@@ -4,13 +4,25 @@
   
   
   <entry>
-    <title></title>
+    <title>读后感：So you want to work in security</title>
     <link href="/2023/07/07/Reflection%20Paper%EF%BC%9ASo%20you%20want%20to%20work%20in%20security/"/>
     <url>/2023/07/07/Reflection%20Paper%EF%BC%9ASo%20you%20want%20to%20work%20in%20security/</url>
     
-    <content type="html"><![CDATA[<!--title: 读后感：So you want to work in securitydate: 2023-07-07tags：​- readcategories:​- Something interesting--><h2 id="读后感：So-you-want-to-work-in-security"><a href="#读后感：So-you-want-to-work-in-security" class="headerlink" title="读后感：So you want to work in security?"></a>读后感：So you want to work in security?</h2><p><a href="http://ifsec.blogspot.com/2018/02/so-you-want-to-work-in-security-and-for.html">So you want to work in security?</a></p><h3 id="得忙起来"><a href="#得忙起来" class="headerlink" title="得忙起来"></a>得忙起来</h3><pre><code class="hljs"> 对于这篇博客，我更愿意将其视作一个纠正我暑期，或是说毕业之后的一个较为松懈的学习态度以及开学前以何种学习方式去补充自己的不足的一篇文章。 显然，本科毕业确实给我带来了一些可能与我并不相称的快乐，即其实我算是选择大于努力的那一部分人，在考研过程中我并未付出和其他人那般的努力，所以其实更应该看到自己与别人的差距，让我快要生锈的脑子转起来。</code></pre><h3 id="任重道远"><a href="#任重道远" class="headerlink" title="任重道远"></a>任重道远</h3><pre><code class="hljs"> 安全方向所涉及的知识面的广度，在我浅薄的认知里，我认为是大于其他方向的。这一点其实早期在蓝鲸短暂学习的时候就感受过了。而其实这也是我在文中感觉被狠狠打脸的一部分。“**Don’t give up when you encounter things you don’t understand**”文中如是说，其实原来我很有幸的扛过了蓝鲸筛选的第一阶段，但随着难度上升，我逃避了。很戏谑的，某学长就在交流中问过：“这回学不学的下去”。我认为这一点确实也是我需要去克服的。 同时，文中写到要充分利用资源，对于这一点，我认为应该是充分的利用有效资源，或者说是如何高效的利用资源处理亟待解决的问题。其实无论从本科的学习还是说之前的毕设或者是论文分享，都可以看出，查找学习知识是一个类似于剥洋葱的过程，查找A中发现有B不懂，那么再去找B，学习B是发现其中出现的C，D不清楚，那么就应该先去把C，D看懂，再一层层往上反着推，无疑这会消耗大量时间，但总归是要比一知半解的了解A是什么会来的更有收获。</code></pre><h3 id="保持思考"><a href="#保持思考" class="headerlink" title="保持思考"></a>保持思考</h3><pre><code class="hljs"> 这一点不仅是说是，如何去提出问题，也是面对一个问题时你能怎么去解决。安全方面，解决问题需要灵活性，可能本科期间，多数时间我们都在跟着课本学习所谓的标准答案，也就是文中提到的“If you prefer to follow a pre-set curriculum, you’re not going to get very far in security”跟着预定的课程走。我确实不否认我更乐意去按着安排做事儿，答案跟着标准答案走，但我觉着确实也应该做出一些突破了。</code></pre>]]></content>
+    <content type="html"><![CDATA[<h2 id="读后感：So-you-want-to-work-in-security"><a href="#读后感：So-you-want-to-work-in-security" class="headerlink" title="读后感：So you want to work in security?"></a>读后感：So you want to work in security?</h2><p><a href="http://ifsec.blogspot.com/2018/02/so-you-want-to-work-in-security-and-for.html">So you want to work in security?</a></p><h3 id="得忙起来"><a href="#得忙起来" class="headerlink" title="得忙起来"></a>得忙起来</h3><pre><code class="hljs"> 对于这篇博客，我更愿意将其视作一个纠正我暑期，或是说毕业之后的一个较为松懈的学习态度以及开学前以何种学习方式去补充自己的不足的一篇文章。 显然，本科毕业确实给我带来了一些可能与我并不相称的快乐，即其实我算是选择大于努力的那一部分人，在考研过程中我并未付出和其他人那般的努力，所以其实更应该看到自己与别人的差距，让我快要生锈的脑子转起来。</code></pre><h3 id="任重道远"><a href="#任重道远" class="headerlink" title="任重道远"></a>任重道远</h3><pre><code class="hljs"> 安全方向所涉及的知识面的广度，在我浅薄的认知里，我认为是大于其他方向的。这一点其实早期在蓝鲸短暂学习的时候就感受过了。而其实这也是我在文中感觉被狠狠打脸的一部分。“**Don’t give up when you encounter things you don’t understand**”文中如是说，其实原来我很有幸的扛过了蓝鲸筛选的第一阶段，但随着难度上升，我逃避了。很戏谑的，某学长就在交流中问过：“这回学不学的下去”。我认为这一点确实也是我需要去克服的。 同时，文中写到要充分利用资源，对于这一点，我认为应该是充分的利用有效资源，或者说是如何高效的利用资源处理亟待解决的问题。其实无论从本科的学习还是说之前的毕设或者是论文分享，都可以看出，查找学习知识是一个类似于剥洋葱的过程，查找A中发现有B不懂，那么再去找B，学习B是发现其中出现的C，D不清楚，那么就应该先去把C，D看懂，再一层层往上反着推，无疑这会消耗大量时间，但总归是要比一知半解的了解A是什么会来的更有收获。</code></pre><h3 id="保持思考"><a href="#保持思考" class="headerlink" title="保持思考"></a>保持思考</h3><pre><code class="hljs"> 这一点不仅是说是，如何去提出问题，也是面对一个问题时你能怎么去解决。安全方面，解决问题需要灵活性，可能本科期间，多数时间我们都在跟着课本学习所谓的标准答案，也就是文中提到的“If you prefer to follow a pre-set curriculum, you’re not going to get very far in security”跟着预定的课程走。我确实不否认我更乐意去按着安排做事儿，答案跟着标准答案走，但我觉着确实也应该做出一些突破了。</code></pre>]]></content>
     
     
+    <categories>
+      
+      <category>Something interesting</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>read</tag>
+      
+    </tags>
     
   </entry>
   
