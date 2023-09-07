@@ -16,47 +16,33 @@
   <meta name="author" content="TEhS">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Pass-01 创建一句话php   @：错误抑制符号，可以阻止PHP报告eval函数执行中的错误 eval：接受一个字符串作为参数，将其作为PHP代码执行 $_POST(&#39;shell&#39;)：POST请求变量，包含一个名为shell的参数  上传尝试  猜测是前端JS限制了上传文件的类型，直接禁用前端JS后，再次上传  上传成功，查看传输的路径  通过蚁剑进行连接  在根目录下即可找">
+    <meta name="description" content="Pass-11 $img_path &#x3D; $_GET[&#39;save_path&#39;] . &quot;&#x2F;&quot; . rand(10, 99) . date(&quot;YmdHis&quot;) . &quot;.&quot; . $file_ext;：构建一个新的文件路径，包括文件名和扩展名。这个路径基于名为 &#39;save_path&#39; 的 GET 参数，以及一个随机数">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Upload_labs1">
-<meta property="og:url" content="http://example.com/2023/09/05/Upload-labs/index.html">
+<meta property="og:title" content="Upload_labs2">
+<meta property="og:url" content="http://example.com/2023/09/07/Upload-labs2/index.html">
 <meta property="og:site_name" content="TEhS">
-<meta property="og:description" content="Pass-01 创建一句话php   @：错误抑制符号，可以阻止PHP报告eval函数执行中的错误 eval：接受一个字符串作为参数，将其作为PHP代码执行 $_POST(&#39;shell&#39;)：POST请求变量，包含一个名为shell的参数  上传尝试  猜测是前端JS限制了上传文件的类型，直接禁用前端JS后，再次上传  上传成功，查看传输的路径  通过蚁剑进行连接  在根目录下即可找">
+<meta property="og:description" content="Pass-11 $img_path &#x3D; $_GET[&#39;save_path&#39;] . &quot;&#x2F;&quot; . rand(10, 99) . date(&quot;YmdHis&quot;) . &quot;.&quot; . $file_ext;：构建一个新的文件路径，包括文件名和扩展名。这个路径基于名为 &#39;save_path&#39; 的 GET 参数，以及一个随机数">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905105954741.png">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905110036360.png">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905110908269.png">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905111208945.png">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905111248987.png">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905111418459.png">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905111610103.png">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905111716152.png">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905113245564.png">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905133923792.png">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905134828992.png">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906131705456.png">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906131758825.png">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906135624141.png">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906140256010.png">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906142332590.png">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906143052256.png">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906143845354.png">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906144030007.png">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906150046786.png">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906150026942.png">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906153208872.png">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906153917267.png">
-<meta property="og:image" content="http://example.com/2023/09/05/Upload-labs/image-20230906154338920.png">
-<meta property="article:published_time" content="2023-09-05T02:58:39.000Z">
-<meta property="article:modified_time" content="2023-09-06T07:44:34.441Z">
+<meta property="og:image" content="http://example.com/2023/09/07/Upload-labs2/image-20230907100705175.png">
+<meta property="og:image" content="http://example.com/2023/09/07/Upload-labs2/image-20230907104811944.png">
+<meta property="og:image" content="http://example.com/2023/09/07/Upload-labs2/image-20230907151043164.png">
+<meta property="og:image" content="http://example.com/2023/09/07/Upload-labs2/image-20230907150642263.png">
+<meta property="og:image" content="http://example.com/2023/09/07/Upload-labs2/image-20230907150615706.png">
+<meta property="og:image" content="http://example.com/2023/09/07/Upload-labs2/image-20230907150559242.png">
+<meta property="og:image" content="http://example.com/2023/09/07/Upload-labs2/image-20230907153602463.png">
+<meta property="og:image" content="http://example.com/2023/09/07/Upload-labs2/image-20230907163747679.png">
+<meta property="og:image" content="http://example.com/2023/09/07/Upload-labs2/image-20230907163902487.png">
+<meta property="og:image" content="http://example.com/2023/09/07/Upload-labs2/image-20230907165625505.png">
+<meta property="article:published_time" content="2023-09-07T01:55:29.000Z">
+<meta property="article:modified_time" content="2023-09-07T08:58:40.613Z">
 <meta property="article:author" content="TEhS">
 <meta property="article:tag" content="CTF">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/2023/09/05/Upload-labs/image-20230905105954741.png">
+<meta name="twitter:image" content="http://example.com/2023/09/07/Upload-labs2/image-20230907100705175.png">
   
   
   
-  <title>Upload_labs1 - TEhS</title>
+  <title>Upload_labs2 - TEhS</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -222,7 +208,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Upload_labs1"></span>
+            <span id="subtitle" data-typed-text="Upload_labs2"></span>
           
         </div>
 
@@ -233,8 +219,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-09-05 10:58" pubdate>
-          2023年9月5日 上午
+        <time datetime="2023-09-07 09:55" pubdate>
+          2023年9月7日 上午
         </time>
       </span>
     
@@ -245,7 +231,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.1k 字
+          679 字
         
       </span>
     
@@ -256,7 +242,7 @@
         
         
         
-          10 分钟
+          6 分钟
         
       </span>
     
@@ -293,70 +279,32 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Upload_labs1</h1>
+            <h1 id="seo-header">Upload_labs2</h1>
             
             
               <div class="markdown-body">
                 
-                <h4 id="Pass-01"><a href="#Pass-01" class="headerlink" title="Pass-01"></a>Pass-01</h4><p><img src="/2023/09/05/Upload-labs/image-20230905105954741.png" srcset="/img/loading.gif" lazyload alt="image-20230905105954741"></p>
-<p><strong>创建一句话php</strong></p>
-<p><img src="/2023/09/05/Upload-labs/image-20230905110036360.png" srcset="/img/loading.gif" lazyload alt="image-20230905110036360"></p>
-<ul>
-<li><code>@</code>：错误抑制符号，可以阻止PHP报告eval函数执行中的错误</li>
-<li><code>eval</code>：接受一个字符串作为参数，将其作为PHP代码执行</li>
-<li><code>$_POST(&#39;shell&#39;)</code>：POST请求变量，包含一个名为shell的参数</li>
-</ul>
-<p><strong>上传尝试</strong></p>
-<p><img src="/2023/09/05/Upload-labs/image-20230905110908269.png" srcset="/img/loading.gif" lazyload alt="image-20230905110908269"></p>
-<p>猜测是前端JS限制了上传文件的类型，直接禁用前端JS后，再次上传</p>
-<p><img src="/2023/09/05/Upload-labs/image-20230905111208945.png" srcset="/img/loading.gif" lazyload alt="image-20230905111208945"></p>
-<p>上传成功，查看传输的路径</p>
-<p><img src="/2023/09/05/Upload-labs/image-20230905111248987.png" srcset="/img/loading.gif" lazyload alt="image-20230905111248987"></p>
-<p>通过蚁剑进行连接</p>
-<p><img src="/2023/09/05/Upload-labs/image-20230905111418459.png" srcset="/img/loading.gif" lazyload alt="image-20230905111418459"></p>
-<p>在根目录下即可找到flag</p>
-<h4 id="Pass-02"><a href="#Pass-02" class="headerlink" title="Pass-02"></a>Pass-02</h4><p>依然通过一句话php木马进行尝试</p>
-<p><img src="/2023/09/05/Upload-labs/image-20230905111610103.png" srcset="/img/loading.gif" lazyload alt="image-20230905111610103"></p>
-<p>通过Burpsuite进行抓包</p>
-<p><img src="/2023/09/05/Upload-labs/image-20230905111716152.png" srcset="/img/loading.gif" lazyload alt="image-20230905111716152"></p>
-<p>Content-Type显示为text&#x2F;php，修改为image&#x2F;jpeg，重发</p>
-<p><img src="/2023/09/05/Upload-labs/image-20230905113245564.png" srcset="/img/loading.gif" lazyload alt="image-20230905113245564"></p>
-<p>得到路径，其余操作与Pass-01相同</p>
-<p>利用该漏洞的关键函数：<code>mime_content_type()</code></p>
-<h4 id="Pass-03"><a href="#Pass-03" class="headerlink" title="Pass-03"></a>Pass-03</h4><p><img src="/2023/09/05/Upload-labs/image-20230905133923792.png" srcset="/img/loading.gif" lazyload alt="image-20230905133923792"></p>
-<p>基于黑名单绕过，通常方法有以下几种：</p>
-<ul>
-<li>上传不常见的php拓展名：pht, phpt, phtml, php3,php4,php5,php6</li>
-<li>有些会忽略大小写：Php，PHp，pHp之类的</li>
-<li>解析漏洞：例如apache，iis，nginx（需要继续了解，后续单独写博客）</li>
-</ul>
-<p><img src="/2023/09/05/Upload-labs/image-20230905134828992.png" srcset="/img/loading.gif" lazyload alt="image-20230905134828992"></p>
-<p>修改后缀即可</p>
-<h4 id="Pass-04"><a href="#Pass-04" class="headerlink" title="Pass-04"></a>Pass-04</h4><p><img src="/2023/09/05/Upload-labs/image-20230906131705456.png" srcset="/img/loading.gif" lazyload alt="image-20230906131705456"></p>
-<p>屏蔽了所有的拓展名，所以可以通过基于白名单的绕过进行文件上传：%00截断：在url中%00表示ascll码中的0 ，而ascii中0作为特殊字符保留，表示字符串结束，所以当url中出现%00时就会认为读取已结束</p>
-<p><img src="/2023/09/05/Upload-labs/image-20230906131758825.png" srcset="/img/loading.gif" lazyload alt="image-20230906131758825"></p>
-<p>也可以通过上传.htaccess文件绕过</p>
-<h4 id="Pass-05"><a href="#Pass-05" class="headerlink" title="Pass-05"></a>Pass-05</h4><p><img src="/2023/09/05/Upload-labs/image-20230906135624141.png" srcset="/img/loading.gif" lazyload alt="image-20230906135624141"></p>
-<p>对比之前的题目，可以发现，少了将文件名全部转化成小写这一步，所以可以通过大小写混合进行绕过</p>
-<p><img src="/2023/09/05/Upload-labs/image-20230906140256010.png" srcset="/img/loading.gif" lazyload alt="image-20230906140256010"></p>
-<h4 id="Pass-06"><a href="#Pass-06" class="headerlink" title="Pass-06"></a>Pass-06</h4><p><img src="/2023/09/05/Upload-labs/image-20230906142332590.png" srcset="/img/loading.gif" lazyload alt="image-20230906142332590"></p>
-<p>并未去除首尾的空格，可以通过添加空格的方式绕过</p>
-<p><img src="/2023/09/05/Upload-labs/image-20230906143052256.png" srcset="/img/loading.gif" lazyload alt="image-20230906143052256"></p>
-<p>因为此时服务器获得的文件后缀是php+空格，不在黑明单中，所以可以实现绕过</p>
-<h4 id="Pass-07"><a href="#Pass-07" class="headerlink" title="Pass-07"></a>Pass-07</h4><p><img src="/2023/09/05/Upload-labs/image-20230906143845354.png" srcset="/img/loading.gif" lazyload alt="image-20230906143845354"></p>
-<p>代码中没有过滤点，可以通过加点进行绕过</p>
-<p><img src="/2023/09/05/Upload-labs/image-20230906144030007.png" srcset="/img/loading.gif" lazyload alt="image-20230906144030007"></p>
-<p>此时，服务器获取到的后缀是空，不在黑名单中</p>
-<h4 id="Pass-08"><a href="#Pass-08" class="headerlink" title="Pass-08"></a>Pass-08</h4><p><img src="/2023/09/05/Upload-labs/image-20230906150046786.png" srcset="/img/loading.gif" lazyload alt="image-20230906150046786"></p>
-<p>源码没有过滤::DATA，可以利用windows的特性</p>
-<p>在window的时候如果文件名+<code>&quot;::$DATA&quot;</code>会把<code>::$DATA</code>之后的数据当成文件流处理,不会检测后缀名，且保持<code>::$DATA</code>之前的文件名，目的就是不检查后缀名</p>
-<p><img src="/2023/09/05/Upload-labs/image-20230906150026942.png" srcset="/img/loading.gif" lazyload alt="image-20230906150026942"></p>
-<h4 id="Pass-09"><a href="#Pass-09" class="headerlink" title="Pass-09"></a>Pass-09</h4><p><img src="/2023/09/05/Upload-labs/image-20230906153208872.png" srcset="/img/loading.gif" lazyload alt="image-20230906153208872"></p>
-<p>由于代码没有写循环，代表对于 <code>.</code> 和 <code> space</code>的过滤只会进行一遍，所以可以通过在后缀名后添加 <code>. .</code>来进行绕过</p>
-<h4 id="Pass-10"><a href="#Pass-10" class="headerlink" title="Pass-10"></a>Pass-10</h4><p><img src="/2023/09/05/Upload-labs/image-20230906153917267.png" srcset="/img/loading.gif" lazyload alt="image-20230906153917267"></p>
-<p><code>$file_name=str_ireplace($deny_file, &quot;&quot;, $file_name)</code>：函数调用会查找 <code>$file_name</code> 中包含在 <code>$deny_ext</code> 数组中的任何子字符串，然后将它们替换为空字符串，即删除这些子字符串</p>
-<p>所以可以通过双写进行绕过，在处理 <code>pphphp</code>时，由于上述函数，中间的php将被替换成空，该后缀仍然会被解析成php</p>
-<p><img src="/2023/09/05/Upload-labs/image-20230906154338920.png" srcset="/img/loading.gif" lazyload alt="image-20230906154338920"></p>
+                <h4 id="Pass-11"><a href="#Pass-11" class="headerlink" title="Pass-11"></a>Pass-11</h4><p><img src="/2023/09/07/Upload-labs2/image-20230907100705175.png" srcset="/img/loading.gif" lazyload alt="image-20230907100705175"></p>
+<p><code>$img_path = $_GET[&#39;save_path&#39;] . &quot;/&quot; . rand(10, 99) . date(&quot;YmdHis&quot;) . &quot;.&quot; . $file_ext;</code>：构建一个新的文件路径，包括文件名和扩展名。这个路径基于名为 <code>&#39;save_path&#39;</code> 的 GET 参数，以及一个随机数、日期时间戳和文件扩展名。所以可以采用%00进行截断</p>
+<h4 id="Pass-12"><a href="#Pass-12" class="headerlink" title="Pass-12"></a>Pass-12</h4><p><img src="/2023/09/07/Upload-labs2/image-20230907104811944.png" srcset="/img/loading.gif" lazyload alt="image-20230907104811944"></p>
+<p>这题变成了 <code>$_POST[&#39;save_path&#39;]</code> ，POST方式不会像GET方式一样，提交经过URL编码，所以进行截断需要手动修改二进制流</p>
+<h4 id="Pass-13，14，15"><a href="#Pass-13，14，15" class="headerlink" title="Pass-13，14，15"></a>Pass-13，14，15</h4><p><img src="/2023/09/07/Upload-labs2/image-20230907151043164.png" srcset="/img/loading.gif" lazyload alt="image-20230907151043164"></p>
+<p>创建图片马：</p>
+<p><img src="/2023/09/07/Upload-labs2/image-20230907150642263.png" srcset="/img/loading.gif" lazyload alt="image-20230907150642263"></p>
+<p>抓包记录上传位置</p>
+<p><img src="/2023/09/07/Upload-labs2/image-20230907150615706.png" srcset="/img/loading.gif" lazyload alt="image-20230907150615706"></p>
+<p>通过题目给出的文件包含漏洞访问，可以看到正确返回了木马中的phpinfo()内容</p>
+<p><img src="/2023/09/07/Upload-labs2/image-20230907150559242.png" srcset="/img/loading.gif" lazyload alt="image-20230907150559242"></p>
+<h4 id="Pass-16"><a href="#Pass-16" class="headerlink" title="Pass-16"></a>Pass-16</h4><p><img src="/2023/09/07/Upload-labs2/image-20230907153602463.png" srcset="/img/loading.gif" lazyload alt="image-20230907153602463"></p>
+<p>发现会对图片进行二次渲染，则之前使用的图片码无法使用，因为加在图片后的php代码会被渲染，从而无法正确执行</p>
+<p>所以可以上传一张图片，对比看被二次渲染过的图片有什么地方是没变的，可以将php代码插入其中（通常文件头是不会被修改的，但修改文件头可能会导致文件损坏）</p>
+<p><img src="/2023/09/07/Upload-labs2/image-20230907163747679.png" srcset="/img/loading.gif" lazyload alt="image-20230907163747679"></p>
+<p>左边是修改过的gif，右边是上传之后重新下载的gif，可以看到php代码被成功的添加</p>
+<p>用上一题同样的方法访问</p>
+<p><img src="/2023/09/07/Upload-labs2/image-20230907163902487.png" srcset="/img/loading.gif" lazyload alt="image-20230907163902487"></p>
+<p>通过文件包含漏洞，代码被成功执行</p>
+<h4 id="Pass-17，18条件竞争"><a href="#Pass-17，18条件竞争" class="headerlink" title="Pass-17，18条件竞争"></a>Pass-17，18条件竞争</h4><p><img src="/2023/09/07/Upload-labs2/image-20230907165625505.png" srcset="/img/loading.gif" lazyload alt="image-20230907165625505"></p>
+<p>利用时间差，根据源码可以知道，上传的逻辑是：如果上传一个jpg，png，gif图片，成功了则改名并保存，若没成功则删除，则可以通过burpsuite进行攻击，不断的上传文件，并不断的访问该文件，直到访问成功</p>
 
                 
               </div>
@@ -402,8 +350,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Upload_labs1</div>
-      <div>http://example.com/2023/09/05/Upload-labs/</div>
+      <div>Upload_labs2</div>
+      <div>http://example.com/2023/09/07/Upload-labs2/</div>
     </div>
     <div class="license-meta">
       
@@ -415,7 +363,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年9月5日</div>
+          <div>2023年9月7日</div>
         </div>
       
       
@@ -447,18 +395,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/09/07/Upload-labs2/" title="Upload_labs2">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Upload_labs2</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/09/05/LFI/" title="LFI">
-                        <span class="hidden-mobile">LFI</span>
+                      <a href="/2023/09/05/Upload-labs/" title="Upload_labs1">
+                        <span class="hidden-mobile">Upload_labs1</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

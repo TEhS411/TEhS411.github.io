@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>Upload_labs2</title>
+    <link href="/2023/09/07/Upload-labs2/"/>
+    <url>/2023/09/07/Upload-labs2/</url>
+    
+    <content type="html"><![CDATA[<h4 id="Pass-11"><a href="#Pass-11" class="headerlink" title="Pass-11"></a>Pass-11</h4><p><img src="/2023/09/07/Upload-labs2/image-20230907100705175.png" alt="image-20230907100705175"></p><p><code>$img_path = $_GET[&#39;save_path&#39;] . &quot;/&quot; . rand(10, 99) . date(&quot;YmdHis&quot;) . &quot;.&quot; . $file_ext;</code>：构建一个新的文件路径，包括文件名和扩展名。这个路径基于名为 <code>&#39;save_path&#39;</code> 的 GET 参数，以及一个随机数、日期时间戳和文件扩展名。所以可以采用%00进行截断</p><h4 id="Pass-12"><a href="#Pass-12" class="headerlink" title="Pass-12"></a>Pass-12</h4><p><img src="/2023/09/07/Upload-labs2/image-20230907104811944.png" alt="image-20230907104811944"></p><p>这题变成了 <code>$_POST[&#39;save_path&#39;]</code> ，POST方式不会像GET方式一样，提交经过URL编码，所以进行截断需要手动修改二进制流</p><h4 id="Pass-13，14，15"><a href="#Pass-13，14，15" class="headerlink" title="Pass-13，14，15"></a>Pass-13，14，15</h4><p><img src="/2023/09/07/Upload-labs2/image-20230907151043164.png" alt="image-20230907151043164"></p><p>创建图片马：</p><p><img src="/2023/09/07/Upload-labs2/image-20230907150642263.png" alt="image-20230907150642263"></p><p>抓包记录上传位置</p><p><img src="/2023/09/07/Upload-labs2/image-20230907150615706.png" alt="image-20230907150615706"></p><p>通过题目给出的文件包含漏洞访问，可以看到正确返回了木马中的phpinfo()内容</p><p><img src="/2023/09/07/Upload-labs2/image-20230907150559242.png" alt="image-20230907150559242"></p><h4 id="Pass-16"><a href="#Pass-16" class="headerlink" title="Pass-16"></a>Pass-16</h4><p><img src="/2023/09/07/Upload-labs2/image-20230907153602463.png" alt="image-20230907153602463"></p><p>发现会对图片进行二次渲染，则之前使用的图片码无法使用，因为加在图片后的php代码会被渲染，从而无法正确执行</p><p>所以可以上传一张图片，对比看被二次渲染过的图片有什么地方是没变的，可以将php代码插入其中（通常文件头是不会被修改的，但修改文件头可能会导致文件损坏）</p><p><img src="/2023/09/07/Upload-labs2/image-20230907163747679.png" alt="image-20230907163747679"></p><p>左边是修改过的gif，右边是上传之后重新下载的gif，可以看到php代码被成功的添加</p><p>用上一题同样的方法访问</p><p><img src="/2023/09/07/Upload-labs2/image-20230907163902487.png" alt="image-20230907163902487"></p><p>通过文件包含漏洞，代码被成功执行</p><h4 id="Pass-17，18条件竞争"><a href="#Pass-17，18条件竞争" class="headerlink" title="Pass-17，18条件竞争"></a>Pass-17，18条件竞争</h4><p><img src="/2023/09/07/Upload-labs2/image-20230907165625505.png" alt="image-20230907165625505"></p><p>利用时间差，根据源码可以知道，上传的逻辑是：如果上传一个jpg，png，gif图片，成功了则改名并保存，若没成功则删除，则可以通过burpsuite进行攻击，不断的上传文件，并不断的访问该文件，直到访问成功</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Basic</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>CTF</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Upload_labs1</title>
     <link href="/2023/09/05/Upload-labs/"/>
     <url>/2023/09/05/Upload-labs/</url>
