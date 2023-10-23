@@ -1,0 +1,771 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/lhr.png">
+  <link rel="icon" href="/img/lhr.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="TEhS">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Bufferlab实验简介IA32的栈帧IA32的栈帧同x86的栈帧相似，栈从高地址向低地址增长。寄存器%esp保存的是栈帧的栈顶（低地址），寄存器%ebp保存的是栈帧的栈底（高地址）。 调用者的栈帧主要包括了参数区以及返回地址。 被调用者的栈帧的栈底首先是保存的寄存器ebp值（指向调用者的栈底），然后是被保存的寄存器，局部变量以及临时空间，最后是参数构造区。 实验准备实验讲义中主要包含了以下3个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="csapplab-bufferlab">
+<meta property="og:url" content="http://example.com/2023/10/06/csapplab-bufferlab/index.html">
+<meta property="og:site_name" content="TEhS">
+<meta property="og:description" content="Bufferlab实验简介IA32的栈帧IA32的栈帧同x86的栈帧相似，栈从高地址向低地址增长。寄存器%esp保存的是栈帧的栈顶（低地址），寄存器%ebp保存的是栈帧的栈底（高地址）。 调用者的栈帧主要包括了参数区以及返回地址。 被调用者的栈帧的栈底首先是保存的寄存器ebp值（指向调用者的栈底），然后是被保存的寄存器，局部变量以及临时空间，最后是参数构造区。 实验准备实验讲义中主要包含了以下3个">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012161536180.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012163333070.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012163807613.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012170015339.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012192005282.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012192126197.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012194646326.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012200351900.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012195924030.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012195855241.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012200444062.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012202402226.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012204852875.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012205107345.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012211941649.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012212046878.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012212231854.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012212311757.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012212345337.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012211925176.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012214342894.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012215742153.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012215823675.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012215723486.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012221107722.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012221140589.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231013001613439.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231013001632974.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231023163626058.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231013010919080.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231013005138599.png">
+<meta property="og:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231013005117564.png">
+<meta property="article:published_time" content="2023-10-06T12:11:39.000Z">
+<meta property="article:modified_time" content="2023-10-23T08:39:28.817Z">
+<meta property="article:author" content="TEhS">
+<meta property="article:tag" content="learning">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2023/10/06/csapplab-bufferlab/image-20231012161536180.png">
+  
+  
+  
+  <title>csapplab-bufferlab - TEhS</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>TEhS</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="csapplab-bufferlab"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-10-06 20:11" pubdate>
+          2023年10月6日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          29 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">csapplab-bufferlab</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="Bufferlab"><a href="#Bufferlab" class="headerlink" title="Bufferlab"></a>Bufferlab</h2><h2 id="实验简介"><a href="#实验简介" class="headerlink" title="实验简介"></a>实验简介</h2><h4 id="IA32的栈帧"><a href="#IA32的栈帧" class="headerlink" title="IA32的栈帧"></a>IA32的栈帧</h4><p>IA32的栈帧同x86的栈帧相似，栈从高地址向低地址增长。寄存器%esp保存的是栈帧的栈顶（低地址），寄存器%ebp保存的是栈帧的栈底（高地址）。</p>
+<p>调用者的栈帧主要包括了参数区以及返回地址。</p>
+<p>被调用者的栈帧的栈底首先是保存的寄存器ebp值（指向调用者的栈底），然后是被保存的寄存器，局部变量以及临时空间，最后是参数构造区。</p>
+<h2 id="实验准备"><a href="#实验准备" class="headerlink" title="实验准备"></a>实验准备</h2><p>实验讲义中主要包含了以下3个可执行文件：</p>
+<ul>
+<li>bufbomb 你所要攻击的缓冲区炸弹程序</li>
+<li>makecookie 根据你所输入的userid生成一个cookie</li>
+<li>hex2raw 一个生成攻击字符串的工具</li>
+</ul>
+<p>首先生成一个cookie供后续使用：</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012161536180.png" srcset="/img/loading.gif" lazyload alt="image-20231012161536180"></p>
+<p>然后使用Ghidra将bufbomb反汇编供后续分析</p>
+<h2 id="实验过程"><a href="#实验过程" class="headerlink" title="实验过程"></a>实验过程</h2><h3 id="阶段0-Candle"><a href="#阶段0-Candle" class="headerlink" title="阶段0:Candle"></a>阶段0:Candle</h3><p>在bufbomb中，通过了test()函数调用getbuf()函数</p>
+<p>test函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">void</span> <span class="hljs-title function_">test</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>  <span class="hljs-type">int</span> iVar1;<br>  <span class="hljs-type">int</span> iVar2;<br>  <span class="hljs-type">int</span> iVar3;<br>  <br>  iVar1 = uniqueval();<span class="hljs-comment">//这个函数利用进程的id作为种子生成一个伪随机数</span><br>  iVar2 = getbuf();<br>  iVar3 = uniqueval();<br>  <span class="hljs-keyword">if</span> (iVar3 == iVar1) &#123;<span class="hljs-comment">//用于验证栈是否被损坏</span><br>    <span class="hljs-keyword">if</span> (iVar2 == cookie) &#123;<br>      __printf_chk(<span class="hljs-number">1</span>,<span class="hljs-string">&quot;Boom!: getbuf returned 0x%x\n&quot;</span>,iVar2);<br>      validate(<span class="hljs-number">3</span>);<br>    &#125;<br>    <span class="hljs-keyword">else</span> &#123;<br>      __printf_chk(<span class="hljs-number">1</span>,<span class="hljs-string">&quot;Dud: getbuf returned 0x%x\n&quot;</span>,iVar2);<br>    &#125;<br>  &#125;<br>  <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;Sabotaged!: the stack has been corrupted&quot;</span>);<br>  &#125;<br>  <span class="hljs-keyword">return</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>getbuf：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs c">undefined4 <span class="hljs-title function_">getbuf</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br><br>&#123;<br>  undefined local_2c [<span class="hljs-number">40</span>];  <br>  Gets(local_2c);<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>目标：让代码执行smoke（）而不是让getbuf（）返回1</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012163333070.png" srcset="/img/loading.gif" lazyload alt="image-20231012163333070"></p>
+<p>通过Ghidra的反汇编结果可以看到smoke函数的起始地址为08048c18</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012163807613.png" srcset="/img/loading.gif" lazyload alt="image-20231012163807613"></p>
+<p>再分析getbuf的汇编代码</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012170015339.png" srcset="/img/loading.gif" lazyload alt="image-20231012170015339"></p>
+<p>可以看到，开辟了一个0x38（56）字节的栈空间，将数组的首地址放在了ebp-0x28的位置，就是说缓冲区有40个字节。</p>
+<p>再加上返回地址和保存的旧的ebp值，此处需要构造如下攻击字段：</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012192005282.png" srcset="/img/loading.gif" lazyload alt="image-20231012192005282"></p>
+<p>使用hex2raw生成攻击字符串并测试</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012192126197.png" srcset="/img/loading.gif" lazyload alt="image-20231012192126197"></p>
+<h3 id="阶段1-Sparkler"><a href="#阶段1-Sparkler" class="headerlink" title="阶段1: Sparkler"></a>阶段1: Sparkler</h3><p>目标：getbuf返回时跳转到fizz</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">void</span> <span class="hljs-title function_">fizz</span><span class="hljs-params">(<span class="hljs-type">int</span> param_1)</span><br><br>&#123;<br>  <span class="hljs-keyword">if</span> (param_1 == cookie) &#123;<br>    __printf_chk(<span class="hljs-number">1</span>,<span class="hljs-string">&quot;Fizz!: You called fizz(0x%x)\n&quot;</span>,param_1);<br>    validate(<span class="hljs-number">1</span>);<br>  &#125;<br>  <span class="hljs-keyword">else</span> &#123;<br>    __printf_chk(<span class="hljs-number">1</span>,<span class="hljs-string">&quot;Misfire: You called fizz(0x%x)\n&quot;</span>,param_1);<br>  &#125;<br>                    <span class="hljs-comment">/* WARNING: Subroutine does not return */</span><br>  <span class="hljs-built_in">exit</span>(<span class="hljs-number">0</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可以看到，要成功调用fizz还需要将cookie作为参数传递，在IA32中，参数是通过调用者的栈进行传递的</p>
+<p>观察fizz的反汇编代码：</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012194646326.png" srcset="/img/loading.gif" lazyload alt="image-20231012194646326"></p>
+<p><code>mov    0x8(%ebp),%eax</code>和 <code>cmp    0x804d108,%eax</code>这两句，将ebp+8的位置的值赋值给eax，再将eax与0x804d108的值比较，可以猜测ebp+8位置存放的就是传递的参数，而0x804d108的值为cookie</p>
+<p>通过gdb调试验证：</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012200351900.png" srcset="/img/loading.gif" lazyload alt="image-20231012200351900"></p>
+<p>可以得到0x804d108的值就是cookie，那么参数就在ebp+8的位置，猜测正确</p>
+<p>构造如下攻击字段：</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012195924030.png" srcset="/img/loading.gif" lazyload alt="image-20231012195924030"></p>
+<p>进行生成和测试：</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012195855241.png" srcset="/img/loading.gif" lazyload alt="image-20231012195855241"></p>
+<p>疑问：</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012200444062.png" srcset="/img/loading.gif" lazyload alt="image-20231012200444062"></p>
+<p>为什么这里也是表示的是ebp+8的位置</p>
+<h3 id="阶段2：Firecracker"><a href="#阶段2：Firecracker" class="headerlink" title="阶段2：Firecracker"></a>阶段2：Firecracker</h3><p>目标：含有一个 bang 函数，和一个全局变量 global_value，需要注入机器代码，修改 global_value 为 cookies 的值，再调用 bang 函数。</p>
+<p>Ghidra获得的bang函数：</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012202402226.png" srcset="/img/loading.gif" lazyload alt="image-20231012202402226"></p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012204852875.png" srcset="/img/loading.gif" lazyload alt="image-20231012204852875"></p>
+<p>通过gdb查看0x804d100的值和0x804d108（上一问得出该地址为cookie）</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012205107345.png" srcset="/img/loading.gif" lazyload alt="image-20231012205107345"></p>
+<p>所以可以构造如下攻击代码：</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012211941649.png" srcset="/img/loading.gif" lazyload alt="image-20231012211941649"></p>
+<p>第一句movl用于修改global_value的值，第二步用于将bang压栈</p>
+<p>获取其机器代码：</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012212046878.png" srcset="/img/loading.gif" lazyload alt="image-20231012212046878"></p>
+<p>通过gdb设置断点</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012212231854.png" srcset="/img/loading.gif" lazyload alt="image-20231012212231854"></p>
+<p>此时的ebp-0x28的位置就是缓冲区的首地址，</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012212311757.png" srcset="/img/loading.gif" lazyload alt="image-20231012212311757"></p>
+<p>构造攻击代码：</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012212345337.png" srcset="/img/loading.gif" lazyload alt="image-20231012212345337"></p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012211925176.png" srcset="/img/loading.gif" lazyload alt="image-20231012211925176"></p>
+<h3 id="阶段3-Dynamite"><a href="#阶段3-Dynamite" class="headerlink" title="阶段3 Dynamite"></a>阶段3 Dynamite</h3><p>让函数getbuf返回cookie而不是1至函数test。注意到在test中当返回值为cookie时程序会输出”Boom!”。你的攻击代码应当将cookie设置为返回值，恢复任何被破坏的状态，将正确的返回地址push到栈上，最终执行ret指令。</p>
+<p>最初是test调用getbuf，前几问通过缓冲区溢出的攻击，实现了到别的函数的跳转，但不会回来继续执行test函数剩下的内容。从test函数可以看出，当收到getbuf的返回值为1时，会输出Dud，当该值为cookie时，会输出Boom！</p>
+<p>但看getbuf函数可以知道，在函数结束后，会将eax的值设置为1然后返回</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012214342894.png" srcset="/img/loading.gif" lazyload alt="image-20231012214342894"></p>
+<p>所以构造的代码第一步要修改eax的值为cookie</p>
+<p>而在进行缓冲区覆盖的时候，旧的ebp值会被覆盖，所以需要恢复此时的ebp值</p>
+<p>第三步是需要进行返回地址的修改，让函数能够继续执行test函数</p>
+<p>所以可以构造如下攻击代码：</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012215742153.png" srcset="/img/loading.gif" lazyload alt="image-20231012215742153"></p>
+<p>转换成机器代码的步骤跟上一问一样，最后构造的攻击字段为：</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012215823675.png" srcset="/img/loading.gif" lazyload alt="image-20231012215823675"></p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012215723486.png" srcset="/img/loading.gif" lazyload alt="image-20231012215723486"></p>
+<h3 id="阶段4-Nitroglycerin"><a href="#阶段4-Nitroglycerin" class="headerlink" title="阶段4 Nitroglycerin"></a>阶段4 <strong>Nitroglycerin</strong></h3><p>程序运行时启用了 -n 选项时，程序在读取输入时会启用 getbufn函数(而不是前面的getbuf)。getbufn函数有与getbuf相似的功能，但前者输入数组的长度为512字节。调用getbufn函数之前，程序会先在栈上分配一个随机长度的空间，从而使得getbufn函数的栈空间在不同调用情况下不再是固定的，实际上%ebp的差值达到±240。在应用 -n 选项的情况下，程序会要求提交输入字符串 5 次，5次输入会面对5个不同的栈空间，并要求每次都成功返回cookie值。level 4的任务与level 3一致，即要求getbufn函数返回调用函数testn时返回cookie值，而不是常规的1</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012221107722.png" srcset="/img/loading.gif" lazyload alt="image-20231012221107722"></p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231012221140589.png" srcset="/img/loading.gif" lazyload alt="image-20231012221140589"></p>
+<p>对于栈随机化的破解可以使用空操作雪橇，nop sled是在构造的机器代码之前加入nop指令（no operation的缩写，机器码位 0x90），其作用为仅将PC增加而不执行任何操作。在这种情况下，只要覆盖的地址能够指向nop序列所处的任意一个地址，就可以顺序执行nop指令，直到遇到真正构造的机器代码，这样的情况下，对于用于覆盖的返回地址的要求就降低了。</p>
+<p>可以看到，数组的分配长度为0x208（520）个字节</p>
+<p>解题思路：</p>
+<p>（1）修改getbufn的返回地址至testn使其能够继续执行</p>
+<p>（2）修改eax的值为cookie</p>
+<p>（3）还原ebp的值，这里不能使用level3的方法，因为每次程序运行时，栈空间的位置都不一样，所以不能通过3中的方法修改固定地址，但由于每次都是执行相同的代码，那么每次执行时栈中元素的相对位置是不变的。在level3中已经分析了，旧的ebp值已经被覆盖了，因此其值没有应用价值，可以考虑通过esp的值恢复ebp的值</p>
+<p>通过阅读testn的汇编，在每一次调用了 getbufn 之后，ebp 的值将会被 push 进去。这个 ebp 值是等于 testn 被调用的时候 esp 存储的值的。esp 先由于push ebx而减去了4，再手动减去了0x24，所以这个时候 exp + 0x28 的值就是传入了 getbufn 开始的时候 ebp 的值。</p>
+<p>所以构造攻击代码：</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231013001613439.png" srcset="/img/loading.gif" lazyload alt="image-20231013001613439"></p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231013001632974.png" srcset="/img/loading.gif" lazyload alt="image-20231013001632974"></p>
+<p>最终构造的攻击代码应该有520（缓冲区长度）+4（覆盖ebp）+4（覆盖返回地址）个字节</p>
+<p>返回地址的选择可以任意跑一次代码，查看ebp位置并-0x208得到的值，进行五次，取最高的一个，这样可以保证每次执行都会通过雪橇一路滑到目标代码进行执行</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231023163626058.png" srcset="/img/loading.gif" lazyload alt="image-20231023163626058"></p>
+<p>因为此处对于单个用户输入的id来生成cookie，作为random的种子，但random是个伪随机函数，所以对于用户来说，开辟的五次空间都是固定的。</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231013010919080.png" srcset="/img/loading.gif" lazyload alt="image-20231013010919080"></p>
+<p>所以构造攻击代码：</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231013005138599.png" srcset="/img/loading.gif" lazyload alt="image-20231013005138599"></p>
+<p>509个nop+15个操作码+4返回地址</p>
+<p><img src="/2023/10/06/csapplab-bufferlab/image-20231013005117564.png" srcset="/img/loading.gif" lazyload alt="image-20231013005117564"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/csapplab/" class="category-chain-item">csapplab</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/learning/" class="print-no-link">#learning</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>csapplab-bufferlab</div>
+      <div>http://example.com/2023/10/06/csapplab-bufferlab/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>TEhS</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年10月6日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/09/18/CourseNote1/" title="CourseNote1">
+                        <span class="hidden-mobile">CourseNote1</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

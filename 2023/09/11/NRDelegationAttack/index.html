@@ -16,33 +16,25 @@
   <meta name="author" content="TEhS">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Pass-11 $img_path &#x3D; $_GET[&#39;save_path&#39;] . &quot;&#x2F;&quot; . rand(10, 99) . date(&quot;YmdHis&quot;) . &quot;.&quot; . $file_ext;：构建一个新的文件路径，包括文件名和扩展名。这个路径基于名为 &#39;save_path&#39; 的 GET 参数，以及一个随机数">
+    <meta name="description" content="NRDelegationAttack: Complexity DDoS attack on DNS Recursive Resolvers（NRDelegationAttack：DNS递归解析器的复杂性DDoS攻击）论文的主题为针对 DNS 递归解析器的 DDoS 攻击。该工作由来自 Tel-Aviv University （以色列特拉维夫大学） 的 DEEPNESS Lab 的研究人员完成。 利">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Upload_labs2">
-<meta property="og:url" content="http://example.com/2023/09/07/Upload-labs2/index.html">
+<meta property="og:title" content="NRDelegationAttack">
+<meta property="og:url" content="http://example.com/2023/09/11/NRDelegationAttack/index.html">
 <meta property="og:site_name" content="TEhS">
-<meta property="og:description" content="Pass-11 $img_path &#x3D; $_GET[&#39;save_path&#39;] . &quot;&#x2F;&quot; . rand(10, 99) . date(&quot;YmdHis&quot;) . &quot;.&quot; . $file_ext;：构建一个新的文件路径，包括文件名和扩展名。这个路径基于名为 &#39;save_path&#39; 的 GET 参数，以及一个随机数">
+<meta property="og:description" content="NRDelegationAttack: Complexity DDoS attack on DNS Recursive Resolvers（NRDelegationAttack：DNS递归解析器的复杂性DDoS攻击）论文的主题为针对 DNS 递归解析器的 DDoS 攻击。该工作由来自 Tel-Aviv University （以色列特拉维夫大学） 的 DEEPNESS Lab 的研究人员完成。 利">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2023/09/07/Upload-labs2/image-20230907100705175.png">
-<meta property="og:image" content="http://example.com/2023/09/07/Upload-labs2/image-20230907104811944.png">
-<meta property="og:image" content="http://example.com/2023/09/07/Upload-labs2/image-20230907151043164.png">
-<meta property="og:image" content="http://example.com/2023/09/07/Upload-labs2/image-20230907150642263.png">
-<meta property="og:image" content="http://example.com/2023/09/07/Upload-labs2/image-20230907150615706.png">
-<meta property="og:image" content="http://example.com/2023/09/07/Upload-labs2/image-20230907150559242.png">
-<meta property="og:image" content="http://example.com/2023/09/07/Upload-labs2/image-20230907153602463.png">
-<meta property="og:image" content="http://example.com/2023/09/07/Upload-labs2/image-20230907163747679.png">
-<meta property="og:image" content="http://example.com/2023/09/07/Upload-labs2/image-20230907163902487.png">
-<meta property="og:image" content="http://example.com/2023/09/07/Upload-labs2/image-20230907165625505.png">
-<meta property="article:published_time" content="2023-09-07T01:55:29.000Z">
-<meta property="article:modified_time" content="2023-09-07T08:58:40.613Z">
+<meta property="og:image" content="http://example.com/2023/09/11/NRDelegationAttack/image-20230914150452417.png">
+<meta property="og:image" content="http://example.com/2023/09/11/NRDelegationAttack/image-20230914163958837.png">
+<meta property="article:published_time" content="2023-09-11T06:36:55.000Z">
+<meta property="article:modified_time" content="2023-09-18T11:05:39.249Z">
 <meta property="article:author" content="TEhS">
-<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="ReadPaper">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/2023/09/07/Upload-labs2/image-20230907100705175.png">
+<meta name="twitter:image" content="http://example.com/2023/09/11/NRDelegationAttack/image-20230914150452417.png">
   
   
   
-  <title>Upload_labs2 - TEhS</title>
+  <title>NRDelegationAttack - TEhS</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -208,7 +200,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Upload_labs2"></span>
+            <span id="subtitle" data-typed-text="NRDelegationAttack"></span>
           
         </div>
 
@@ -219,8 +211,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-09-07 09:55" pubdate>
-          2023年9月7日 上午
+        <time datetime="2023-09-11 14:36" pubdate>
+          2023年9月11日 下午
         </time>
       </span>
     
@@ -231,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          679 字
+          3.3k 字
         
       </span>
     
@@ -242,7 +234,7 @@
         
         
         
-          6 分钟
+          28 分钟
         
       </span>
     
@@ -279,32 +271,71 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Upload_labs2</h1>
+            <h1 id="seo-header">NRDelegationAttack</h1>
             
             
               <div class="markdown-body">
                 
-                <h4 id="Pass-11"><a href="#Pass-11" class="headerlink" title="Pass-11"></a>Pass-11</h4><p><img src="/2023/09/07/Upload-labs2/image-20230907100705175.png" srcset="/img/loading.gif" lazyload alt="image-20230907100705175"></p>
-<p><code>$img_path = $_GET[&#39;save_path&#39;] . &quot;/&quot; . rand(10, 99) . date(&quot;YmdHis&quot;) . &quot;.&quot; . $file_ext;</code>：构建一个新的文件路径，包括文件名和扩展名。这个路径基于名为 <code>&#39;save_path&#39;</code> 的 GET 参数，以及一个随机数、日期时间戳和文件扩展名。所以可以采用%00进行截断</p>
-<h4 id="Pass-12"><a href="#Pass-12" class="headerlink" title="Pass-12"></a>Pass-12</h4><p><img src="/2023/09/07/Upload-labs2/image-20230907104811944.png" srcset="/img/loading.gif" lazyload alt="image-20230907104811944"></p>
-<p>这题变成了 <code>$_POST[&#39;save_path&#39;]</code> ，POST方式不会像GET方式一样，提交经过URL编码，所以进行截断需要手动修改二进制流</p>
-<h4 id="Pass-13，14，15"><a href="#Pass-13，14，15" class="headerlink" title="Pass-13，14，15"></a>Pass-13，14，15</h4><p><img src="/2023/09/07/Upload-labs2/image-20230907151043164.png" srcset="/img/loading.gif" lazyload alt="image-20230907151043164"></p>
-<p>创建图片马：</p>
-<p><img src="/2023/09/07/Upload-labs2/image-20230907150642263.png" srcset="/img/loading.gif" lazyload alt="image-20230907150642263"></p>
-<p>抓包记录上传位置</p>
-<p><img src="/2023/09/07/Upload-labs2/image-20230907150615706.png" srcset="/img/loading.gif" lazyload alt="image-20230907150615706"></p>
-<p>通过题目给出的文件包含漏洞访问，可以看到正确返回了木马中的phpinfo()内容</p>
-<p><img src="/2023/09/07/Upload-labs2/image-20230907150559242.png" srcset="/img/loading.gif" lazyload alt="image-20230907150559242"></p>
-<h4 id="Pass-16"><a href="#Pass-16" class="headerlink" title="Pass-16"></a>Pass-16</h4><p><img src="/2023/09/07/Upload-labs2/image-20230907153602463.png" srcset="/img/loading.gif" lazyload alt="image-20230907153602463"></p>
-<p>发现会对图片进行二次渲染，则之前使用的图片码无法使用，因为加在图片后的php代码会被渲染，从而无法正确执行</p>
-<p>所以可以上传一张图片，对比看被二次渲染过的图片有什么地方是没变的，可以将php代码插入其中（通常文件头是不会被修改的，但修改文件头可能会导致文件损坏）</p>
-<p><img src="/2023/09/07/Upload-labs2/image-20230907163747679.png" srcset="/img/loading.gif" lazyload alt="image-20230907163747679"></p>
-<p>左边是修改过的gif，右边是上传之后重新下载的gif，可以看到php代码被成功的添加</p>
-<p>用上一题同样的方法访问</p>
-<p><img src="/2023/09/07/Upload-labs2/image-20230907163902487.png" srcset="/img/loading.gif" lazyload alt="image-20230907163902487"></p>
-<p>通过文件包含漏洞，代码被成功执行</p>
-<h4 id="Pass-17，18条件竞争"><a href="#Pass-17，18条件竞争" class="headerlink" title="Pass-17，18条件竞争"></a>Pass-17，18条件竞争</h4><p><img src="/2023/09/07/Upload-labs2/image-20230907165625505.png" srcset="/img/loading.gif" lazyload alt="image-20230907165625505"></p>
-<p>利用时间差，根据源码可以知道，上传的逻辑是：如果上传一个jpg，png，gif图片，成功了则改名并保存，若没成功则删除，则可以通过burpsuite进行攻击，不断的上传文件，并不断的访问该文件，直到访问成功</p>
+                <h2 id="NRDelegationAttack-Complexity-DDoS-attack-on-DNS-Recursive-Resolvers（NRDelegationAttack：DNS递归解析器的复杂性DDoS攻击）"><a href="#NRDelegationAttack-Complexity-DDoS-attack-on-DNS-Recursive-Resolvers（NRDelegationAttack：DNS递归解析器的复杂性DDoS攻击）" class="headerlink" title="NRDelegationAttack: Complexity DDoS attack on DNS Recursive Resolvers（NRDelegationAttack：DNS递归解析器的复杂性DDoS攻击）"></a>NRDelegationAttack: Complexity DDoS attack on DNS Recursive Resolvers（NRDelegationAttack：DNS递归解析器的复杂性DDoS攻击）</h2><p>论文的主题为针对 DNS 递归解析器的 DDoS 攻击。该工作由来自 Tel-Aviv University （以色列特拉维夫大学） 的 DEEPNESS Lab 的研究人员完成。</p>
+<p>利用系统在应对不利条件或异常情况时的性能瓶颈和漏洞，从而有意或恶意地导致系统资源的不合理使用或耗尽。</p>
+<p>Referral response: 引荐响应，是指在计算机网络中，特别是在DNS（域名系统）中，一个服务器向另一个服务器提供关于如何解析特定查询的信息的响应。这种响应告诉请求服务器应该将查询转发到哪个其他服务器来获取所需的信息。</p>
+<p>在DNS中，引荐响应通常是由权威DNS服务器提供的。当一个DNS服务器收到一个查询，但它不拥有与该查询相关的信息时，它可以向请求服务器返回一个引荐响应，指示请求服务器将查询发送到另一个DNS服务器，通常是更高级别的DNS服务器，以获取所需的信息。这个过程可以追溯到根DNS服务器，以便最终找到与查询相关的IP地址或其他资源记录。</p>
+<h4 id="Glue-record"><a href="#Glue-record" class="headerlink" title="Glue record"></a>Glue record</h4><p>普通的DNS记录是保存在权威服务器上的，胶水记录是保存在注册局的DNS服务器上的</p>
+<p>简述一个DNS查询流程：若要查询jd.com</p>
+<ol>
+<li>获取根服务器列表</li>
+<li>向根服务器发送查询（“请问你有jd.com吗？” “没有，但你可以找.com问问，我正好有他们的ip地址，顺带给你吧”）</li>
+<li>向.com权威服务器发送查询（“请问你有jd.com吗” “没有，但你可以找管理jd.com的服务器问问，我正好有他们的ip地址，给你吧”）</li>
+<li>向jd.com域名权威服务器发送查询（“请问你有jd.com吗” “有的，给你吧”）</li>
+</ol>
+<p>在查询过程中，2，3步返回的结果中，顺带给的ip地址就是胶水记录，若没有，则需要<strong>额外的查询去获得ip地址</strong>（递归解析器开启主动解析进程，每个名称服务器启动一个独立的递归状态，查询权威服务器提供的全部名称服务器的ip地址，此过程将消耗大量的服务器资源）</p>
+<p>同时，假设在自建服务器中，example.com使用ns1.example.com和ns2.example.com作为权威服务器</p>
+<p>为了解析example.com，若没有胶水记录，则无法知道ns1.example和ns2.example.com的ip，那么为了解析ns1.example.com的地址，又需要解析example.com，从而陷入循环</p>
+<h4 id="NXNSAttack攻击"><a href="#NXNSAttack攻击" class="headerlink" title="NXNSAttack攻击"></a>NXNSAttack攻击</h4><p>通过向某一递归解析器查询攻击者的权威服务器授权域名的子域名发起大量查询请求，致使攻击者的恶意查询流量在解析过程中被放大，最终导致递归解析器与受害者域名的权威域名服务器遭受拒绝服务攻击。</p>
+<p>威胁模型：</p>
+<p>NXNSAttack的攻击者拥有一个二级域名，如attack.com并维护其权威服务器，并且可以为该域配置大量不同的子域名</p>
+<p>为这些子域名设置NS记录，将这些子域名的解析授权到受害者域名，如victim.com的多个不存在的子域名的权威服务器，这些子域名实际上不存在victim.com的DNS配置中</p>
+<p>攻击流程：</p>
+<p><img src="/2023/09/11/NRDelegationAttack/image-20230914150452417.png" srcset="/img/loading.gif" lazyload alt="image-20230914150452417"></p>
+<ol>
+<li>攻击者向其维护的一个子域名ns1.attacker.com发起DNS查询请求，攻击者每次查询会使用不同的子域名，以此来绕过递归解析器的缓存机制</li>
+<li>攻击者请求会到达attack.com的权威服务器，并返回提前设置好的DNS响应，其中包含大量的NS记录，这些记录指向受害者域下的不存在的子域名，而且不包含glue记录，即不会包含这些子域名的ip地址</li>
+<li>当递归解析器收到大量包含NS记录的响应后，会尝试解析这些NS记录，以确定每个名称服务器的ip地址。为了完成这个任务，解析器就会向victim.com的权威服务器发送大量的NS解析请求</li>
+<li>但由于这些子域名并不存在，受害者域的权威服务器就回返回NX响应（Name Error）</li>
+<li>由于递归解析器不断地发起NS解析请求，而受害者域的权威服务器始终返回NX响应，就会占用服务器资源，最终导致递归解析器和受害者域名的权威服务器遭受拒绝服务攻击，无法响应正常的DNS请求。</li>
+</ol>
+<h4 id="缓解策略：MaxFetch-k"><a href="#缓解策略：MaxFetch-k" class="headerlink" title="缓解策略：MaxFetch(k)"></a>缓解策略：MaxFetch(k)</h4><p>具体步骤：</p>
+<ol>
+<li>对于每一个请求中的1个或k个名称服务器进行解析，而不是在NS记录响应到达递归解析器时，一次性查询该区的全部名称服务器ip</li>
+<li>收到用户请求时，如果请求的是已经解析过的名称服务器时，解析器会解析另外k个名称服务器的ip地址</li>
+<li>解析过程一直持续到权威返回的NS记录响应中提供的所有NS记录被解析</li>
+</ol>
+<p>例如，在BIND9的实现中，k为5，在收到包含许多NS名称的引用响应时，BIND9只解析5个，如果所有的解析都反回NXDOMAIN（域名不存在或无法解析），则解析终止并向客户端返回NY响应。</p>
+<h4 id="攻击利用的四个DNS机制"><a href="#攻击利用的四个DNS机制" class="headerlink" title="攻击利用的四个DNS机制"></a>攻击利用的四个DNS机制</h4><h5 id="Slist"><a href="#Slist" class="headerlink" title="Slist"></a>Slist</h5><p>“SLIST” 机制在 RFC-1034 中提出。它在解析器实现中用作临时存储器，用于记录在处理客户端查询时执行的每个中间名称服务器解析的状态。在 BIND9 中其被实现为 address-DB (ADB) 。当递归解析器接收到响应中没有包含 NS 记录的 IP 地址的响应时，其将 NS 记录保存在 ADB 中，并启动新的 DNS 查询来收集这些 NS 服务器的 A 记录。</p>
+<h5 id="Delegation-Response"><a href="#Delegation-Response" class="headerlink" title="Delegation Response"></a>Delegation Response</h5><p>要回答解析器的查询请求，权威服务器可以决定将解析工作委托给另一个名称服务器。例如图 2 中，example1.com 将 e1.example.com 的解析委托给 www1.example2.com ，或者当解析器获得引用响应（Referral Response, RR） 时，就会发生这种情况。</p>
+<h5 id="Referral-Reponse-Limit"><a href="#Referral-Reponse-Limit" class="headerlink" title="Referral Reponse Limit"></a>Referral Reponse Limit</h5><p>即上文提到过的缓解措施，当查询达到限制时，将设置一个特殊标志，No_Fetch</p>
+<h5 id="Restart-Event"><a href="#Restart-Event" class="headerlink" title="Restart Event"></a>Restart Event</h5><p>在许多情况下，解析器中的解析过程被委托给不同的名称服务器，在这种情况下，它将重新启动并在新的名称服务器上继续解析。被重定向到的“新权威”服务器将会被记录在 ADB 中。</p>
+<p>在restart时，解析器会清除和重置一些标识位，其中包括为了缓解 NXNSAttack 引入的No_Fetch标识位，其用来限制解析器每次查询的NS数量，当No_Fetch为1时，将终止本次解析。</p>
+<h4 id="NRDelegation-Attack威胁模型"><a href="#NRDelegation-Attack威胁模型" class="headerlink" title="NRDelegation Attack威胁模型"></a>NRDelegation Attack威胁模型</h4><h5 id="攻击条件："><a href="#攻击条件：" class="headerlink" title="攻击条件："></a>攻击条件：</h5><ol>
+<li>一个或多个可以发起恶意查询的客户端</li>
+<li>一个可以产生特定referral response的可控权威服务器</li>
+<li>不响应DNS查询的服务器列表或ip地址</li>
+</ol>
+<h5 id="攻击流程"><a href="#攻击流程" class="headerlink" title="攻击流程"></a>攻击流程</h5><p><img src="/2023/09/11/NRDelegationAttack/image-20230914163958837.png" srcset="/img/loading.gif" lazyload alt="image-20230914163958837"></p>
+<p><strong>阶段1</strong></p>
+<ol>
+<li>攻击者发起恶意查询，xyz.referral.com</li>
+<li>受害者解析器向攻击者控制的权威服务器查询referral.com</li>
+<li>referral.com回复一个大型引用响应</li>
+</ol>
+<p><strong>阶段2</strong></p>
+<ol start="4">
+<li>解析器首先遍历ADB和缓存，查看这些NS是否已经被查询过，因为存在A和AAAA两种记录（IPv4和IPv6），所以会查询2n次</li>
+<li>解析器没有找到NS的有效信息，就回发起解析，由于Referral Response Limit的存在，每次只查询k个</li>
+</ol>
+<p>攻击者利用可控的权威名称服务器返回没有胶水记录的超长的referral response（大小设为 n ）。根据解析器软件的实现（文中主要针对 BIND9 的实现），解析器首先将遍历 ADB 和缓存，查看这些 NS 是否之前查询过，因为存在 A 和 AAAA 两种记录，所以会查询2n次，这是 NRDelegationAttack 的主要成因之一，<strong>每次的遍历耗费了服务器大量的计算资源</strong>。当解析器没有找到 NS 的有效信息，则会对这些 NS 发起解析，由于Referral Response Limit限制的存在，因此，解析器每次仅查询有限的 k 个 NS。</p>
+<p><strong>阶段3</strong></p>
+<p>当解析器查询referral response中的NS时，将被引导至权威服务器，并触发委托响应，这时候restart事件被激活，No_Fetch标识符被清除，重新开启第4步，<strong>重新检查ADB和缓存</strong>。由于攻击者设置的是不响应 DNS 查询的服务器，因此，这些无法获取到这些NS的有效信息，因此，无法在ADB 中更新这些 NS 的信息。所以步骤 10 只有到达解析器的安全限制计数器的上限才会停止，BIND9 中这个上限为 100。该上限对攻击者来说已经可以完成攻击了。</p>
 
                 
               </div>
@@ -323,7 +354,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Basic/" class="category-chain-item">Basic</a>
+  <a href="/categories/Study/" class="category-chain-item">Study</a>
   
   
 
@@ -338,7 +369,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/CTF/" class="print-no-link">#CTF</a>
+        <a href="/tags/ReadPaper/" class="print-no-link">#ReadPaper</a>
       
     </div>
   
@@ -350,8 +381,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Upload_labs2</div>
-      <div>http://example.com/2023/09/07/Upload-labs2/</div>
+      <div>NRDelegationAttack</div>
+      <div>http://example.com/2023/09/11/NRDelegationAttack/</div>
     </div>
     <div class="license-meta">
       
@@ -363,7 +394,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年9月7日</div>
+          <div>2023年9月11日</div>
         </div>
       
       
@@ -395,9 +426,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/09/11/NRDelegationAttack/" title="NRDelegationAttack">
+                      <a href="/2023/09/18/CourseNote1/" title="CourseNote1">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">NRDelegationAttack</span>
+                        <span class="hidden-mobile">CourseNote1</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -405,8 +436,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/09/05/Upload-labs/" title="Upload_labs1">
-                        <span class="hidden-mobile">Upload_labs1</span>
+                      <a href="/2023/09/07/Upload-labs2/" title="Upload_labs2">
+                        <span class="hidden-mobile">Upload_labs2</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
