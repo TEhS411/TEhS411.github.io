@@ -1,0 +1,759 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/lhr.png">
+  <link rel="icon" href="/img/lhr.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="TEhS">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Backporting Security Patches of Web Applications:A Prototype Design and Implementation on Injection Vulnerability PatchesWeb应用的反向安全补丁:注入漏洞补丁的原型设计和实现 由复旦大学和约翰霍普金斯大学研究人员共同研究完成 现状对于修复Web应用程序漏洞，通常的做法是打补丁，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ReadPaper3">
+<meta property="og:url" content="http://example.com/2023/10/31/ReadPaper3/index.html">
+<meta property="og:site_name" content="TEhS">
+<meta property="og:description" content="Backporting Security Patches of Web Applications:A Prototype Design and Implementation on Injection Vulnerability PatchesWeb应用的反向安全补丁:注入漏洞补丁的原型设计和实现 由复旦大学和约翰霍普金斯大学研究人员共同研究完成 现状对于修复Web应用程序漏洞，通常的做法是打补丁，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/10/31/ReadPaper3/image-20231108111205552.png">
+<meta property="og:image" content="http://example.com/2023/10/31/ReadPaper3/image-20231108111227472.png">
+<meta property="og:image" content="http://example.com/2023/10/31/ReadPaper3/image-20231108111307950.png">
+<meta property="og:image" content="http://example.com/2023/10/31/ReadPaper3/image-20231108140242515.png">
+<meta property="og:image" content="http://example.com/2023/10/31/ReadPaper3/image-20231108153958177.png">
+<meta property="og:image" content="http://example.com/2023/10/31/ReadPaper3/image-20231108150345617.png">
+<meta property="og:image" content="http://example.com/2023/10/31/ReadPaper3/image-20231108165043937.png">
+<meta property="og:image" content="http://example.com/2023/10/31/ReadPaper3/image-20231108165248741.png">
+<meta property="article:published_time" content="2023-10-31T06:05:24.000Z">
+<meta property="article:modified_time" content="2023-11-08T11:29:32.657Z">
+<meta property="article:author" content="TEhS">
+<meta property="article:tag" content="ReadPaper">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2023/10/31/ReadPaper3/image-20231108111205552.png">
+  
+  
+  
+  <title>ReadPaper3 - TEhS</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>TEhS</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="ReadPaper3"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-10-31 14:05" pubdate>
+          2023年10月31日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          40 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">ReadPaper3</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="Backporting-Security-Patches-of-Web-Applications-A-Prototype-Design-and-Implementation-on-Injection-Vulnerability-Patches"><a href="#Backporting-Security-Patches-of-Web-Applications-A-Prototype-Design-and-Implementation-on-Injection-Vulnerability-Patches" class="headerlink" title="Backporting Security Patches of Web Applications:A Prototype Design and Implementation on Injection Vulnerability Patches"></a>Backporting Security Patches of Web Applications:A Prototype Design and Implementation on Injection Vulnerability Patches</h2><p>Web应用的反向安全补丁:注入漏洞补丁的原型设计和实现</p>
+<p>由复旦大学和约翰霍普金斯大学研究人员共同研究完成</p>
+<h3 id="现状"><a href="#现状" class="headerlink" title="现状"></a>现状</h3><p>对于修复Web应用程序漏洞，通常的做法是打补丁，但现实世界中补丁的部署存在挑战</p>
+<p>例如：CVE-2018-7600的Drupal补丁发布了三个月，对于这个任意代码执行漏洞，研究人员发现大约有11500个网站没有打补丁。</p>
+<p>原因：</p>
+<p>很多情况下无法将补丁直接应用于易受攻击的网站，因为Web应用程序版本不匹配。具体而言，Web应用程序开发人员在大多数情况下只为最新版本提供补丁，但网站维护者通常因为遗留原因而运行旧版本，例如，该应用程序没有自动更新界面或者网站有一些针对旧版本定制的代码。因此，网站维护者面临的一个实际问题是在旧版本的自己的网站上应用针对最新版本的补丁。根据几项先前的研究，他们通常不愿这样做，因为他们缺乏技术经验，并害怕破坏网站功能。</p>
+<h3 id="Backporting-security-patches安全补丁反向移植"><a href="#Backporting-security-patches安全补丁反向移植" class="headerlink" title="Backporting security patches安全补丁反向移植"></a>Backporting security patches安全补丁反向移植</h3><p>跨版本补丁部署的实际问题可以形式化为一个研究问题，即如何将特定漏洞的给定安全补丁逆向移植到目标旧版本的Web应用程序，简称为安全补丁逆向移植。</p>
+<p>安全补丁逆向移植的一般目标是维护Web应用程序的两个重要属性：</p>
+<p>（1）安全性：即能够抵御与漏洞相关的攻击</p>
+<p>（2）向后兼容性：不引发别的功能问题</p>
+<p><strong>逆向移植的可能性：</strong></p>
+<p>安全补丁的目的是使用安全逻辑来更新Web应用程序中给定输入的脆弱逻辑</p>
+<p>逆向移植是可能的，因为相同的脆弱逻辑也可能存在于目标旧版本的Web应用程序中</p>
+<p>（脆弱逻辑vulnerable logic：应用程序中存在潜在漏洞或者安全问题的部分或代码）</p>
+<p><strong>逆向移植的挑战：</strong></p>
+<ol>
+<li>补丁可能不仅仅更新脆弱逻辑，还可能引入其他新功能，例如添加新输入。这些新功能可能在目标旧版本上无法正常工作，导致兼容性问题。</li>
+<li>目标版本可能不包含与补丁旨在修复的脆弱逻辑完全相同的内容</li>
+</ol>
+<h3 id="SBP（可安全逆向移植补丁）和SBV（可安全逆向移植版本）"><a href="#SBP（可安全逆向移植补丁）和SBV（可安全逆向移植版本）" class="headerlink" title="SBP（可安全逆向移植补丁）和SBV（可安全逆向移植版本）"></a>SBP（可安全逆向移植补丁）和SBV（可安全逆向移植版本）</h3><p>SBP是一种新生成的补丁，只包含从原始补丁中提取的安全的、可确定计算的安全逻辑，用以替换脆弱逻辑；而SBV是一种特殊的目标版本，具有与SBP所针对的脆弱逻辑相同的内容。SBP和SBV的组合实现了安全和向后兼容性的逆向移植目标，因为SBP消除了与漏洞无关的修复，并且SBV确保目标中的脆弱逻辑与原始补丁所针对的脆弱逻辑完全相同。具体而言，我们提出的使用SBP和SBV进行逆向移植是一个三步方法。首先，它确定原始补丁是否可逆向移植，然后从应用了原始补丁的后期版本生成SBP。其次，它检查目标版本并确保该版本是SBV。最后，它确定目标版本中的漏洞位置并应用SBP。</p>
+<h3 id="SKYPORT注入漏洞补丁逆向移植框架"><a href="#SKYPORT注入漏洞补丁逆向移植框架" class="headerlink" title="SKYPORT注入漏洞补丁逆向移植框架"></a>SKYPORT注入漏洞补丁逆向移植框架</h3><p>虽然逆向移植在主观上是有效的，但主要挑战在于如何以正式的可比较的方式表示web应用程序的安全逻辑和脆弱逻辑</p>
+<p>利用sink（危险函数）：可能触发危险行为如文件操作、命令执行、数据库操作等行为的函数</p>
+<p>例如：跨站脚本攻击中的echo</p>
+<p>研究团队观察到，sink函数通常存在与补丁前，补丁后和目标版本，这一结果启发研究团队开发了SKYPORT，这一框架将Web应用程序的安全和脆弱逻辑表示为一种称为“sink能力”（sink capability）的概念</p>
+<p>例子：OpenEMR版本5.0.1之前的CVE2018-10572（任意文件读取漏洞）</p>
+<p>diff：diff是Unix系统的一个很重要的工具程序。它用来比较两个文本文件的差异，是代码版本管理的基石之一。</p>
+<p>官方补丁：</p>
+<p><img src="/2023/10/31/ReadPaper3/image-20231108111205552.png" srcset="/img/loading.gif" lazyload alt="image-20231108111205552"></p>
+<p>生成的SBP：</p>
+<p><img src="/2023/10/31/ReadPaper3/image-20231108111227472.png" srcset="/img/loading.gif" lazyload alt="image-20231108111227472"></p>
+<p>部署：</p>
+<p><img src="/2023/10/31/ReadPaper3/image-20231108111307950.png" srcset="/img/loading.gif" lazyload alt="image-20231108111307950"></p>
+<p><strong>为什么存在漏洞</strong>：</p>
+<p>读取了用户输入$_GET[template]的文件但没有进行任何检查</p>
+<p><strong>为什么逆向移植这个补丁具有挑战性：</strong></p>
+<p>补丁不仅包含修复漏洞的代码（12行），还包含了与漏洞无关的代码（增加的第二行第三行），这可能会引发向后兼容性问题</p>
+<p>同时，将补丁应用到c中所示的目标版本是具有挑战的，因为图a中用于确定补丁位置的第五行没有引入到目标版本</p>
+<p><strong>如何将补丁从5.0.0.6逆向移植到5.0.0.5</strong></p>
+<p>首先，S KY P ORT生成一个可安全逆向移植的补丁SBP，如图b所示，其中包含整个安全逻辑，包括convert_safe_file_dir_name()函数，并删除与漏洞无关的代码。其次，SKYPORT检查版本5.0.0.5是否是一个可安全逆向移植的版本（SBV），因为两个版本的脆弱逻辑，即在图1（a）和（c）中第11行处以sink功能表示的脆弱逻辑，是相同的。最后，S KY P ORT将生成的SBP应用于图1（c）中的SBV，通过添加两行备份代码（第2行和第3行）并将第11行替换为第12行</p>
+<h4 id="Web应用程序的脆弱逻辑表示"><a href="#Web应用程序的脆弱逻辑表示" class="headerlink" title="Web应用程序的脆弱逻辑表示"></a>Web应用程序的脆弱逻辑表示</h4><p>Web应用程序的脆弱逻辑可以表示为与给定用户输入相关的所有控制流和数据流。换句话说，一个经过精心设计的恶意输入可能会引发遵循特定控制流和数据流路径的脆弱程序执行，从而导致恶意后果。</p>
+<p>将导致汇聚点函数的所有控制流路径称为汇聚点流（sink flows），并用 (flow1, flow2, …) 表示</p>
+<p><img src="/2023/10/31/ReadPaper3/image-20231108140242515.png" srcset="/img/loading.gif" lazyload alt="image-20231108140242515"></p>
+<ul>
+<li>Reach Condition（到达条件）：是涉及到flow k的所有控制流条件的集合</li>
+<li>DE：涉及到flow k的参数的符号表达式</li>
+</ul>
+<p>将不同汇聚点流的所有 RC 和 DE 放在一起，并将它们定义为联合集（{&lt;RC flow1, DE flow1&gt;, &lt;RC flow2, DE flow2&gt;, …}），作为汇聚点能力（sink capability），表示注入漏洞的脆弱逻辑。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">if</span> ($condition)<br>  $value = $input1<br><span class="hljs-keyword">else</span><br>  $value = $input2<br><br>sink_func($value + <span class="hljs-number">1</span>)<br></code></pre></td></tr></table></figure>
+
+<p>有两个sink flows，一个来自if分支，记作flow1，一个来自else分支，记作flow2</p>
+<p>flow1的RC ：{$condition} , DE:{$input1+1}</p>
+<p>flow2的RC : {$condition}, DE:{$input2+1}</p>
+<p><img src="/2023/10/31/ReadPaper3/image-20231108153958177.png" srcset="/img/loading.gif" lazyload alt="image-20231108153958177"></p>
+<h4 id="补丁影响分析"><a href="#补丁影响分析" class="headerlink" title="补丁影响分析"></a>补丁影响分析</h4><p><strong>首先利用前向分析定位受影响的行</strong></p>
+<p>SKYPORT从补丁的更改开始执行前向污点分析，并使用受影响的行中的受影响的变量查询程序依赖图（用于描述程序中各个元素之间的依赖关系和控制流关系）</p>
+<p>该分析包括可能影响汇聚点函数的达到条件或数据流表达式的三种类型的语句，并排除其他无关的语句。具体来说，这三种类型的语句包括赋值语句（影响数据流表达式）、条件语句（影响达到条件）和退出语句（影响达到条件）</p>
+<p><strong>从受影响的行中识别汇聚点函数</strong>sink</p>
+<p>基于开发者创建的sink函数和漏洞类型之间的映射</p>
+<p>若有些sink函数是开发人员自定义的，那么就执行代码可达性分析来找到最终的sink函数</p>
+<p>代码可达性分析：用于确定程序中的哪些代码部分可以在不同的执行路径上被访问或执行</p>
+<p><img src="/2023/10/31/ReadPaper3/image-20231108150345617.png" srcset="/img/loading.gif" lazyload alt="image-20231108150345617"></p>
+<h4 id="汇聚点能力提取"><a href="#汇聚点能力提取" class="headerlink" title="汇聚点能力提取"></a>汇聚点能力提取</h4><p>接收汇聚点函数的列表和给定版本的Web应用程序，然后计算所有汇聚点函数的汇聚点能力（Sink capability，简称SC）</p>
+<p>详细来说：</p>
+<p>首先，SKYPORT 执行前向路径探索，从入口点或调用者函数开始，沿着控制流边缘追踪，直到达到提供的汇聚点函数。在探索过程中，SKYPORT 还会检查是否存在退出语句，例如die()，并停止探索。如果 SKYPORT 遇到一个循环，它会展开一次循环以避免路径爆炸。</p>
+<p>其次，SKYPORT 通过符号跟踪根据树地址代码（TAC）公式计算RC和DE，然后联合成SC：&lt;RC, DE&gt;</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs markdown">TAC 是 &quot;Tree Address Code&quot; 的缩写，是一种中间表示（Intermediate Representation）的形式，通常用于编程语言编译器和静态代码分析器中。<br><br>TAC 是一种树状结构，用于表示程序的控制流和数据流。它通常包括以下元素：<br><br><span class="hljs-bullet">1.</span> 操作符（Operators）：表示执行的操作，例如加法、减法、乘法、赋值等。<br><span class="hljs-bullet">2.</span> 操作数（Operands）：参与操作的变量、常数或表达式。<br><span class="hljs-bullet">3.</span> 表达式树（Expression Tree）：用于表示复杂的表达式，其中每个节点代表一个操作符，而子节点代表操作数或其他子表达式。<br><span class="hljs-bullet">4.</span> 条件语句（Conditional Statements）：用于表示分支和条件控制结构，如 if 语句、while 循环等。<br><span class="hljs-bullet">5.</span> 标签（Labels）：用于标识代码的不同部分，以便在跳转指令中引用。<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="SBP验证和生成"><a href="#SBP验证和生成" class="headerlink" title="SBP验证和生成"></a>SBP验证和生成</h4><p>在这一步，需要检查原始的官方补丁是否可以进行逆向移植，并将其转化成SBP，具体来说，需要检查以下三个属性：</p>
+<p>PSBP-a：对于每个flow k，RC post flow k 都是RC pre flow k的子集（为了防止SBP引入未知的控制流到补丁后的版本）</p>
+<p>PSBP-b：对于每个flow k，DE post flow k都是 DE pre flow k的子集（为了防止SBP补丁向补丁后版本引入未知的数据表达式，因为这有可能破坏目标版本的功能）</p>
+<p>PSBP-c：对于每个flow k，RC post flow k和DE post flow k都是确定可计算的（排除了例如time（），rand（）等返回非确定性值的函数）</p>
+<p>这三个属性确保SBP的部署不会影响目标应用程序的正常功能</p>
+<p>若同时满足这三个条件，那就认为原始补丁是可以进行反向移植的</p>
+<p>然后SKYPORT就会生成一个安全的sink函数，并替换掉原始的sink函数</p>
+<p>因为在汇聚点能力提取的时候，对于循环，是只展开一次，然后计算的，所以需要在考虑SBP验证时对循环进行处理处理：</p>
+<ul>
+<li>补丁和汇聚点在循环体内：SKYPORT将循环块视作一个函数，并计算函数内的SC，然后进行SBP验证</li>
+<li>补丁在外，汇聚点在内：SKYPORT将循环视作sink函数，计算SC</li>
+<li>补丁在内或者外，汇聚点在外：SKYPORT将循环封装成一个函数用以计算SC（？）</li>
+</ul>
+<h4 id="SBV验证"><a href="#SBV验证" class="headerlink" title="SBV验证"></a>SBV验证</h4><p>同样的，基于汇聚点能力的子属性来进行验证</p>
+<p>PSBV-a：对于每个 f lowk，RC pre flow k 与 RC target flow k相同。这个属性确保目标版本中没有额外的脆弱控制流。sink1和sink2 target：sink1</p>
+<p>PSBV-b：对于每个 f lowk，DE pre flow k 与 DE target flow k 相同。这个属性确保目标版本中没有额外的脆弱数据表达式。</p>
+<p>这两个子属性可以保证将SBP应用到SBV后能保证安全性，因为两个版本的脆弱逻辑完全相同</p>
+<h4 id="部署补丁"><a href="#部署补丁" class="headerlink" title="部署补丁"></a>部署补丁</h4><p>对Web应用程序的源代码进行修改</p>
+<p>包含两个步骤，替换和备份</p>
+<p><strong>替换</strong></p>
+<ol>
+<li>函数替换：直接将sink函数替换成安全的函数</li>
+<li>参数替换：若sink函数无法被直接替换，比如是php的关键字include之类的，SKYPORT就将include改成include safe_include()</li>
+</ol>
+<p>在这一步时，SKYPORT会检查名称冲突避免函数名称已经被使用了</p>
+<p><strong>备份</strong></p>
+<p>SKYPORT备份了与sink函数相关的变量，特别是全局变量、汇聚函数调用者的参数和外部变量，然后在安全的函数中使用</p>
+<h4 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h4><p><img src="/2023/10/31/ReadPaper3/image-20231108165043937.png" srcset="/img/loading.gif" lazyload alt="image-20231108165043937"></p>
+<p>数据集包括了 155 个补丁（即 155 个预补丁版本和后补丁版本）以及 1,526 个有漏洞的目标旧版本</p>
+<p>与当前最先进的技术进行比较：</p>
+<p><img src="/2023/10/31/ReadPaper3/image-20231108165248741.png" srcset="/img/loading.gif" lazyload alt="image-20231108165248741"></p>
+<ol>
+<li>**直接应用补丁(Direct Patch Application)**：这种方法直接使用”patch”命令将官方补丁应用到目标版本上。</li>
+<li>**严格自动升级(Strict Auto-upgrade)**：如果两个 Web 应用程序版本之间支持的 PHP 版本相同，利用 Web 应用程序框架提供的自动升级 API</li>
+<li>**懒惰自动升级(Lazy Auto-upgrade)**：这种方法是对严格自动升级的一种宽松方法，它认为如果 PHP 版本冲突仅存在于测试文件中，自动升级就可以成功。</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Study/" class="category-chain-item">Study</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ReadPaper/" class="print-no-link">#ReadPaper</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>ReadPaper3</div>
+      <div>http://example.com/2023/10/31/ReadPaper3/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>TEhS</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年10月31日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/11/29/OSlab1/" title="OSlab1">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">OSlab1</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/10/06/csapplab-bufferlab/" title="csapplab-bufferlab">
+                        <span class="hidden-mobile">csapplab-bufferlab</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,890 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/lhr.png">
+  <link rel="icon" href="/img/lhr.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="TEhS">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="OS  - lab1 Booting a PC实验目的： 熟悉QEMU，了解PC开机程序 探究6.828的内核加载过程，了解开机后，内核是如何加载到内存并运行的 探究6.828内核的基本结构  第一部分：PC Bootstrap 第一代PC处理器是16位字长的Intel 8088处理器，但其地址总线有20位，所以能够实现1MB的寻址（段寄存器中的值左移4位，形成20位段基址，然后和16位段内偏移相">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OSlab1">
+<meta property="og:url" content="http://example.com/2023/11/29/OSlab1/index.html">
+<meta property="og:site_name" content="TEhS">
+<meta property="og:description" content="OS  - lab1 Booting a PC实验目的： 熟悉QEMU，了解PC开机程序 探究6.828的内核加载过程，了解开机后，内核是如何加载到内存并运行的 探究6.828内核的基本结构  第一部分：PC Bootstrap 第一代PC处理器是16位字长的Intel 8088处理器，但其地址总线有20位，所以能够实现1MB的寻址（段寄存器中的值左移4位，形成20位段基址，然后和16位段内偏移相">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231130154817983.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231130161251088.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231202231040821.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231203100345159.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231203102700304.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231203104130794.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231203104443964.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231203110758011.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231203134914979.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231203142338121.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231203150710971.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231203153045625.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231203155358101.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231203162346709.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231203163201635.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231207173300436.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231207173652370.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231203203708983.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231203204834851.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231203205746371.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231210134724371.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231210135841791.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231210141109424.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231210141331622.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231210151728706.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231210152437922.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231210170111456.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231210204124667.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231210210244148.png">
+<meta property="og:image" content="http://example.com/2023/11/29/OSlab1/image-20231210210220345.png">
+<meta property="article:published_time" content="2023-11-29T11:01:07.000Z">
+<meta property="article:modified_time" content="2024-01-24T05:23:34.221Z">
+<meta property="article:author" content="TEhS">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2023/11/29/OSlab1/image-20231130154817983.png">
+  
+  
+  
+  <title>OSlab1 - TEhS</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>TEhS</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="OSlab1"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-11-29 19:01" pubdate>
+          2023年11月29日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          16k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          136 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">OSlab1</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="OS-lab1-Booting-a-PC"><a href="#OS-lab1-Booting-a-PC" class="headerlink" title="OS  - lab1 Booting a PC"></a>OS  - lab1 Booting a PC</h2><h3 id="实验目的："><a href="#实验目的：" class="headerlink" title="实验目的："></a><strong>实验目的：</strong></h3><ul>
+<li>熟悉QEMU，了解PC开机程序</li>
+<li>探究6.828的内核加载过程，了解开机后，内核是如何加载到内存并运行的</li>
+<li>探究6.828内核的基本结构</li>
+</ul>
+<h3 id="第一部分：PC-Bootstrap"><a href="#第一部分：PC-Bootstrap" class="headerlink" title="第一部分：PC Bootstrap"></a>第一部分：PC Bootstrap</h3><p><img src="/2023/11/29/OSlab1/image-20231130154817983.png" srcset="/img/loading.gif" lazyload alt="image-20231130154817983"></p>
+<p>第一代PC处理器是16位字长的Intel 8088处理器，但其地址总线有20位，所以能够实现1MB的寻址（<strong>段寄存器中的值左移4位，形成20位段基址，然后和16位段内偏移相加</strong>），即0x00000000 - 0x000FFFFF，但也只有640KB是用户可用的，剩下的空间用作其他目的，如图所示。其中最重要的是BIOS ROM，BIOS负责进行一些基本的系统初始化任务，比如开启显卡，检查系统的内存大小等工作。在初始化完成之后，从合适的地方加载操作系统。</p>
+<p>虽然Intel处理器突破了1MB内存空间，在80286和80386上已经实现了16MB，4GB的地址空间，但是PC的架构必须仍旧把原来的1MB的地址空间的结构保留下来，这样才能实现向后兼容性。所以现代计算机的地址 0x000A0000<del>0x00100000区间是一个空洞，不会被使用。因此这个空洞就把地址空间划分成了两个部分，第一部分就是从0x00000000</del>0x000A0000，叫做传统内存。剩下的不包括空洞的其他部分叫做扩展内存。而对于这种32位字长处理器通常把BIOS存放到整个存储空间的顶端处。</p>
+<p><img src="/2023/11/29/OSlab1/image-20231130161251088.png" srcset="/img/loading.gif" lazyload alt="image-20231130161251088"></p>
+<h3 id="第二部分：The-Boot-Loader"><a href="#第二部分：The-Boot-Loader" class="headerlink" title="第二部分：The Boot Loader"></a>第二部分：The Boot Loader</h3><h4 id="练习2"><a href="#练习2" class="headerlink" title="练习2:"></a>练习2:</h4><p>使用gdb的<code>si</code>（单步调试）命令进入ROM BIOS并追踪几条指令，并猜测这些指令的作用。不需要指出指令具体的细节，只要理解BIOS一开始运行的核心思想而已。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs assembly">[f000:fff0]    0xffff0: ljmp   $0xf000,$0xe05b # 跳到一个较早的位置<br>[f000:e05b]    0xfe05b: cmpl   $0x0,%cs:0x6ac8<br>[f000:e062]    0xfe062: jne    0xfd2e1         # 测试cs段的0x6ac8字是否为0        <br>[f000:e066]    0xfe066: xor    %dx,%dx         # 把dx寄存器清零<br>[f000:e068]    0xfe068: mov    %dx,%ss         <br>[f000:e06a]    0xfe06a: mov    $0x7000,%esp    <br>[f000:e070]    0xfe070: mov    $0xf34c2,%edx   <br>[f000:e076]    0xfe076: jmp    0xfd15c         <br>[f000:d15c]    0xfd15c: mov    %eax,%ecx       <br>[f000:d15f]    0xfd15f: cli                    # 关闭硬件中断<br>[f000:d160]    0xfd160: cld                    # 设置串传送指令方向<br>[f000:d161]    0xfd161: mov    $0x8f,%eax      <br>[f000:d167]    0xfd167: out    %al,$0x70       <br>[f000:d169]    0xfd169: in     $0x71,%al       # 关闭不可屏蔽中断，70，71端口用于控制CMOS，操作CMOS存储器中的内容需要两个端口，一个是0x70另一个就是0x71。其中0x70可以叫做索引寄存器，这个8位寄存器的最高位是不可屏蔽中断(NMI)使能位。如果你把这个位置1，则NMI不会被响应。低7位用于指定CMOS存储器中的存储单元地址<br>[f000:d16b]    0xfd16b: in     $0x92,%al       # 读取系统控制端口A<br>[f000:d16d]    0xfd16d: or     $0x2,%al        <br>[f000:d16f]    0xfd16f: out    %al,$0x92       # 通过快速A20以启动A20<br>[f000:d171]    0xfd171: lidtw  %cs:0x6ab8      # 将cs:0x6ab8加载进入IDT表<br>[f000:d177]    0xfd177: lgdtw  %cs:0x6a74      # 将cs:0x6a74加载进入GDT表<br>[f000:d17d]    0xfd17d: mov    %cr0,%eax   <br>[f000:d180]    0xfd180: or     $0x1,%eax       <br>[f000:d184]    0xfd184: mov    %eax,%cr0       # 将cr0寄存器的保护模式位打开<br>[f000:d187]    0xfd187: ljmpl  $0x8,$0xfd18f   # 通过ljmp指令进入保护模式<br>=&gt; 0xfd18f:     mov    $0x10,%eax              # 设置段寄存器<br>=&gt; 0xfd194:     mov    %eax,%ds<br>=&gt; 0xfd196:     mov    %eax,%es  <br>=&gt; 0xfd198:     mov    %eax,%ss<br>=&gt; 0xfd19a:     mov    %eax,%fs<br>=&gt; 0xfd19c:     mov    %eax,%gs<br>=&gt; 0xfd19e:     mov    %ecx,%eax  <br>=&gt; 0xfd1a0:     jmp    *%edx                   # 跳转<br></code></pre></td></tr></table></figure>
+
+<p>总的来说，BIOS的操作就是在控制，初始化，检测各种底层的设备，比如时钟，GDTR寄存器。以及设置中断向量表。</p>
+<h4 id="练习3"><a href="#练习3" class="headerlink" title="练习3:"></a>练习3:</h4><p>设置一个断点在地址0x7c00处，这是boot sector被加载的位置。然后让程序继续运行直到这个断点。跟踪&#x2F;boot&#x2F;boot.S文件的每一条指令，同时使用boot.S文件和系统为你反汇编出来的文件obj&#x2F;boot&#x2F;boot.asm。你也可以使用GDB的x&#x2F;i指令来获取去任意一个机器指令的反汇编指令，把源文件boot.S文件和boot.asm文件以及在GDB反汇编出来的指令进行比较。</p>
+<p>追踪到bootmain函数中，而且还要具体追踪到readsect()子函数里面。找出和readsect()c语言程序的每一条语句所对应的汇编指令，回到bootmain()，然后找出把内核文件从磁盘读取到内存的那个for循环所对应的汇编语句。找出当循环结束后会执行哪条语句，在那里设置断点，继续运行到断点，然后运行完所有的剩下的语句。</p>
+<p><img src="/2023/11/29/OSlab1/image-20231202231040821.png" srcset="/img/loading.gif" lazyload alt="image-20231202231040821"></p>
+<p><img src="/2023/11/29/OSlab1/image-20231203100345159.png" srcset="/img/loading.gif" lazyload alt="image-20231203100345159"></p>
+<p>当BIOS运行完毕之后，cpu的控制权就会转移到boot.S上，所以分析boot.S，通过介绍可以看出，boot.S的总体作用是将实模式切换为保护模式</p>
+<h5 id="Boot-S"><a href="#Boot-S" class="headerlink" title="Boot.S"></a>Boot.S</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs assembly">.globl start<br>start:<br>  .code16                     # Assemble for 16-bit mode<br>  cli                         # Disable interrupts<br>  cld                         # String operations increment<br><br>  # Set up the important data segment registers (DS, ES, SS).<br>  xorw    %ax,%ax             # Segment number zero<br>  movw    %ax,%ds             # -&gt; Data Segment<br>  movw    %ax,%es             # -&gt; Extra Segment<br>  movw    %ax,%ss             # -&gt; Stack Segment<br></code></pre></td></tr></table></figure>
+
+<p>cli用于关闭所有中断，cld用于指定串处理操作的指针移动方向，接下来是吧ds，es，ss全部清零，为后边进入保护模式做准备</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs assembly">  # Enable A20:<br>  #   For backwards compatibility with the earliest PCs, physical<br>  #   address line 20 is tied low, so that addresses higher than<br>  #   1MB wrap around to zero by default.  This code undoes this.<br>seta20.1:<br>  inb     $0x64,%al               # Wait for not busy<br>  testb   $0x2,%al<br>  jnz     seta20.1<br><br>  movb    $0xd1,%al               # 0xd1 -&gt; port 0x64<br>  outb    %al,$0x64<br><br>seta20.2:<br>  inb     $0x64,%al               # Wait for not busy<br>  testb   $0x2,%al<br>  jnz     seta20.2<br><br>  movb    $0xdf,%al               # 0xdf -&gt; port 0x60<br>  outb    %al,$0x60<br><br></code></pre></td></tr></table></figure>
+
+<p>前三条指令读取了键盘控制器的0x64端口，并通过与2相与，来检测0x64的bit 1是否为1，也就是此时，输入缓冲区是否满了。只有当缓冲区不满时，才会执行后续代码</p>
+<p><img src="/2023/11/29/OSlab1/image-20231203102700304.png" srcset="/img/loading.gif" lazyload alt="image-20231203102700304"></p>
+<p>后续将d1写入到0x64端口，d1代表下一次写入0x60端口的数据将被写入给804x控制器的输出端口。</p>
+<p><img src="/2023/11/29/OSlab1/image-20231203104130794.png" srcset="/img/loading.gif" lazyload alt="image-20231203104130794"></p>
+<p>Seta20.2同理，表示将df写进0x60端口，df用于开启A20地址总线</p>
+<p><img src="/2023/11/29/OSlab1/image-20231203104443964.png" srcset="/img/loading.gif" lazyload alt="image-20231203104443964"></p>
+<p><strong>什么是A20地址总线？：</strong></p>
+<p>在早期的PC上处理器仅支持20位的地址空间，任何超过20位的地址都会被卷回。<br>例如：0xFFFF+0xFFFF &#x3D; 0x1FFFE -&gt; 0xFFFE</p>
+<p>默认情况下，A20是置0的，进入保护模式前需要先打开A20以获得完全的寻址能力。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs assembly"> # Switch from real to protected mode, using a bootstrap GDT<br> # and segment translation that makes virtual addresses <br> # identical to their physical addresses, so that the <br> # effective memory map does not change during the switch.<br> lgdt    gdtdesc<br> movl    %cr0, %eax<br> orl     $CR0_PE_ON, %eax<br> movl    %eax, %cr0<br> <br> ljmp    $PROT_MODE_CSEG, $protcseg<br> <br> <br> <br>.set PROT_MODE_CSEG, 0x8         # kernel code segment selector（这句在代码最开始）<br><br>gdtdesc:<br>		.word   0x17                           # sizeof(gdt) - 1<br>   .long   gdt                            # address gdt<br></code></pre></td></tr></table></figure>
+
+<p> lgdt gdtdesc，是把gdtdesc这个标识符（标识一个内存地址，共6个字节）送入全局映射描述符表寄存器GDTR中，后续将CR0的值置1，代表保护模式启动，最后的跳转表示将当前运行模式切换成32位地址模式</p>
+<p><strong>什么是全局描述符表？</strong></p>
+<p>记录的是内存各个段的信息，包括了段基址，段界限，段属性等信息。程序首先将对应的段选择子（可以理解为数组的索引）加载进入段寄存器中。然后在执行程序时，根据指令的内容确定应该使用的段寄存器，根据段寄存器中的段选择子确定应该使用的段描述符。再结合段描述符中包含的信息加上指令自身的地址构造出实际的物理地址。最终将该地址发送到地址总线上，到物理内存中寻址，并取回相应的数据。</p>
+<p><img src="/2023/11/29/OSlab1/image-20231203110758011.png" srcset="/img/loading.gif" lazyload alt="image-20231203110758011"></p>
+<p>接下来是重新加载所有寄存器的值，这是按照规定来的，只有这样才能使刚刚加载完的GDTR值生效</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs assembly">  .code32                     # Assemble for 32-bit mode<br>protcseg:<br>  # Set up the protected-mode data segment registers<br>  movw    $PROT_MODE_DSEG, %ax    # Our data segment selector<br>  movw    %ax, %ds                # -&gt; DS: Data Segment<br>  movw    %ax, %es                # -&gt; ES: Extra Segment<br>  movw    %ax, %fs                # -&gt; FS<br>  movw    %ax, %gs                # -&gt; GS<br>  movw    %ax, %ss                # -&gt; SS: Stack Segment<br></code></pre></td></tr></table></figure>
+
+<p>接下来的指令就是设置esp寄存器的值，并正式跳转到main.c文件的main函数部分执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs assembly"># Set up the stack pointer and call into C.<br>movl    $start, %esp<br>call bootmain<br></code></pre></td></tr></table></figure>
+
+
+
+<h5 id="Main-c"><a href="#Main-c" class="headerlink" title="Main.c"></a>Main.c</h5><p>首先直接看Main.c的介绍</p>
+<p><img src="/2023/11/29/OSlab1/image-20231203134914979.png" srcset="/img/loading.gif" lazyload alt="image-20231203134914979"></p>
+<p>这里可以看到main.c的任务是从硬盘引导一个ELF格式的内核镜像</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// read 1st page off disk</span><br>readseg((<span class="hljs-type">uint32_t</span>) ELFHDR, SECTSIZE*<span class="hljs-number">8</span>, <span class="hljs-number">0</span>);<br></code></pre></td></tr></table></figure>
+
+<p>这里调用了一个函数readseg，这个函数的功能如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">void</span> <span class="hljs-title function_">readseg</span><span class="hljs-params">(uchar *pa, uint count, uint offset)</span>;<br></code></pre></td></tr></table></figure>
+
+<p>把距离内核起始地址offset个偏移量存储单元作为起始，将它和它之后的count字节的数据读出送入以pa为起始地址的内存物理地址处。</p>
+<p>所以main函数中，这条指令的意思就是把内核的前4MB的内容读取到ELFHDR中</p>
+<p>接下来验证其是否为一个ELF文件</p>
+<p><strong>什么是ELF？</strong></p>
+<p>elf是一种文件格式，主要被用来把程序存放到磁盘上。是在程序被编译和链接后被创建出来的。一个elf文件包括多个段。对于一个可执行程序，通常包含存放代码的文本段(text section)，存放全局变量的data段，存放字符串常量的rodata段。elf文件的头部就是用来描述这个elf文件如何在存储器中存储。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// is this a valid ELF?</span><br><span class="hljs-keyword">if</span> (ELFHDR-&gt;e_magic != ELF_MAGIC)<br>   <span class="hljs-keyword">goto</span> bad;<br></code></pre></td></tr></table></figure>
+
+<p>elf头部信息的magic字段是整个头部信息的开端。并且如果这个文件是格式是ELF格式的话，文件的elf-&gt;magic应该是&#x3D;ELF_MAGIC的，所以这条语句就是判断这个输入文件是否是合法的elf可执行文件。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">ph = (<span class="hljs-keyword">struct</span> Proghdr *) ((<span class="hljs-type">uint8_t</span> *) ELFHDR + ELFHDR-&gt;e_phoff);<br></code></pre></td></tr></table></figure>
+
+<p>头部中包含Program Header Table。这个表格存放着程序中所有段的信息。通过这个表我们才能找到要执行的代码段，数据段等等。所以我们要先获得这个表。</p>
+<p>这条指令就可以完成这一点，首先elf是表头起址，而phoff字段代表Program Header Table距离表头的偏移量。所以ph可以被指定为Program Header Table表头。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">eph = ph + ELFHDR-&gt;e_phnum;<br></code></pre></td></tr></table></figure>
+
+<p>e_phnum存放的时候Program Header Table中表项的个数，所以这里是将eph指向表的末尾</p>
+<p><img src="/2023/11/29/OSlab1/image-20231203142338121.png" srcset="/img/loading.gif" lazyload alt="image-20231203142338121"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">for</span> (; ph &lt; eph; ph++)<br>  <span class="hljs-comment">// p_pa is the load address of this segment (as well</span><br>    <span class="hljs-comment">// as the physical address)</span><br>readseg(ph-&gt;p_pa, ph-&gt;p_memsz, ph-&gt;p_offset);<br></code></pre></td></tr></table></figure>
+
+<p>ph-&gt;pa指的是这个段在内存中的物理地址。ph-&gt;offset字段指的是这一段的开头相对于这个elf文件的开头的偏移量。ph-&gt;filesz字段指的是这个段在elf文件中的大小。ph-&gt;memsz则指的是这个段被实际装入内存后的大小。这个for循环就是在加载所有的段到内存中。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">((<span class="hljs-type">void</span> (*)(<span class="hljs-type">void</span>)) (ELFHDR-&gt;e_entry))();<br></code></pre></td></tr></table></figure>
+
+<p>e_entry字段指向的是这个文件的执行入口地址。所以这里相当于开始运行这个文件。也就是内核文件。 自此就把控制权从boot loader转交给了操作系统的内核。</p>
+<h4 id="练习4"><a href="#练习4" class="headerlink" title="练习4"></a>练习4</h4><p><strong>阅读5.1到5.5节。然后下载pointers.c的代码，并且编译运行它，确保你理解在屏幕上打印出来的所有的值是怎么来的。尤其要重点理解第1行，第6行的指针地址是如何得到的，以及在第2行到第4行的值是如何得到的，还有为什么在第5行打印出来的值看起来像程序崩溃了。</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span><br><br><span class="hljs-type">void</span><br><span class="hljs-title function_">f</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>    <span class="hljs-type">int</span> a[<span class="hljs-number">4</span>];           <span class="hljs-comment">//int型数组</span><br>    <span class="hljs-type">int</span> *b = <span class="hljs-built_in">malloc</span>(<span class="hljs-number">16</span>);<span class="hljs-comment">//int类型指针</span><br>    <span class="hljs-type">int</span> *c;             <span class="hljs-comment">//int类型指针</span><br>    <span class="hljs-type">int</span> i;							<br><br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;1: a = %p, b = %p, c = %p\n&quot;</span>, a, b, c);<br>  <span class="hljs-comment">//a输出a数组首地址，b输出操作系统分配的内存空间的起始地址，c输出指针的值，此时是未一个未定义的值</span><br><br>    c = a;<br>    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">4</span>; i++)<br>			a[i] = <span class="hljs-number">100</span> + i; <span class="hljs-comment">//运行完，a中为100，101，102，103</span><br>    c[<span class="hljs-number">0</span>] = <span class="hljs-number">200</span>;       <span class="hljs-comment">//改a[0]为200</span><br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;2: a[0] = %d, a[1] = %d, a[2] = %d, a[3] = %d\n&quot;</span>,<br>	   a[<span class="hljs-number">0</span>], a[<span class="hljs-number">1</span>], a[<span class="hljs-number">2</span>], a[<span class="hljs-number">3</span>]);<br><br>    c[<span class="hljs-number">1</span>] = <span class="hljs-number">300</span>;<br>    *(c + <span class="hljs-number">2</span>) = <span class="hljs-number">301</span>;<br>    <span class="hljs-number">3</span>[c] = <span class="hljs-number">302</span>;      <span class="hljs-comment">//访问数组的三种不同方法，修改了a数组的值</span><br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;3: a[0] = %d, a[1] = %d, a[2] = %d, a[3] = %d\n&quot;</span>,<br>	   a[<span class="hljs-number">0</span>], a[<span class="hljs-number">1</span>], a[<span class="hljs-number">2</span>], a[<span class="hljs-number">3</span>]);<br><br>    c = c + <span class="hljs-number">1</span>;      <span class="hljs-comment">//c此时指向a[1]</span><br>    *c = <span class="hljs-number">400</span>;       <span class="hljs-comment">//修改a[1]为400</span><br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;4: a[0] = %d, a[1] = %d, a[2] = %d, a[3] = %d\n&quot;</span>,<br>	   a[<span class="hljs-number">0</span>], a[<span class="hljs-number">1</span>], a[<span class="hljs-number">2</span>], a[<span class="hljs-number">3</span>]);<br><br>    c = (<span class="hljs-type">int</span> *) ((<span class="hljs-type">char</span> *) c + <span class="hljs-number">1</span>);<br>    *c = <span class="hljs-number">500</span>;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;5: a[0] = %d, a[1] = %d, a[2] = %d, a[3] = %d\n&quot;</span>,<br>	   a[<span class="hljs-number">0</span>], a[<span class="hljs-number">1</span>], a[<span class="hljs-number">2</span>], a[<span class="hljs-number">3</span>]);<br><br>    b = (<span class="hljs-type">int</span> *) a + <span class="hljs-number">1</span>;<br>    c = (<span class="hljs-type">int</span> *) ((<span class="hljs-type">char</span> *) a + <span class="hljs-number">1</span>);<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;6: a = %p, b = %p, c = %p\n&quot;</span>, a, b, c);<br>&#125;<br><br><span class="hljs-type">int</span><br><span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> ac, <span class="hljs-type">char</span> **av)</span><br>&#123;<br>    f();<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p><img src="/2023/11/29/OSlab1/image-20231203150710971.png" srcset="/img/loading.gif" lazyload alt="image-20231203150710971"></p>
+<p>第五条，将c强制类型转换成char，此时，c的值为0x7ffd7b5c3474，加1后，为0x7ffd7b5c3475，再转换成int，这样会同时影响a[1], a[2]，此时c操作的区域为75-79</p>
+<p><img src="/2023/11/29/OSlab1/image-20231203153045625.png" srcset="/img/loading.gif" lazyload alt="image-20231203153045625"></p>
+<p>所以a[1]变成128144，a[2]变成256</p>
+<p>第六条，b取a的地址+1，但此时b是int类型指针，所以值实际+4</p>
+<p>c将a地址转换成char类型，再+1，值也+1</p>
+<h4 id="练习5"><a href="#练习5" class="headerlink" title="练习5:"></a>练习5:</h4><p><strong>再次追踪引导加载程序的前几条指令，找出如果引导加载程序的链接地址错误，将会“中断”或执行错误的第一条指令。然后在<code>boot/Makefrag</code>中将链接地址更改为错误的值，运行<code>make clean</code>，使用<code>make</code>重新编译实验，再次追踪引导加载程序，查看会发生什么。不要忘记随后将链接地址更改回正确值，并再次运行<code>make clean</code>！</strong></p>
+<p><strong>链接地址</strong></p>
+<p>链接地址可以理解为通过编译器链接器处理形成的可执行程序中指令的地址，即逻辑地址</p>
+<p><strong>加载地址</strong></p>
+<p>可执行文件真正被装入内存后运行的地址，即物理地址。</p>
+<p>在Lab中作者说，BIOS默认把boot loader加载到0x7C00内存地址处，所以就要求boot loader的链接地址也要在0x7C00处。boot loader地址的设定是在boot&#x2F;Makefrag中完成的，所以修改这个值应该就是题目所要求的</p>
+<p>根据题目要求，找到Makefrag中的链接位置，这里将0x7c00修改成0x7e00，重新执行make</p>
+<p><img src="/2023/11/29/OSlab1/image-20231203155358101.png" srcset="/img/loading.gif" lazyload alt="image-20231203155358101"></p>
+<p>下图这条指令是把指令后面的值所指定内存地址处后6个字节的值输入全局描述符表寄存器GDTR，但是当前这条指令读取的内存地址是0x7e64，这里存入的全部是0，就导致了GDT表读取的值不正确，如果要进入保护模式，就必须要先启动分段机制，如果全局描述符表读取不正确，段的信息也不正确，自然无法成功启动</p>
+<p><img src="/2023/11/29/OSlab1/image-20231203162346709.png" srcset="/img/loading.gif" lazyload alt="image-20231203162346709"></p>
+<p>继续执行，运行到这里之后就出错了，因为实际要跳转去的位置是0x7c32</p>
+<p><img src="/2023/11/29/OSlab1/image-20231203163201635.png" srcset="/img/loading.gif" lazyload alt="image-20231203163201635"></p>
+<h4 id="练习6"><a href="#练习6" class="headerlink" title="练习6"></a>练习6</h4><p><strong>在BIOS进入Boot loader时检查在0x00100000处的8个字，然后在引导加载程序进入内核时再次检查。 他们为什么不同？</strong> </p>
+<p>答：在BIOS进入Boot loader时，0x100000内存后的8个字都为零，因为此时内核程序还没有加载进入内存。 内核的加载在<code>bootmain</code>函数中完成。</p>
+<p><img src="/2023/11/29/OSlab1/image-20231207173300436.png" srcset="/img/loading.gif" lazyload alt="image-20231207173300436"></p>
+<p><img src="/2023/11/29/OSlab1/image-20231207173652370.png" srcset="/img/loading.gif" lazyload alt="image-20231207173652370"></p>
+<h3 id="第三部分：Loading-the-Kernel"><a href="#第三部分：Loading-the-Kernel" class="headerlink" title="第三部分：Loading the Kernel"></a>第三部分：Loading the Kernel</h3><h4 id="练习7"><a href="#练习7" class="headerlink" title="练习7"></a>练习7</h4><p>使用QEMU和GDB来跟踪进入JOS内核并在movl %eax, %cr0处停下来。检查地址0x00100000和0xf0100000的内存。现在，使用GDB命令stepi单步执行该指令。再次检查地址0x00100000和0xf0100000的内存。确保你理解刚刚发生的事情。</p>
+<p>在新映射建立后，如果映射没有生效，会导致无法正常工作的第一条指令是什么？将kern&#x2F;entry.S中的movl %eax, %cr0注释掉，进行跟踪，看看你是否正确。</p>
+<p>操作系统内核通常被链接到非常高的虚拟地址（例如0xf0100000）下运行，以便留下处理器虚拟地址空间的低地址部分供用户程序使用。</p>
+<p>许多机器在地址范围无法达到<code>0xf0100000</code>，因此我们无法指望能够在那里存储内核。相反，我们将使用处理器的内存管理硬件将虚拟地址<code>0xf0100000</code>（内核代码期望运行的链接地址）映射到物理地址<code>0x00100000</code>（引导加载程序将内核加载到物理内存中）。</p>
+<p>现在，我们只需映射前4MB的物理内存，这足以让我们启动并运行。 我们使用<code>kern/entrypgdir.c</code>中手写的，静态初始化的页面目录和页表来完成此操作。</p>
+<p>为了实现虚拟地址，需要通过CR0，这个寄存器的第31位是分页标志</p>
+<p><img src="/2023/11/29/OSlab1/image-20231203203708983.png" srcset="/img/loading.gif" lazyload alt="image-20231203203708983"></p>
+<p>显然在执行完mov %eax，%cr0后，地址映射成功了</p>
+<p><img src="/2023/11/29/OSlab1/image-20231203204834851.png" srcset="/img/loading.gif" lazyload alt="image-20231203204834851"></p>
+<p>猜测会出错的是mov $relocated, %eax，relocated这个的地址是段地址+偏移地址得到的，如果映射失败，那么段地址将还是在高地址，计算后，应该会导致越界错误，通过gdb验证：</p>
+<p><img src="/2023/11/29/OSlab1/image-20231203205746371.png" srcset="/img/loading.gif" lazyload alt="image-20231203205746371"></p>
+<p>注释了之后，发现地址映射确实失败，继续运行，到mov $relocated, %eax时，qemu也打印出了错误终止运行。</p>
+<h4 id="练习8"><a href="#练习8" class="headerlink" title="练习8"></a>练习8</h4><p><strong>我们省略了一小段代码 - 使用“%o”形式的模式打印八进制数所需的代码。找到并填写此代码片段。</strong></p>
+<p>题目要求我们阅读三个源文件（\kern\printf.c , \kern\console.c , \lib\printfmt.c）的代码，并弄清楚他们的关系</p>
+<ul>
+<li><strong>\kern\printf.c</strong>中的cprintf，vcprintf子程序调用了<strong>\lib\printfmt.c</strong>中的<strong>vprintfmt</strong>子程序。</li>
+<li><strong>\kern\printf.c</strong>中的putch子程序中调用了<strong>cputchar</strong>，这个程序是定义在<strong>\kern\console.c</strong>中的。</li>
+<li><strong>\lib\printfmt.c</strong>中的一些功能也依赖于<strong>cputchar</strong>子程序</li>
+</ul>
+<p>所以得出结论，<strong>\kern\printf.c</strong>，<strong>\lib\printfmt.c</strong>两个文件的功能依赖于<strong>\kern\console.c</strong>的功能。所以我们就看一下<strong>\kern\console.c</strong>。</p>
+<p><strong>\kern\console.c</strong>：</p>
+<p>代码较长，关注较为重要的cputchar</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// `High&#x27;-level console I/O.  Used by readline and cprintf.</span><br><span class="hljs-type">void</span><br><span class="hljs-title function_">cputchar</span><span class="hljs-params">(<span class="hljs-type">int</span> c)</span><br>&#123;<br>    cons_putc(c);<br>&#125;<br><br><span class="hljs-comment">// output a character to the console</span><br><span class="hljs-type">static</span> <span class="hljs-type">void</span><br><span class="hljs-title function_">cons_putc</span><span class="hljs-params">(<span class="hljs-type">int</span> c)</span><br>&#123;<br>    serial_putc(c);<br>    lpt_putc(c);<br>    cga_putc(c);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>那么再看serial_putc(c)</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">define</span> COM1        0x3F8</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> COM_TX        0    <span class="hljs-comment">// Out: Transmit buffer (DLAB=0)</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> COM_LSR        5    <span class="hljs-comment">// In:    Line Status Register</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> COM_LSR_TXRDY    0x20    <span class="hljs-comment">//   Transmit buffer avail 具体含义/全程</span></span><br><br><span class="hljs-type">static</span> <span class="hljs-type">void</span><br><span class="hljs-title function_">serial_putc</span><span class="hljs-params">(<span class="hljs-type">int</span> c)</span><br>&#123;<br>    <span class="hljs-type">int</span> i;<br><br>    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>;<br>         !(inb(COM1 + COM_LSR) &amp; COM_LSR_TXRDY) &amp;&amp; i &lt; <span class="hljs-number">12800</span>;<br>         i++)<br>        delay();<br><br>    outb(COM1 + COM_TX, c);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可以看到这段代码实际上是控制0x3F8+5 &#x3D; 0x3FD， 0x3F8+0 &#x3D; 0x3F8这两个端口</p>
+<p>通过查询端口功能，可以知道：inb指令是读取0x3fd端口的内容，并且判断它的bit5是否为1，即发送数据缓冲寄存器是否为空。如果为空，则计算机可以发送下一个数据给端口。</p>
+<p>而outb指令则是把要发送的数据c，发送给0x3f8，从上图中可见，当0x3f8端口被写入值时，他是作为发送数据缓冲寄存器的，里面存放要发送给串口的数据。</p>
+<p>lpt_putc:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/***** Parallel port output code *****/</span><br><span class="hljs-comment">// For information on PC parallel port programming, see the class References</span><br><span class="hljs-comment">// page.</span><br><br><span class="hljs-type">static</span> <span class="hljs-type">void</span><br><span class="hljs-title function_">lpt_putc</span><span class="hljs-params">(<span class="hljs-type">int</span> c)</span><br>&#123;<br>    <span class="hljs-type">int</span> i;<br><br>    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; !(inb(<span class="hljs-number">0x378</span>+<span class="hljs-number">1</span>) &amp; <span class="hljs-number">0x80</span>) &amp;&amp; i &lt; <span class="hljs-number">12800</span>; i++)<br>        delay();<br>    outb(<span class="hljs-number">0x378</span>+<span class="hljs-number">0</span>, c);<br>    outb(<span class="hljs-number">0x378</span>+<span class="hljs-number">2</span>, <span class="hljs-number">0x08</span>|<span class="hljs-number">0x04</span>|<span class="hljs-number">0x01</span>);<br>    outb(<span class="hljs-number">0x378</span>+<span class="hljs-number">2</span>, <span class="hljs-number">0x08</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>原理上也是在操作IO端口，经过查询，这段代码用于向PC并行端口发送字符，并通过轮询的方式等待端口准备好接收数据。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">static</span> <span class="hljs-type">void</span><br><span class="hljs-title function_">cga_putc</span><span class="hljs-params">(<span class="hljs-type">int</span> c)</span><br>&#123;<br>    <span class="hljs-comment">// if no attribute given, then use black on white</span><br>    <span class="hljs-keyword">if</span> (!(c &amp; ~<span class="hljs-number">0xFF</span>))<br>        c |= <span class="hljs-number">0x0700</span>;<br><br>    <span class="hljs-keyword">switch</span> (c &amp; <span class="hljs-number">0xff</span>) &#123;<br>    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;\b&#x27;</span>: <span class="hljs-comment">//退格</span><br>        <span class="hljs-keyword">if</span> (crt_pos &gt; <span class="hljs-number">0</span>) &#123;<br>            crt_pos--;<br>            crt_buf[crt_pos] = (c &amp; ~<span class="hljs-number">0xff</span>) | <span class="hljs-string">&#x27; &#x27;</span>;<br>        &#125;<br>        <span class="hljs-keyword">break</span>;<br>    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;\n&#x27;</span>:  <span class="hljs-comment">//换行</span><br>        crt_pos += CRT_COLS;<br>    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;\r&#x27;</span>:  <span class="hljs-comment">//回车符，将光标移动到当前行开头</span><br>        crt_pos -= (crt_pos % CRT_COLS);<br>        <span class="hljs-keyword">break</span>;<br>    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;\t&#x27;</span>:  <span class="hljs-comment">//制表</span><br>        cons_putc(<span class="hljs-string">&#x27; &#x27;</span>);<br>        cons_putc(<span class="hljs-string">&#x27; &#x27;</span>);<br>        cons_putc(<span class="hljs-string">&#x27; &#x27;</span>);<br>        cons_putc(<span class="hljs-string">&#x27; &#x27;</span>);<br>        cons_putc(<span class="hljs-string">&#x27; &#x27;</span>);<br>        <span class="hljs-keyword">break</span>;<br>    <span class="hljs-keyword">default</span>:    <span class="hljs-comment">//普通字符</span><br>        crt_buf[crt_pos++] = c;        <span class="hljs-comment">/* write the character */</span><br>        <span class="hljs-keyword">break</span>;<br>    &#125;<br><br>    <span class="hljs-comment">// What is the purpose of this?</span><br>    <span class="hljs-keyword">if</span> (crt_pos &gt;= CRT_SIZE) &#123;   <span class="hljs-comment">//检查是否到达屏幕缓冲区的末尾</span><br>        <span class="hljs-type">int</span> i;       <br><br>        memmove(crt_buf, crt_buf + CRT_COLS, (CRT_SIZE - CRT_COLS) * <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">uint16_t</span>));                 <span class="hljs-comment">//屏幕内容上滚一行</span><br>        <span class="hljs-keyword">for</span> (i = CRT_SIZE - CRT_COLS; i &lt; CRT_SIZE; i++)<br>            crt_buf[i] = <span class="hljs-number">0x0700</span> | <span class="hljs-string">&#x27; &#x27;</span>; <span class="hljs-comment">//清空最后一行的内容，设置为空格</span><br>        crt_pos -= CRT_COLS;         <span class="hljs-comment">//将光标移动到新一行的开头</span><br>    &#125;<br><br>    <span class="hljs-comment">/* move that little blinky thing */</span><br>    outb(addr_6845, <span class="hljs-number">14</span>);<br>    outb(addr_6845 + <span class="hljs-number">1</span>, crt_pos &gt;&gt; <span class="hljs-number">8</span>);<br>    outb(addr_6845, <span class="hljs-number">15</span>);<br>    outb(addr_6845 + <span class="hljs-number">1</span>, crt_pos);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>\lib\printfmt.c：</strong></p>
+<p>这个文件开头有一段注释：</p>
+<p>“打印各种样式的字符串的子程序，经常被printf，sprintf，fprintf函数所调用，这些代码是同时被内核和用户程序所使用的。”所以，这里这个文件中定义的子程序是我们能在编程时直接利用printf函数向屏幕输出信息的关键</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">static</span> <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> <span class="hljs-type">long</span><br><span class="hljs-title function_">getuint</span><span class="hljs-params">(va_list *ap, <span class="hljs-type">int</span> lflag)</span><span class="hljs-comment">//？lflag</span><br>&#123;<br>        <span class="hljs-keyword">if</span> (lflag &gt;= <span class="hljs-number">2</span>)<br>                <span class="hljs-keyword">return</span> va_arg(*ap, <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> <span class="hljs-type">long</span>);<br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (lflag)<br>                <span class="hljs-keyword">return</span> va_arg(*ap, <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span>);<br>        <span class="hljs-keyword">else</span><br>                <span class="hljs-keyword">return</span> va_arg(*ap, <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span>);<br>  <span class="hljs-comment">//能够处理可变个数输入参数的功能就是有va_list, va_arg(), va_start(), va_end()来实现的</span><br>&#125;<span class="hljs-comment">//函数根据lflag参数的值，决定获取的数的大小。</span><br><br><br><span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;x&#x27;</span>:<br>       num = getuint(&amp;ap, lflag);<br>       base = <span class="hljs-number">16</span>;<br>number:<br>       printnum(putch, putdat, num, base, width, padc);<br>       <span class="hljs-keyword">break</span>;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2023/11/29/OSlab1/image-20231210134724371.png" srcset="/img/loading.gif" lazyload alt="image-20231210134724371"></p>
+<p>其中定义了一个while循环，分为以下几个步骤：</p>
+<ul>
+<li>首先一个一个的输出格式字符串fmt中所有’%’之前的字符，因为它们就是要直接输出的，比如”This is %d test”中的”This is “。当然如果在把这些字符一个个输出中遇到结束符’\0’，则结束输出。</li>
+<li>剩余的代码都是在处理’%’符号后面的格式化输出，比如是%d，则按照十进制输出对应参数。</li>
+</ul>
+<p>补充8进制格式代码只需要仿照其输出10进制的或者16进制的格式就行</p>
+<p><strong>\kern\printf.c</strong></p>
+<p>这个文件中定义的就是在编程中会用到的最顶层的一些格式化输出子程序，比如printf，sprintf等等。</p>
+<p>这里比较重要的就是我们上边用到了的putch</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">static</span> <span class="hljs-type">void</span><br><span class="hljs-title function_">putch</span><span class="hljs-params">(<span class="hljs-type">int</span> ch, <span class="hljs-type">int</span> *cnt)</span><br>&#123;<br>    cputchar(ch);<br>    *cnt++;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这里这个子程序实现的就是把字符输出到屏幕上，cnt则是计数器，记录的已经输出的字符。</p>
+<h4 id="练习9"><a href="#练习9" class="headerlink" title="练习9"></a>练习9</h4><p><strong>判断一下操作系统内核是从哪条指令开始初始化它的堆栈空间的，以及这个堆栈坐落在内存的哪个地方？内核是如何给它的堆栈保留一块内存空间的？堆栈指针又是指向这块被保留的区域的哪一端的呢？</strong></p>
+<p><strong>从那条指令开始的？</strong></p>
+<p>首先根据之前的分析，boot.S和main.c是PC启动后首先运行的两部分代码，但这两部分并不属于操作系统内核代码。main.c最后跳转到了entry.S，此时控制权被转交给了entry.S。而在这之前，并没有看到一些有关ebp，esp寄存器的操作，所以这会儿并没有初始化堆栈空间。</p>
+<p>entry.S中，有这样三条指令，最后一条指令调用了i386_init，这个子程序位于init.c文件之中。在这个程序中已经开始对操作系统进行一些初始化工作。可见，到i386_init子程序时，内核的堆栈应该已经设置好了。所以前边两句就是初始化操作。</p>
+<p><img src="/2023/11/29/OSlab1/image-20231210135841791.png" srcset="/img/loading.gif" lazyload alt="image-20231210135841791"></p>
+<p><strong>在内存的什么地方？</strong></p>
+<p>既然要看具体位置，则需要调试，进入entry.S</p>
+<p>所以首先在进入entry.S的位置打断点（b *0x7d63）</p>
+<p><img src="/2023/11/29/OSlab1/image-20231210141109424.png" srcset="/img/loading.gif" lazyload alt="image-20231210141109424"></p>
+<p>这里可以看到第一条指令是在0x0010000c的位置，这是因为在bootmain中，已经把所有的内核文件加载到0x100000处了，这里可以看到内核的第一条指令所在的物理地址就是0x10000c</p>
+<p>继续运行</p>
+<p><img src="/2023/11/29/OSlab1/image-20231210141331622.png" srcset="/img/loading.gif" lazyload alt="image-20231210141331622"></p>
+<p>在执行完jmp指令后，地址发生了变化，已经转换成了虚拟地址</p>
+<p><img src="/2023/11/29/OSlab1/image-20231210151728706.png" srcset="/img/loading.gif" lazyload alt="image-20231210151728706"></p>
+<p>可以看出在栈顶在0xf0117000</p>
+<p>然后在kern&#x2F;entry.S中定义了：</p>
+<p><img src="/2023/11/29/OSlab1/image-20231210152437922.png" srcset="/img/loading.gif" lazyload alt="image-20231210152437922"></p>
+<p>在inc&#x2F;memlayout.h中</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">// Kernel stack.</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> KSTACKTOP	KERNBASE</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> KSTKSIZE	(8*PGSIZE)   		<span class="hljs-comment">// size of a kernel stack</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> KSTKGAP		(8*PGSIZE)   		<span class="hljs-comment">// size of a kernel stack guard</span></span><br></code></pre></td></tr></table></figure>
+
+<p>在inc&#x2F;mmu.h中：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">define</span> PGSIZE		4096		<span class="hljs-comment">// bytes mapped by a page</span></span><br></code></pre></td></tr></table></figure>
+
+<p>所以栈的大小就有32KB</p>
+<p><strong>指针是指向这块区域的哪一端的？</strong></p>
+<p>栈是向下生长的，所以指向的是最高处的地址</p>
+<h4 id="练习10"><a href="#练习10" class="headerlink" title="练习10"></a>练习10</h4><p><strong>为了能够更好的了解在x86上的C程序调用过程的细节，我们首先找到在obj&#x2F;kern&#x2F;kern.asm中test_backtrace子程序的地址， 设置断点，并且探讨一下在内核启动后，这个程序被调用时发生了什么。对于这个循环嵌套调用的程序test_backtrace，它一共压入了多少信息到堆栈之中。并且它们都代表什么含义？</strong></p>
+<p>首先看test_backtrace的c语言形式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">void</span><br><span class="hljs-title function_">test_backtrace</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span><br>&#123;<br>    cprintf(<span class="hljs-string">&quot;entering test_backtrace %d\n&quot;</span>, x);<br>    <span class="hljs-keyword">if</span> (x &gt; <span class="hljs-number">0</span>)<br>        test_backtrace(x<span class="hljs-number">-1</span>);<br>    <span class="hljs-keyword">else</span><br>        mon_backtrace(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);<br>    cprintf(<span class="hljs-string">&quot;leaving test_backtrace %d\n&quot;</span>, x);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可见这个子程序是一个循环调用，在每一层循环中先打印信息 “entering test_backtrace x”，然后对test_backtrace进行循环调用。当被循环调用完成，再打印信息 “leaving test_backtrace x”。所以最先进入的程序会最后退出。</p>
+<p>每一次进入test_backtrace后，他会进行如下操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs assembly">push %ebp<br>mov %esp, %ebp<br>push %ebx<br>sub $0x14, %esp<br></code></pre></td></tr></table></figure>
+
+<p>这四个操作将被用于存放调用这个子程序的父程序的栈帧信息，以及为当前子程序分配新的栈帧。</p>
+<p>当运行test_backtrace(5)之前，esp寄存器ebp寄存器的值分别为如下：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">esp</span>:<span class="hljs-number">0</span>xf010ffe0<br><span class="hljs-attribute">ebp</span>:<span class="hljs-number">0</span>xf010ffd8<br></code></pre></td></tr></table></figure>
+
+<p>此处的0xf010ffe0-0xf010fff8就是调用test_backtrace的程序i386_init的栈帧</p>
+<p>当调用test_backtrace(5)时，首先call指令会将i386_init的返回地址压入栈中，所以此时esp变成了0xf010ffdc。</p>
+<p>子程序中第一句push %ebp，把i386_init的ebp寄存器的值压入堆栈中，即地址0xf010ffd8处，此时esp的值变为0xf010ffd8。</p>
+<p>然后 mov %esp, %ebp 把ebp的值更新为esp的值，0xf010ffd8。这个就是当前test子程序栈帧的高地址边界。</p>
+<p>然后 push %ebx 把ebx寄存器的值压入堆栈，此时esp变为0xf010ffd4。因为%ebx寄存器可能被这个子程序所使用，所以必须把它之前的值保留。</p>
+<p>然后 sub $0x14, %esp 把esp中的值减去0x14&#x3D;20，esp的值变为0xf010ffc0。这就是给test子程序分配一个大小为20个存储单元的额外的栈帧空间，供它存储一些临时变量的值。</p>
+<p>所以上述4条汇编指令，执行完成后，esp，ebp寄存器的值变化为</p>
+<p>　　　　esp : 0xf010ffc0   ebp：0xf010ffd8  </p>
+<p>这就是test_backtrace(5)子程序运行时的栈帧地址范围。而输入参数’5’的值存放在0xf010ffe0单元处。</p>
+<p>总的来说每次调用test_backtrace时：</p>
+<ol>
+<li>将返回地址（call指令的下一条指令的地址）压栈</li>
+<li>将ebp, esp, ebx三个寄存器的值压栈，以便退出函数前恢复它们的值</li>
+<li>调用cprintf函数打印”entering test_backtrace x”，其中x为输入参数的值</li>
+<li>将输入参数(x-1)压栈</li>
+<li>调用test_backtrace(x-1)</li>
+<li>调用cprintf函数打印”leaving test_backtrace x”，其中x为输入参数的值</li>
+</ol>
+<p><img src="/2023/11/29/OSlab1/image-20231210170111456.png" srcset="/img/loading.gif" lazyload alt="image-20231210170111456"></p>
+<h4 id="练习11"><a href="#练习11" class="headerlink" title="练习11"></a>练习11</h4><p>实现mon_backtrace，这个函数的功能就是把当前栈里面的所有栈帧按照规定的格式输出出来：</p>
+<p><img src="/2023/11/29/OSlab1/image-20231210204124667.png" srcset="/img/loading.gif" lazyload alt="image-20231210204124667"></p>
+<p>如何完成：</p>
+<ul>
+<li>ebp指针所指的位置存放的是父函数中我们保存的ebp地址，所以知道了栈顶的ebp的值，就能知道所有的ebp的值，讲义里提到可以使用icn&#x2F;x86.h中的read_ebp()直接获取当前栈顶ebp的值</li>
+<li>ebp+4的位置，存放的是返回地址，也就是eip寄存器的值。再往上就是函数调用时传递的参数</li>
+<li>什么时候停止：在entry.S中，初始化栈帧时，将ebp初始化成了0，所以当ebp为0时就可以终止循环</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">int</span><br><span class="hljs-title function_">mon_backtrace</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> **argv, <span class="hljs-keyword">struct</span> Trapframe *tf)</span><br>&#123;<br>        <span class="hljs-comment">// Your code here.</span><br>        <span class="hljs-type">uint32_t</span> ebp = read_ebp(); <span class="hljs-comment">//获取当前ebp寄存器中的值，是个地址</span><br>        <span class="hljs-type">uint32_t</span> * temp = (<span class="hljs-type">uint32_t</span> *)ebp; <span class="hljs-comment">//定义指针变量，用于寻址操作</span><br>        cprintf(<span class="hljs-string">&quot;Stack backtrace:\n&quot;</span>); <span class="hljs-comment">//按着格式来</span><br>          <span class="hljs-keyword">while</span>(<span class="hljs-number">1</span>)&#123; <span class="hljs-comment">//终止条件</span><br>                cprintf(<span class="hljs-string">&quot;  ebp %08x eip %08x args %08x %08x %08x %08x %08x\n&quot;</span>, temp, *(temp+<span class="hljs-number">1</span>), *(temp+<span class="hljs-number">2</span>), *(temp+<span class="hljs-number">3</span>), *(temp+<span class="hljs-number">4</span>), *(temp+<span class="hljs-number">5</span>), *(temp+<span class="hljs-number">6</span>));<span class="hljs-comment">//%08x输出8个字节的16进制数，将temp更新为调用者栈帧的ebp</span><br>                temp = (<span class="hljs-type">uint32_t</span> *)(*temp);<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p><img src="/2023/11/29/OSlab1/image-20231210210244148.png" srcset="/img/loading.gif" lazyload alt="image-20231210210244148"></p>
+<p><img src="/2023/11/29/OSlab1/image-20231210210220345.png" srcset="/img/loading.gif" lazyload alt="image-20231210210220345"></p>
+<h3 id="反思与收获"><a href="#反思与收获" class="headerlink" title="反思与收获"></a>反思与收获</h3><p>本次实验使用的是BIOS+MBR的启动方式，但现在多数使用UEFI+GPT（或者说是UEFI+MBR）</p>
+<ul>
+<li>**BIOS:**是一组固化到计算机内主板上一个ROM芯片上的程序，它保存着计算机最重要的基本输入输出的程序、开机后自检程序和系统自启动程序，它可从CMOS中读写系统设置的具体信息。</li>
+<li>**UEFI:**全称“统一的可扩展固件接口”(Unified Extensible Firmware Interface)， 是一种详细描述类型接口的标准。这种接口用于操作系统自动从预启动的操作环境，加载到一种操作系统上。</li>
+<li>**MBR:**即主引导记录，是对IBM兼容机的硬盘或者可移动磁盘分区时，在驱动器最前端的一段引导扇区。MBR描述了逻辑分区的信息，包含文件系统以及组织方式。此外，MBR还包含计算机在启动的第二阶段加载操作系统的可执行代码或连接每个分区的引导记录（VBR）。这个MBR代码通常被称为引导程序。</li>
+<li>**GPT:**是GUID磁碟分割表（GUIDPartition Table）的缩写，是一个实体硬盘的分区表的结构布局的标准。它是可扩展固件接口（EFI）标准（被Intel用于替代个人计算机的BIOS）的一部分，被用于替代BIOS系统中的一32bits来存储逻辑块地址和大小信息的主开机纪录（MBR）分区表。</li>
+</ul>
+<p>在启动时：</p>
+<p>MBR里面存放着电脑需要从哪个系统启动的信息，电脑便会自动转到系统所在的分区，继续执行该分区里的引导。<br>对于GPT，电脑会找到硬盘里第一个FAT格式 (比如：FAT32格式) 的主分区，默认该分区为引导所在位置。而且电脑会读取分区里面的固定的引导文件。 但GPT分区表并不是和UEFI强绑定的，并没有规范要求GPT分区表的存储设备必须有第一个分区作为300MB的FAT32格式的EFI分区，GPT分区表的存储设备完全可以是U盘，完全可以没有EFI分区</p>
+<p>GPT相较于MBR：</p>
+<ul>
+<li>MBR最大只支持2TB的硬盘，GPT没有此限制</li>
+<li>MBR最大支持4个主分区，要想分更多分区，需要使用逻辑分区，而windows支持GPT最大128个主分区</li>
+<li>GPT的引导更加透明、可控，并且更强大</li>
+</ul>
+<p>对于内核代码的拉起：</p>
+<p>macOS是直接拉起XNU内核，Linux和Windows一般还需要OS提供的bootloader来拉起操作系统内核</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>OSlab1</div>
+      <div>http://example.com/2023/11/29/OSlab1/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>TEhS</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年11月29日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/01/24/autofz/" title="autofz">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">autofz</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/10/31/ReadPaper3/" title="ReadPaper3">
+                        <span class="hidden-mobile">ReadPaper3</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
