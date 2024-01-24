@@ -4,13 +4,50 @@
   
   
   <entry>
+    <title>WebWriteUp1</title>
+    <link href="/2024/01/24/WebWriteUp/"/>
+    <url>/2024/01/24/WebWriteUp/</url>
+    
+    <content type="html"><![CDATA[<h4 id="EasySQL（极客大挑战）"><a href="#EasySQL（极客大挑战）" class="headerlink" title="EasySQL（极客大挑战）"></a>EasySQL（极客大挑战）</h4><p><img src="/2024/01/24/WebWriteUp/image-20240124190853709.png" alt="image-20240124190853709"></p><p>先输入用户名1和密码1</p><p><img src="/2024/01/24/WebWriteUp/image-20240124190942891.png" alt="image-20240124190942891"></p><p>可以看出是通过GET方法传输数据</p><p>尝试输入1’进行测试</p><p>得到报错：<img src="/2024/01/24/WebWriteUp/image-20240124193114395.png" alt="image-20240124193114395"></p><p>这说明是查询语句中是存在一个单引号的，为单引号闭合，那么则构造payload</p><p><code>1&#39;or 1=1 #</code></p><p>填在用户名处（或直接修改），密码任意，因为被#注释掉了</p><p><img src="/2024/01/24/WebWriteUp/image-20240124193458266.png" alt="image-20240124193458266"></p><p>成功绕过</p><h4 id="HaveFun"><a href="#HaveFun" class="headerlink" title="HaveFun"></a>HaveFun</h4><p><img src="/2024/01/24/WebWriteUp/image-20240124195701183.png" alt="image-20240124195701183"></p><p>进来发现啥也没有，那么查看源码</p><p><img src="/2024/01/24/WebWriteUp/image-20240124195736363.png" alt="image-20240124195736363"></p><p>通过Get方法获得参数，并存放在cat中，判断该值是否等于dog，那么构造payload</p><p><img src="/2024/01/24/WebWriteUp/image-20240124200024766.png" alt="image-20240124200024766"></p><p>获得flag</p><h4 id="Warm-Up"><a href="#Warm-Up" class="headerlink" title="Warm Up"></a>Warm Up</h4><p><img src="/2024/01/24/WebWriteUp/image-20240124200118945.png" alt="image-20240124200118945"></p><p>进来就是这个抽象笑脸，啥也没有，题目里有tag：php，代码审计，那么查看源码</p><p><img src="/2024/01/24/WebWriteUp/image-20240124200330278.png" alt="image-20240124200330278"></p><p>查看source.php（直接改url）</p><p><img src="/2024/01/24/WebWriteUp/image-20240124200411693.png" alt="image-20240124200411693"></p><p>看到还有个hint.php，也打开看一下</p><p><img src="/2024/01/24/WebWriteUp/image-20240124200528267.png" alt="image-20240124200528267"></p><p>只有这么一句话</p><p>还是重点看source.php</p><p>这段代码就是，对用户请求的文件进行安全检查，如果通过安全检查，且在白名单中，则通过include方法包含这个文件，且能得到以下条件：</p><ol><li>设置了一个白名单，只包含source.php和hint.php，第一个if检查是否存在$page并且是否为字符串。</li><li>检查$page是否在白名单中，是的话返回true。接下来，两个函数一个<a href="https://www.php.net/manual/zh/function.mb-substr.php">mb_substr</a>和<a href="https://www.php.net/manual/zh/function.mb-strpos.php">mb_strpos</a>，总的意思就是截取变量page中?前面的字符串，然后再进行白名单校验。</li><li>在url解码后的$page的?前面是否在whitelist里面</li></ol><p>所以构造payload</p><p><code>source.php?file=hint.php?ffffllllaaaagggg</code></p><p>发现，图片消失了，那么说明payload是正确的，那么进行目录穿越找文件</p><p>修改payload（实际五层时就能找到）</p><p><code>source.php?file=hint.php?../../../../../../ffffllllaaaagggg</code></p><p><img src="/2024/01/24/WebWriteUp/image-20240124202309328.png" alt="image-20240124202309328"></p><p>得到flag</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Web</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>CTF</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>autofz</title>
     <link href="/2024/01/24/autofz/"/>
     <url>/2024/01/24/autofz/</url>
     
-    <content type="html"><![CDATA[]]></content>
+    <content type="html"><![CDATA[<h2 id="autofz-Automated-Fuzzer-Composition-at-Runtime"><a href="#autofz-Automated-Fuzzer-Composition-at-Runtime" class="headerlink" title="autofz: Automated Fuzzer Composition at Runtime"></a>autofz: Automated Fuzzer Composition at Runtime</h2><p>作者：Yu-Fu Fu &#x2F; Jaehyuk Lee &#x2F; Taesoo Kim</p><p>学校或机构：Georgia Institute of Technology（佐治亚理工学院）</p><h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><h4 id="选择负担"><a href="#选择负担" class="headerlink" title="选择负担"></a>选择负担</h4><p><strong>什么是选择负担</strong></p><p>模糊测试由于开发多样化的模糊测试工具而变得越来越受欢迎，特别是在软件漏洞检测方面。由于各种模糊测试技术的应用，大多数模糊测试工具在其选择的目标上表现出色。然而，模糊测试工具的多样性也使得难以选择最适合复杂实际程序的模糊测试工具，称之为<strong>选择负担</strong>。社区尝试通过创建一组标准基准来解决这个问题，以比较和对比模糊测试工具在各种应用程序上的性能，但结果总是一个次优的决策——平均性能最佳的模糊测试工具并不保证对用户关注的目标产生最佳结果。</p><p><strong>当前解决策略</strong></p><ul><li>模糊测试基准Fuzzing benchmarks（如Magma，Lava，ProFuzzBench）列举了每个基准目标的适用的模糊测试工具。</li><li>协作模糊测试，通过合作使用不同组合的模糊测试工具，通过多个模糊测试器的语料库共享提升整体性能。但在模糊测试器的选择依赖于静态分析的结果，依然需要大量的计算和人力资源，同时，如何为多个模糊测试器分配合理的资源也会影响整体的效果</li></ul><p><strong>autofz设计思路</strong></p><blockquote><p>Unlike previous works, autofz automatically deploys a set of fuzzer(s) per workload, not per program.</p></blockquote><p>不像其他fuzzer，autofz并不是为整个程序，而是为每个工作负载部署一套模糊测试工具，autofz 的目标是通过对模糊测试工具的动态组合实现选择问题的完全自动化，成为一种一键解决方案。</p><h4 id="autofz"><a href="#autofz" class="headerlink" title="autofz"></a>autofz</h4><p><strong>trend（趋势）</strong></p><p>将基准模糊测试工具的运行时进展称为趋势，autofz在整个执行过程中会随着趋势的变化而切换模糊测试工具并调整资源，而不是在执行期间坚持使用一组特定的模糊测试工具。</p><p><strong>工作原理</strong></p><p>准备阶段：</p><p>捕获目标二进制文件的运行时趋势，并部署展示强趋势的模糊测试工具</p><p>聚焦阶段：</p><p>基于捕获的趋势和指导信息，聚焦阶段尝试通过选定的模糊测试工具实现最佳性能。此外，autofz 利用指导信息的动态资源调整使其能够兼顾个体模糊测试工具和不同模糊测试工具组合的优势。一方面，它可以优先考虑某个模糊测试工具，通过将所有资源分配给选定的模糊测试工具，显著优于其他工具。另一方面，autofz 通过分配资源充分利用多个模糊测试工具。</p><p><strong>贡献</strong></p><p>本文将autofz 集成到 Fuzzer Test Suite 和 UNIFUZZ 中，它们支持最高效和广泛使用的模糊测试工具。</p><blockquote><p><strong>Fuzzer Test Suite（FTS）</strong>：</p><p>Fuzzer Test Suite 包括一系列标准化的测试用例和目标程序，用于模糊测试工具的性能评估。这些测试用例可能涉及不同类型的二进制文件和应用程序，旨在覆盖多个应用场景。FTS 的目标是提供一个一致的基准，以便研究人员和开发人员能够有效地评估不同模糊测试工具的表现。</p><p><strong>UNIFUZZ</strong>：</p><p>UNIFUZZ 是一个开源的、集成化的模糊测试解决方案，专注于提供可扩展和易用的模糊测试环境。它为研究人员和开发人员提供了一整套工具，包括各种先进的模糊测试工具、资源管理、结果分析等功能。</p></blockquote><ul><li>提供了一种为每个工作负载设计的动态模糊测试器组合方案</li><li>autofz提供的是一种自动的，非入侵的方法</li><li>提供了对模糊测试器组合的高效的资源分配算法</li></ul><p>目前阅读论文的疑惑：</p><ol><li>基准模糊测试器是如何定义的</li><li>趋势的具体评估标准是什么</li><li>混合使用模糊测试器，其工作负载可能会发生改变，是如何自适应这种改变并设计动态模糊测试器组合方案的</li><li>准备阶段和聚焦阶段的具体实现？</li></ol>]]></content>
     
     
+    <categories>
+      
+      <category>Study</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>ReadPaper</tag>
+      
+    </tags>
     
   </entry>
   
