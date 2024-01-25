@@ -23,11 +23,13 @@
 <meta property="og:site_name" content="TEhS">
 <meta property="og:description" content="autofz: Automated Fuzzer Composition at Runtime作者：Yu-Fu Fu &#x2F; Jaehyuk Lee &#x2F; Taesoo Kim 学校或机构：Georgia Institute of Technology（佐治亚理工学院） Introduction选择负担什么是选择负担 模糊测试由于开发多样化的模糊测试工具而变得越来越受欢迎，特别是在软">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/01/24/autofz/image-20240125102248335.png">
 <meta property="article:published_time" content="2024-01-24T05:22:35.000Z">
-<meta property="article:modified_time" content="2024-01-24T10:45:58.878Z">
+<meta property="article:modified_time" content="2024-01-25T10:27:21.897Z">
 <meta property="article:author" content="TEhS">
 <meta property="article:tag" content="ReadPaper">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2024/01/24/autofz/image-20240125102248335.png">
   
   
   
@@ -220,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.5k 字
+          2.7k 字
         
       </span>
     
@@ -231,7 +233,7 @@
         
         
         
-          13 分钟
+          23 分钟
         
       </span>
     
@@ -294,8 +296,29 @@
 <p>捕获目标二进制文件的运行时趋势，并部署展示强趋势的模糊测试工具</p>
 <p>聚焦阶段：</p>
 <p>基于捕获的趋势和指导信息，聚焦阶段尝试通过选定的模糊测试工具实现最佳性能。此外，autofz 利用指导信息的动态资源调整使其能够兼顾个体模糊测试工具和不同模糊测试工具组合的优势。一方面，它可以优先考虑某个模糊测试工具，通过将所有资源分配给选定的模糊测试工具，显著优于其他工具。另一方面，autofz 通过分配资源充分利用多个模糊测试工具。</p>
-<p><strong>贡献</strong></p>
-<p>本文将autofz 集成到 Fuzzer Test Suite 和 UNIFUZZ 中，它们支持最高效和广泛使用的模糊测试工具。</p>
+<p><img src="/2024/01/24/autofz/image-20240125102248335.png" srcset="/img/loading.gif" lazyload alt="image-20240125102248335"></p>
+<ol>
+<li>为了公平进行模糊测试效果的比较，在第一步先进行种子的同步，同时为所有基准模糊测试工具分配相同数量的资源（1）</li>
+<li>然后每个模糊测试器轮流以非常短的时间间隔运行，直到达到退出条件（退出条件将在后边详细说明）然后通过AFL Bitmap衡量每个模糊测试器的运行效果。（2，3）</li>
+<li>根据趋势，决定每个模糊测试工具在当前工作负载下的优先级以及资源分配元数据（4）</li>
+<li>对分配的CPU核心进行时间切片（作用还没想明白）（5）</li>
+<li>过渡到聚焦阶段的时候在进行种子同步（6，7），允许被选择的模糊测试器共享准备阶段可能产生的独特测试用例</li>
+<li>进入聚焦阶段，按照资源分配元数据一次运行所选的模糊测试工具，为每个工具分配特定的CPU时间窗口（8）</li>
+<li>此时聚焦阶段目的是实现最大性能，所以会在一个在一个模糊测试工具执行后，我们同步种子，以允许剩余的模糊测试工具通过其他模糊测试工具探索未发现的路径。当分配的全部资源被消耗完毕时，它回到准备阶段并测量趋势（9）</li>
+<li>两个阶段轮流执行，知道模糊测试执行终止</li>
+</ol>
+<h4 id="难点"><a href="#难点" class="headerlink" title="难点"></a><strong>难点</strong></h4><p><strong>准备时间</strong></p>
+<p>准备阶段的时间选择至关重要，如果准备阶段的时间过短，很难捕获到模糊测试工具的明显趋势，导致最后选取的工具集并不是最优的；但准备时间过长，则有可能造成资源的浪费，同时使整个实验的周期延长。为了避免引入另一种手动确定适当时间预算的方法，autofz引入了动态准备时间。</p>
+<p>为了实现这一点，autofz首先在运行时计算位图的峰值差异，当差异大于定义的阈值时，可以允许准备阶段提前退出，然后直接进入聚焦阶段，多余的资源同样也被委托给聚焦阶段。阈值可以由用户进行初始配置（θinit）。然而，autofz会自动调整初始配置并找到每个目标的最佳阈值，从而消除了另一种手动努力。阈值会在每个准备阶段之后的每一轮进行校准。具体而言，如果发生提前退出，autofz将通过θinit增加阈值（θcur）。否则，它将θcur除以二。这种设计背后的原理是随着模糊测试活动的进行，总体上其进展逐渐减缓。在其早期阶段，由于以合法种子作为其初始输入，所选的模糊测试工具通常会产生相当大的进展。因此，如果阈值过小，它将很容易被越过，autofz可能会做出次优的决策。相反，随着模糊测试活动的进行，每个模糊测试工具产生的进展很容易饱和，探索新路径变得困难。</p>
+<p><strong>如何衡量趋势</strong></p>
+<p>由于进行了种子的同步，所以，可以将运行时，每个模糊测试工具能探索的独特的路径视作其贡献，即找到所有工具的共同路径，然后把这些路径从位图中减掉，比较贡献大小</p>
+<p><strong>资源分配</strong></p>
+<p>autofz支持两种资源分配策略</p>
+<ol>
+<li>优先考虑最佳性能，将所有资源分配给排名最高的模糊测试工具。仅当某个模糊测试工具明显优于所有其他基准模糊测试工具时，才激活此策略</li>
+<li>根据每个模糊测试工具的趋势进行比例分配资源。请注意，每个基准模糊测试工具的贡献是基于它发现的唯一路径进行评估的。因此，如果在准备阶段捕获到多个强烈趋势，这很大程度上表明准备阶段找到了多个有利于模糊测试程序不同部分的模糊测试工具。在这种情况下，我们根据它们的贡献比例分配资源，并实现协作模糊测试的好处。</li>
+</ol>
+<h4 id="贡献"><a href="#贡献" class="headerlink" title="贡献"></a><strong>贡献</strong></h4><p>本文将autofz 集成到 Fuzzer Test Suite 和 UNIFUZZ 中，它们支持最高效和广泛使用的模糊测试工具。</p>
 <blockquote>
 <p><strong>Fuzzer Test Suite（FTS）</strong>：</p>
 <p>Fuzzer Test Suite 包括一系列标准化的测试用例和目标程序，用于模糊测试工具的性能评估。这些测试用例可能涉及不同类型的二进制文件和应用程序，旨在覆盖多个应用场景。FTS 的目标是提供一个一致的基准，以便研究人员和开发人员能够有效地评估不同模糊测试工具的表现。</p>
@@ -307,14 +330,7 @@
 <li>autofz提供的是一种自动的，非入侵的方法</li>
 <li>提供了对模糊测试器组合的高效的资源分配算法</li>
 </ul>
-<p>目前阅读论文的疑惑：</p>
-<ol>
-<li>基准模糊测试器是如何定义的</li>
-<li>趋势的具体评估标准是什么</li>
-<li>混合使用模糊测试器，其工作负载可能会发生改变，是如何自适应这种改变并设计动态模糊测试器组合方案的</li>
-<li>准备阶段和聚焦阶段的具体实现？</li>
-</ol>
-
+<h4 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h4>
                 
               </div>
             

