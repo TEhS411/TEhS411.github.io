@@ -46,8 +46,27 @@
 <meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240125195404097.png">
 <meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240125195436474.png">
 <meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240125195526719.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240126150517909.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240126150625427.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240126150732541.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240126150755178.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240126151216802.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240126151540171.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240126153519187.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240126154133769.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240126154325513.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240126154658007.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240126154634784.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240126154809129.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240126154847897.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240126155713350.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240126193749558.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240126193856592.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240126195918958.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240126205028096.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240126211244718.png">
 <meta property="article:published_time" content="2024-01-24T10:47:42.000Z">
-<meta property="article:modified_time" content="2024-01-25T11:56:18.313Z">
+<meta property="article:modified_time" content="2024-01-26T13:23:01.138Z">
 <meta property="article:author" content="TEhS">
 <meta property="article:tag" content="CTF">
 <meta name="twitter:card" content="summary_large_image">
@@ -244,7 +263,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.4k 字
+          2.8k 字
         
       </span>
     
@@ -255,7 +274,7 @@
         
         
         
-          12 分钟
+          23 分钟
         
       </span>
     
@@ -373,6 +392,88 @@
 <p><img src="/2024/01/24/WebWriteUp/image-20240125195436474.png" srcset="/img/loading.gif" lazyload alt="image-20240125195436474"></p>
 <p>找到flag，用cat命令查看</p>
 <p><img src="/2024/01/24/WebWriteUp/image-20240125195526719.png" srcset="/img/loading.gif" lazyload alt="image-20240125195526719"></p>
+<h4 id="Ping-Ping-Ping"><a href="#Ping-Ping-Ping" class="headerlink" title="Ping Ping Ping"></a>Ping Ping Ping</h4><p><img src="/2024/01/24/WebWriteUp/image-20240126150517909.png" srcset="/img/loading.gif" lazyload alt="image-20240126150517909"></p>
+<p>进来发现只有个这个，那推测跟上一题类似，也是一道命令注入题</p>
+<p>构造payload：</p>
+<p>&#x2F;?ip&#x3D;127.0.0.1</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240126150625427.png" srcset="/img/loading.gif" lazyload alt="image-20240126150625427"></p>
+<p>能ping通</p>
+<p>那么还是一样的套路，修改payload为：&#x2F;?ip&#x3D;127.0.0.1;ls</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240126150732541.png" srcset="/img/loading.gif" lazyload alt="image-20240126150732541"></p>
+<p>利用cat命令查看</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240126150755178.png" srcset="/img/loading.gif" lazyload alt="image-20240126150755178"></p>
+<p>应该是过滤了空格</p>
+<blockquote>
+<p>过滤空格的方法有：</p>
+<p>$IFS</p>
+<p>${IFS}</p>
+<p>$IFS$(任意数字)， 如：$IFS$1</p>
+<p>&lt;</p>
+<p>&lt;&gt;</p>
+<p>{cat, flag.php}</p>
+<p>%20</p>
+<p>%09</p>
+</blockquote>
+<p>尝试payload: &#x2F;?ip&#x3D;127.0.0.1;cat$IFSflag.php</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240126151216802.png" srcset="/img/loading.gif" lazyload alt="image-20240126151216802"></p>
+<p>那应该是有更多的过滤手段，再看看index.php中有啥</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240126151540171.png" srcset="/img/loading.gif" lazyload alt="image-20240126151540171"></p>
+<p>这段代码的作用：</p>
+<ol>
+<li>检查变量 <code>$ip</code> 中是否包含一些特殊字符。如果 <code>$ip</code> 中包含其中任何一个字符，代码将输出匹配的字符数（由 参数 <code>$match</code> 传递），然后输出 “fxck your symbol!” 并结束程序。</li>
+<li>检查是否有空格在变量 <code>$ip</code> 中。如果有空格，输出 “fxck your space!” 并结束程序。</li>
+<li>检查 <code>$ip</code> 中是否包含字符串 “bash”。如果包含，输出 “fxck your bash!” 并结束程序。</li>
+<li>检查 <code>$ip</code> 中是否包含字符串 “flag”，如果包含，输出 “fxck your flag!” 并结束程序</li>
+<li>如果通过了所有的检查，使用 <code>shell_exec</code> 函数执行 ping 命令。这里是执行 <code>ping -c 4</code> 命令，其中 <code>-c 4</code> 表示发送四个 ICMP 包。</li>
+</ol>
+<p>那么显然，可以尝试拼接的方式被限制的关键词flag</p>
+<p>构造payload：&#x2F;?ip&#x3D;127.0.0.1;a&#x3D;ag;cat$IFS$1fl$a.php，得到flag</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240126153519187.png" srcset="/img/loading.gif" lazyload alt="image-20240126153519187"></p>
+<h4 id="随便注"><a href="#随便注" class="headerlink" title="随便注"></a>随便注</h4><p><img src="/2024/01/24/WebWriteUp/image-20240126154133769.png" srcset="/img/loading.gif" lazyload alt="image-20240126154133769"></p>
+<p>Submit一下</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240126154325513.png" srcset="/img/loading.gif" lazyload alt="image-20240126154325513"></p>
+<p>尝试sql注入</p>
+<p><strong>首先判断是字符型还是数字型</strong></p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240126154658007.png" srcset="/img/loading.gif" lazyload alt="image-20240126154658007"></p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240126154634784.png" srcset="/img/loading.gif" lazyload alt="image-20240126154634784"></p>
+<p>两次都有回显，说明是字符型注入</p>
+<p>接着<strong>查询字段数</strong>：</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240126154809129.png" srcset="/img/loading.gif" lazyload alt="image-20240126154809129"></p>
+<p>查到第三次发现：</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240126154847897.png" srcset="/img/loading.gif" lazyload alt="image-20240126154847897"></p>
+<p>说明有两个字段</p>
+<p><strong>确定字段的显示顺序</strong></p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240126155713350.png" srcset="/img/loading.gif" lazyload alt="image-20240126155713350"></p>
+<p>说明select被过滤掉了</p>
+<p>（这里不会了，看题解，说是要用堆叠注入，堆叠注入相关笔记单独整理）</p>
+<p>爆破数据库</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240126193749558.png" srcset="/img/loading.gif" lazyload alt="image-20240126193749558"></p>
+<p>尝试爆表</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240126193856592.png" srcset="/img/loading.gif" lazyload alt="image-20240126193856592"></p>
+<p>构造payload查看第一个表1919810931114514</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs applescript"><span class="hljs-number">1</span>&#x27;; show columns <span class="hljs-keyword">from</span> `<span class="hljs-number">1919810931114514</span>` <span class="hljs-comment">#</span><br></code></pre></td></tr></table></figure>
+
+<p>这里要注意，表名为数字时，要用反引号括起来，同时需要在最后加#屏蔽掉其他查询语句</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240126195918958.png" srcset="/img/loading.gif" lazyload alt="image-20240126195918958"></p>
+<p><strong>方法一</strong></p>
+<p>因为select被过滤掉了，那么则可以对 </p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs axapta"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> `<span class="hljs-number">1919810931114514</span>` <span class="hljs-meta">#;</span><br></code></pre></td></tr></table></figure>
+
+<p>进行16进制编码，然后构造payload</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">;<span class="hljs-keyword">SeT</span><span class="hljs-variable">@a</span><span class="hljs-operator">=</span><span class="hljs-number">0x73656c656374202a2066726f6d20603139313938313039333131313435313460</span>;<span class="hljs-keyword">prepare</span> execsql <span class="hljs-keyword">from</span> <span class="hljs-variable">@a</span>;<span class="hljs-keyword">execute</span> execsql;#<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>prepare…from…是预处理语句，会进行编码转换。</li>
+<li>execute用来执行由SQLPrepare创建的SQL语句。</li>
+<li>SELECT可以在一条语句里对多个变量同时赋值,而SET只能一次对一个变量赋值。</li>
+</ul>
+<p><img src="/2024/01/24/WebWriteUp/image-20240126205028096.png" srcset="/img/loading.gif" lazyload alt="image-20240126205028096"></p>
+<p><strong>方法二</strong></p>
+<p>构造payload：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-number">1</span><span class="hljs-string">&#x27;; handler `1919810931114514` open as `a`; handler `a` read next;#</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/2024/01/24/WebWriteUp/image-20240126211244718.png" srcset="/img/loading.gif" lazyload alt="image-20240126211244718"></p>
+<p>在MySQL中，<code>HANDLER</code>语句用于通过存储引擎直接操作表的数据，而不是使用标准的SQL查询语句。可以以更底层的方式对表进行读写操作，绕过SQL解释器。</p>
 
                 
               </div>
