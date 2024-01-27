@@ -16,12 +16,12 @@
   <meta name="author" content="TEhS">
   <meta name="keywords" content="">
   
-    <meta name="description" content="EasySQL（极客大挑战） 先输入用户名1和密码1  可以看出是通过GET方法传输数据 尝试输入1’进行测试 得到报错： 这说明是查询语句中是存在一个单引号的，为单引号闭合，那么则构造payload 1&#39;or 1&#x3D;1 # 填在用户名处（或直接修改），密码任意，因为被#注释掉了  成功绕过 HaveFun 进来发现啥也没有，那么查看源码  通过Get方法获得参数，并存放在cat中，判断该值">
+    <meta name="description" content="[极客大挑战]EasySQL 先输入用户名1和密码1  可以看出是通过GET方法传输数据 尝试输入1’进行测试 得到报错： 这说明是查询语句中是存在一个单引号的，为单引号闭合，那么则构造payload 1&#39;or 1&#x3D;1 # 填在用户名处（或直接修改），密码任意，因为被#注释掉了  成功绕过 HaveFun 进来发现啥也没有，那么查看源码  通过Get方法获得参数，并存放在cat中，判断该值">
 <meta property="og:type" content="article">
 <meta property="og:title" content="WebWriteUp1">
 <meta property="og:url" content="http://example.com/2024/01/24/WebWriteUp/index.html">
 <meta property="og:site_name" content="TEhS">
-<meta property="og:description" content="EasySQL（极客大挑战） 先输入用户名1和密码1  可以看出是通过GET方法传输数据 尝试输入1’进行测试 得到报错： 这说明是查询语句中是存在一个单引号的，为单引号闭合，那么则构造payload 1&#39;or 1&#x3D;1 # 填在用户名处（或直接修改），密码任意，因为被#注释掉了  成功绕过 HaveFun 进来发现啥也没有，那么查看源码  通过Get方法获得参数，并存放在cat中，判断该值">
+<meta property="og:description" content="[极客大挑战]EasySQL 先输入用户名1和密码1  可以看出是通过GET方法传输数据 尝试输入1’进行测试 得到报错： 这说明是查询语句中是存在一个单引号的，为单引号闭合，那么则构造payload 1&#39;or 1&#x3D;1 # 填在用户名处（或直接修改），密码任意，因为被#注释掉了  成功绕过 HaveFun 进来发现啥也没有，那么查看源码  通过Get方法获得参数，并存放在cat中，判断该值">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240124190853709.png">
 <meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240124190942891.png">
@@ -65,8 +65,23 @@
 <meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240126195918958.png">
 <meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240126205028096.png">
 <meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240126211244718.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240127142115912.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240127143407328.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240127143719209.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240127194441306.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240127195449355.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240127195652258.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240127195734295.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240127200322958.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240127200350391.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240127200438038.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240127200507688.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240127200821860.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240127201839681.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240127202000095.png">
+<meta property="og:image" content="http://example.com/2024/01/24/WebWriteUp/image-20240127202726155.png">
 <meta property="article:published_time" content="2024-01-24T10:47:42.000Z">
-<meta property="article:modified_time" content="2024-01-26T13:23:01.138Z">
+<meta property="article:modified_time" content="2024-01-27T12:27:39.430Z">
 <meta property="article:author" content="TEhS">
 <meta property="article:tag" content="CTF">
 <meta name="twitter:card" content="summary_large_image">
@@ -263,7 +278,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.8k 字
+          3.9k 字
         
       </span>
     
@@ -274,7 +289,7 @@
         
         
         
-          23 分钟
+          33 分钟
         
       </span>
     
@@ -316,7 +331,7 @@
             
               <div class="markdown-body">
                 
-                <h4 id="EasySQL（极客大挑战）"><a href="#EasySQL（极客大挑战）" class="headerlink" title="EasySQL（极客大挑战）"></a>EasySQL（极客大挑战）</h4><p><img src="/2024/01/24/WebWriteUp/image-20240124190853709.png" srcset="/img/loading.gif" lazyload alt="image-20240124190853709"></p>
+                <h4 id="极客大挑战-EasySQL"><a href="#极客大挑战-EasySQL" class="headerlink" title="[极客大挑战]EasySQL"></a>[极客大挑战]EasySQL</h4><p><img src="/2024/01/24/WebWriteUp/image-20240124190853709.png" srcset="/img/loading.gif" lazyload alt="image-20240124190853709"></p>
 <p>先输入用户名1和密码1</p>
 <p><img src="/2024/01/24/WebWriteUp/image-20240124190942891.png" srcset="/img/loading.gif" lazyload alt="image-20240124190942891"></p>
 <p>可以看出是通过GET方法传输数据</p>
@@ -457,7 +472,7 @@
 <p><img src="/2024/01/24/WebWriteUp/image-20240126195918958.png" srcset="/img/loading.gif" lazyload alt="image-20240126195918958"></p>
 <p><strong>方法一</strong></p>
 <p>因为select被过滤掉了，那么则可以对 </p>
-<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs axapta"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> `<span class="hljs-number">1919810931114514</span>` <span class="hljs-meta">#;</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs axapta"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> `<span class="hljs-number">1919810931114514</span>` <span class="hljs-meta">#</span><br></code></pre></td></tr></table></figure>
 
 <p>进行16进制编码，然后构造payload</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">;<span class="hljs-keyword">SeT</span><span class="hljs-variable">@a</span><span class="hljs-operator">=</span><span class="hljs-number">0x73656c656374202a2066726f6d20603139313938313039333131313435313460</span>;<span class="hljs-keyword">prepare</span> execsql <span class="hljs-keyword">from</span> <span class="hljs-variable">@a</span>;<span class="hljs-keyword">execute</span> execsql;#<br></code></pre></td></tr></table></figure>
@@ -474,6 +489,69 @@
 
 <p><img src="/2024/01/24/WebWriteUp/image-20240126211244718.png" srcset="/img/loading.gif" lazyload alt="image-20240126211244718"></p>
 <p>在MySQL中，<code>HANDLER</code>语句用于通过存储引擎直接操作表的数据，而不是使用标准的SQL查询语句。可以以更底层的方式对表进行读写操作，绕过SQL解释器。</p>
+<h4 id="EasySql"><a href="#EasySql" class="headerlink" title="EasySql"></a>EasySql</h4><p><img src="/2024/01/24/WebWriteUp/image-20240127142115912.png" srcset="/img/loading.gif" lazyload alt="image-20240127142115912"></p>
+<p>输入1’，没有回显，输入1，正常回显，判断是数字型注入</p>
+<p>输入1; show tables# 爆表看看</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240127143407328.png" srcset="/img/loading.gif" lazyload alt="image-20240127143407328"></p>
+<p>尝试：1; select * from Flag#</p>
+<p>回显错误</p>
+<p>尝试：1; show columns from Flag#</p>
+<p>回显错误</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240127143719209.png" srcset="/img/loading.gif" lazyload alt="image-20240127143719209"></p>
+<p>看着应该是过滤了很多关键字</p>
+<p>尝试上边提到过的将语句转16进制，构造payload</p>
+<p>1;SeT@a&#x3D;0x73656c6563742a66726f6d466c6167;prepare execsql from @a;execute execsql;#</p>
+<p>回显错误</p>
+<p>那么再尝试handler语句</p>
+<p>1; handler Flag open as a; handler a read next;#</p>
+<p>回显依然是错误</p>
+<p>（做不动了，看题解）</p>
+<p>猜测不仅是很多关键词被过滤了，flag本身也被过滤了</p>
+<p>大佬们猜测后段语言为：select $_GET[‘query’] || flag from Flag</p>
+<p>这里猜测的思路，以我的理解如下：</p>
+<p>首先在知道的数字型注入之后，经过上述看题解之前的尝试之后，发现常规的注入手段不好使</p>
+<p>然后猜想是不是在后端用的语言里，获取了输入框的内容还进行的别的运算</p>
+<p>那么在输入框尝试：1，1，得到回显：</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240127194441306.png" srcset="/img/loading.gif" lazyload alt="image-20240127194441306"></p>
+<p>尝试1，2</p>
+<p>发现回显并没有变</p>
+<p>尝试1，a</p>
+<p>发现得不到回显</p>
+<p>这里需要补充一个知识：</p>
+<blockquote>
+<p>当在sql语句中使用了||运算符时，如果两端其中一个字段的值为NULL或者非数字字符串，那么连接的操作的结果为0</p>
+</blockquote>
+<p>那么就可以猜测，在后端的语句里使用了||运算符</p>
+<p>这里就有了第一种解法：</p>
+<p>将||运算符转换，原理如下：</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240127195449355.png" srcset="/img/loading.gif" lazyload alt="image-20240127195449355"></p>
+<p>所以构造payload：1; set sql_mode&#x3D;PIPES_AS_CONCAT; select 1</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240127195652258.png" srcset="/img/loading.gif" lazyload alt="image-20240127195652258"></p>
+<p>解法2</p>
+<p>构造payload：*,1</p>
+<p>传到后端的语句就变成了：select *,1 || flag from Flag</p>
+<p>这段SQL代码的含义是：从Flag表中选择所有的列，以及由列flag的值与数字1进行连接生成的新列。原理如下：</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240127195734295.png" srcset="/img/loading.gif" lazyload alt="image-20240127195734295"></p>
+<h4 id="极客大挑战-Secret-File"><a href="#极客大挑战-Secret-File" class="headerlink" title="[极客大挑战 ]Secret File"></a>[极客大挑战 ]Secret File</h4><p>看题目名字，猜测是个文件包含类似的题</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240127200322958.png" srcset="/img/loading.gif" lazyload alt="image-20240127200322958"></p>
+<p>进去长这样，查看源码</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240127200350391.png" srcset="/img/loading.gif" lazyload alt="image-20240127200350391"></p>
+<p>发现还有个元素，只是把字体设置成了黑色，找到元素位置点进去（或者直接在url里&#x2F;Archive_room.php）</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240127200438038.png" srcset="/img/loading.gif" lazyload alt="image-20240127200438038"></p>
+<p>再点</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240127200507688.png" srcset="/img/loading.gif" lazyload alt="image-20240127200507688"></p>
+<p>回到上一页，查看源码：</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240127200821860.png" srcset="/img/loading.gif" lazyload alt="image-20240127200821860"></p>
+<p>发现有个action.php，但最后进去的是end.php，说明存在重定向，抓个包，然后重新发到action.php</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240127201839681.png" srcset="/img/loading.gif" lazyload alt="image-20240127201839681"></p>
+<p>看到有个secr3t.php，查看</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240127202000095.png" srcset="/img/loading.gif" lazyload alt="image-20240127202000095"></p>
+<p>显然这里进行了过滤，如果用户输入的文件名包含 <code>../</code>、<code>tp</code>、<code>input</code> 或 <code>data</code> 中的任何一个子串，则输出 “Oh no!” 并终止脚本执行，那么这里可以尝试伪协议，构造payload：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">?file=php:<span class="hljs-regexp">//</span>filter<span class="hljs-regexp">/read=convert.base64-encode/</span>resource=flag.php<br></code></pre></td></tr></table></figure>
+
+<p>得到flag.php的内容：</p>
+<p><img src="/2024/01/24/WebWriteUp/image-20240127202726155.png" srcset="/img/loading.gif" lazyload alt="image-20240127202726155"></p>
+<p>base64解码即可得到flag</p>
 
                 
               </div>
