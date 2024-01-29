@@ -224,6 +224,128 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2024/01/29/WebWriteUp2/" target="_self">
+          WebWriteUp2
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/01/29/WebWriteUp2/" target="_self">
+        <div>
+          [极客大挑战]LoveSQL 判断注入类型 尝试随便一个用户名，密码（1，2），有回显  尝试1’ , 2‘，  说明是字符型注入 判断字段数 11&#x27; or 1=1 order by 1 #  正确回显为：  但测到4时  说明有3个字段 确定字段顺序 12&#x27; union select 1,2,3#   不难猜测，第二列放的是用户名，第三列放的是密码 爆出当前数据库&#x2F;
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-01-29 15:36" pubdate>
+              2024-01-29
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Web/" class="category-chain-item">Web</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/CTF/">#CTF</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/01/29/%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/" target="_self">
+          命令注入总结
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/01/29/%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5%E6%80%BB%E7%BB%93/" target="_self">
+        <div>
+          命令行注入命令注入通常因为指Web应用在服务器上拼接系统命令而造成的漏洞 常见危险函数PHP:  System exec passthru Shell_exec popen Proc_open  Python:  system popen Subprocess.call spawn  常见注入方式分号(;) 1ping 127.0.0.1;ls  多条语句顺序执行 管道符(|) 1cmd1 | c
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-01-29 14:34" pubdate>
+              2024-01-29
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Web/" class="category-chain-item">Web</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/CTF/">#CTF</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2024/01/24/WebWriteUp/" target="_self">
           WebWriteUp1
         </a>
@@ -671,128 +793,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/CTF/">#CTF</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2023/09/02/BUUCTFWriteUp1/" target="_self">
-          BUUCTFWriteUp1
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/09/02/BUUCTFWriteUp1/" target="_self">
-        <div>
-          LFI COURSE 1  if(isset($_GET[&#39;file&#39;])) &#123; ... &#125;：这是一个条件语句，用于检查是否存在名为 ‘file’ 的 GET 参数。如果存在，代码块内的内容将被执行。 $str = $_GET[&#39;file&#39;];：将名为 ‘file’ 的 GET 参数的值存储在变量 $str 中。 include $_GET[&#
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-09-02 09:19" pubdate>
-              2023-09-02
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/Basic/" class="category-chain-item">Basic</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/CTF/">#CTF</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2023/07/27/ReadPaper2/" target="_self">
-          ReadPaper2
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/07/27/ReadPaper2/" target="_self">
-        <div>
-          WarpAttack: Bypassing CFI through Compiler-Introduced Double-Fetches （WarpAttack：通过编译器引入的双重获取绕过CFI）Introduction如今多数系统上运行的软件是由C&#x2F;C++编写的，容易出现内存损坏错误，因此需要对这些程序进行彻底的测试以尽可能的消除错误，但通常测试时不完整的，因此会在代码中添加缓解措施
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-07-27 16:07" pubdate>
-              2023-07-27
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/Study/" class="category-chain-item">Study</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/ReadPaper/">#ReadPaper</a>
             
           </div>
         
