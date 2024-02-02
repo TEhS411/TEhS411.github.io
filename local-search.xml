@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>WebRR</title>
+    <link href="/2024/02/02/WebRR/"/>
+    <url>/2024/02/02/WebRR/</url>
+    
+    <content type="html"><![CDATA[<h2 id="WEBRR-A-Forensic-System-for-Replaying-and-Investigating-Web-Based-Attacks-in-The-Modern-Web"><a href="#WEBRR-A-Forensic-System-for-Replaying-and-Investigating-Web-Based-Attacks-in-The-Modern-Web" class="headerlink" title="WEBRR: A Forensic System for Replaying and Investigating Web-Based Attacks in The Modern Web"></a>WEBRR: A Forensic System for Replaying and Investigating Web-Based Attacks in The Modern Web</h2><h3 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h3><p>基于Chromium的浏览器使用多进程架构。主进程是浏览器进程，类似于操作系统级别的内核。然后，在沙箱化的渲染进程中呈现Web内容，这些进程无法直接访问网络或底层文件系统。本文提出的WebRR是基于Chromium浏览器构建的，并且主要在渲染过程中实现</p><h4 id="渲染进程"><a href="#渲染进程" class="headerlink" title="渲染进程"></a>渲染进程</h4><p>包含四个主要组件</p><ul><li><p><strong>渲染引擎（Blink）</strong>：</p><p><strong>功能：</strong> 负责呈现网站，处理HTML解析、维护DOM（文档对象模型）并实现暴露于V8的网络API。</p><p><strong>多线程性质：</strong> 是一个高度多线程的组件，可以并行处理多个任务。</p></li><li><p><strong>JS引擎（V8）</strong>：</p><p><strong>功能：</strong> 执行Web应用程序中的所有JavaScript组件，包括脚本、回调和事件处理程序。</p><p><strong>多线程性质：</strong> 每个渲染过程都包括V8引擎的一个实例，用于执行JavaScript代码。</p></li><li><p><strong>绑定层</strong>：</p><p><strong>作用：</strong> 将Blink和V8连接在一起，通过暴露功能实现它们之间的交互。</p><p><strong>功能：</strong> 包括超过4,000个API和2,000个暴露于V8的调用属性，这些API和属性用于启用JavaScript代码对DOM进行更改所需的Blink API等功能。</p><p><strong>生成方式：</strong> 这些API是在编译Chromium时通过绑定生成器生成的，将WebIDL文件编译成C++代码 [35]。</p></li><li><p><strong>平台层</strong>：</p><p><strong>作用：</strong> 是与浏览器过程通信的附加中间层，允许Blink和V8通过这一层与浏览器过程进行通信。</p></li></ul><h4 id="渲染线程"><a href="#渲染线程" class="headerlink" title="渲染线程"></a>渲染线程</h4><ul><li><strong>渲染线程（Render Thread）：</strong><ul><li><strong>职责：</strong> 渲染线程是渲染进程中的核心组件之一，主要负责处理与页面渲染相关的任务。</li><li>功能：<ul><li>负责将页面的HTML和CSS渲染成可视化的页面，包括布局、样式和绘制等操作。</li><li>执行与页面关联的JavaScript代码，包括通过脚本标签引入的脚本和嵌入在HTML文档中的脚本。</li><li>处理DOM（文档对象模型）的操作，包括对文档元素的增删改查。</li><li>处理与页面相关的事件，例如用户交互和鼠标点击等。</li></ul></li></ul></li><li><strong>WebWorker线程：</strong><ul><li><strong>职责：</strong> WebWorker线程是在后台独立运行的JavaScript线程，与主线程（渲染线程）相互独立，用于执行一些耗时的或需要在后台运行的任务。</li><li>特点：<ul><li>独立于主线程，不阻塞主线程的执行，因此可以提高页面的响应性。</li><li>通过消息传递机制与主线程通信，但无法直接访问DOM。</li><li>可以用于执行复杂的计算、大规模数据处理等任务，而不影响用户界面的交互性。</li></ul></li></ul></li><li><strong>ServiceWorker线程：</strong><ul><li><strong>职责：</strong> ServiceWorker线程也是在后台独立运行的JavaScript线程，但其设计目的是改善离线Web应用的体验，并提供推送通知等功能。</li><li>特点：<ul><li>独立于浏览器窗口和页面，注册后一直在后台运行。</li><li>可以拦截和处理网络请求，包括在离线状态下缓存内容以提供离线访问。</li><li>具有一些特殊的事件，如fetch事件，允许ServiceWorker拦截和修改网络请求。</li><li>可以接收来自后端服务器的推送消息，并触发浏览器通知</li></ul></li></ul></li></ul><h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><h4 id="针对的问题"><a href="#针对的问题" class="headerlink" title="针对的问题"></a><strong>针对的问题</strong></h4><p>在企业遭受复杂攻击或发生数据泄漏后，需要进行取证分析，重建和了解攻击的根本原因</p><h4 id="现状"><a href="#现状" class="headerlink" title="现状"></a>现状</h4><p>为解决上述问题，现在已经开发出了系统级的审计系统，包括整个系统的记录和重播方法。但此类方法的主要局限性就是其对Web攻击的分析是有限的，因为系统级抽象（例如进程，套接字，文件），与处理Web攻击相关的必要语义之间存在很大的差距（例如HTML&#x2F;CSS和Javascript）</p><p>所以为了解决这个问题：</p><p>初步尝试就是提出了具有审计功能的安全级浏览器，能提供特定于Web的审计系统。但当前系统是仅记录的系统，不提供重放功能。</p><p>接着就是提出了一些面向Web的记录和回放系统，这些多数关注于支持调试和测试，并没有考虑到安全审计。进行安全级审计，需要在取证环境中保持记录状态，但流行的测试工具Mozilla的rr会导致超过4倍的开销。</p><h4 id="需要满足的条件"><a href="#需要满足的条件" class="headerlink" title="需要满足的条件"></a>需要满足的条件</h4><p>实现取证级的记录和重放：</p><ul><li>确定性重放：即确保重放的路径与记录的路径要一样。如果不同，可能会阻止攻击正确或全部重放，进而导致无法分析攻击的根本原因</li><li>始终在线记录：因为攻击因为攻击是不可预测的和短暂的，所以审计日志记录必须始终打开</li><li>防篡改：审计系统不容易被攻击者篡改或禁用</li><li>可移植：基于Web的取证记录和审计系统要独立于OS和设备</li></ul><h4 id="WebRR"><a href="#WebRR" class="headerlink" title="WebRR"></a>WebRR</h4><p><img src="/2024/02/02/WebRR/image-20240202202110475.png" alt="image-20240202202110475"></p><p>WEBRR通过利用JavaScript执行单元分区的概念来重新构想如何重放网站，将Web应用的JS分区为一系列JavaScript执行单元（JEUs），其中JEU表示脚本、回调或事件处理程序。接下来，在重放期间，WEBRR通过重放每个单独的JEU同时保留记录的执行顺序来重放应用程序。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Study</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>ReadPaper</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>WebWriteUp3</title>
     <link href="/2024/02/01/WebWriteUp3/"/>
     <url>/2024/02/01/WebWriteUp3/</url>
