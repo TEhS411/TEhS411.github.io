@@ -31,8 +31,13 @@
 <meta property="og:image" content="http://example.com/2024/02/01/WebWriteUp3/image-20240201161834973.png">
 <meta property="og:image" content="http://example.com/2024/02/01/WebWriteUp3/image-20240201161858789.png">
 <meta property="og:image" content="http://example.com/2024/02/01/WebWriteUp3/image-20240201174111628.png">
+<meta property="og:image" content="http://example.com/2024/02/01/WebWriteUp3/image-20240203205319202.png">
+<meta property="og:image" content="http://example.com/2024/02/01/WebWriteUp3/image-20240203210016882.png">
+<meta property="og:image" content="http://example.com/2024/02/01/WebWriteUp3/image-20240203205817503.png">
+<meta property="og:image" content="http://example.com/2024/02/01/WebWriteUp3/image-20240203213908903.png">
+<meta property="og:image" content="http://example.com/2024/02/01/WebWriteUp3/image-20240203214043914.png">
 <meta property="article:published_time" content="2024-02-01T02:25:09.000Z">
-<meta property="article:modified_time" content="2024-02-01T09:55:47.533Z">
+<meta property="article:modified_time" content="2024-02-03T13:41:55.504Z">
 <meta property="article:author" content="TEhS">
 <meta property="article:tag" content="CTF">
 <meta name="twitter:card" content="summary_large_image">
@@ -229,7 +234,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.7k 字
+          4.3k 字
         
       </span>
     
@@ -240,7 +245,7 @@
         
         
         
-          31 分钟
+          36 分钟
         
       </span>
     
@@ -352,6 +357,30 @@
 
 <p>php的弱类型比较，如果比较一个数字和字符串或者比较涉及到数字内容的字符串，则字符串会被转换成数值并且比较按照数值来进行</p>
 <p>所以这里只需要构造payload：?key&#x3D;123即可</p>
+<h3 id="EaseCalc"><a href="#EaseCalc" class="headerlink" title="EaseCalc"></a>EaseCalc</h3><p><img src="/2024/02/01/WebWriteUp3/image-20240203205319202.png" srcset="/img/loading.gif" lazyload alt="image-20240203205319202"></p>
+<p>简单尝试，数字可以正常显示，字母会报错</p>
+<p>查看源码：</p>
+<p><img src="/2024/02/01/WebWriteUp3/image-20240203210016882.png" srcset="/img/loading.gif" lazyload alt="image-20240203210016882"></p>
+<p>大致就是通过ajax，向服务器发送表单，根据服务器返回的结果，不刷新网页，更新页面上的元素</p>
+<p>看着有个calc.php，访问，得到以下代码</p>
+<p><img src="/2024/02/01/WebWriteUp3/image-20240203205817503.png" srcset="/img/loading.gif" lazyload alt="image-20240203205817503"></p>
+<p>使用黑名单进行过滤</p>
+<p>那么就需要对传参num和我们尝试访问的文件目录进行过滤</p>
+<p>这里可以在传参时，在num前边加空格绕过字符检测<strong>因为现在的变量叫“ num”，而不是“num”。但php在解析的时候，会先把空格给去掉，这样我们的代码还能正常运行，还上传了非法字符。</strong>（这个在我看来，有点类似后缀名绕过时候的xx.php.）</p>
+<p>那么能传参之后，看着过滤了&#x2F;,那么猜测跟文件访问有关，那么如何绕过呢</p>
+<p>利用<code>scandir</code> 函数，其用于获取指定目录中的文件和目录列表</p>
+<p><code>scandir(chr(47))</code> 获取的是根目录 <code>/</code> 下的所有文件和目录的列表。<code>chr</code> 是一个 PHP 函数，用于返回指定 ASCII 值的字符。在这里，<code>chr(47)</code> 返回 ASCII 值为 47 的字符，即斜杠 <code>/</code>。所以，<code>chr(47)</code> 就是表示根目录 <code>/</code>。</p>
+<p>构造payload，</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">/calc.php? num=<span class="hljs-number">1</span>; var<span class="hljs-constructor">_dump(<span class="hljs-params">scandir</span>(<span class="hljs-params">chr</span>(47)</span>));<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2024/02/01/WebWriteUp3/image-20240203213908903.png" srcset="/img/loading.gif" lazyload alt="image-20240203213908903"></p>
+<p>看到根目录下有个文件叫f1agg</p>
+<p>利用<code>file_get_contents</code> 函数，用于获取文件的内容。</p>
+<p>构造payload：</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs autoit">/calc.php？  %<span class="hljs-number">20</span>num=var_dump(file_get_contents(<span class="hljs-built_in">chr</span>(<span class="hljs-number">47</span>).<span class="hljs-built_in">chr</span>(<span class="hljs-number">102</span>).<span class="hljs-built_in">chr</span>(<span class="hljs-number">49</span>).<span class="hljs-built_in">chr</span>(<span class="hljs-number">97</span>).<span class="hljs-built_in">chr</span>(<span class="hljs-number">103</span>).<span class="hljs-built_in">chr</span>(<span class="hljs-number">103</span>)))<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2024/02/01/WebWriteUp3/image-20240203214043914.png" srcset="/img/loading.gif" lazyload alt="image-20240203214043914"></p>
+<p>得到flag</p>
 
                 
               </div>
