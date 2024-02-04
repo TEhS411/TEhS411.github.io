@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2024/02/02/WebRR/image-20240202202110475.png">
 <meta property="article:published_time" content="2024-02-02T06:22:24.000Z">
-<meta property="article:modified_time" content="2024-02-03T13:43:27.945Z">
+<meta property="article:modified_time" content="2024-02-04T13:33:17.988Z">
 <meta property="article:author" content="TEhS">
 <meta property="article:tag" content="ReadPaper">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.6k 字
+          3.5k 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          22 分钟
+          29 分钟
         
       </span>
     
@@ -360,7 +360,18 @@
 <li><strong>密钥管理：</strong> 加密密钥可以安全地存储在密钥托管中，以确保密钥的安全性，只有在调查需要时才能解密并与分析师共享。</li>
 <li><strong>浏览器安全性：</strong> WEBRR在威胁模型中假设浏览器应用程序在攻击发生时不被破坏，从而可信任记录的日志。即使浏览器被破坏，WEBRR仍然能够记录攻击的所有步骤，直到实际破坏发生。</li>
 </ol>
-<h3 id="WebRR"><a href="#WebRR" class="headerlink" title="WebRR"></a>WebRR</h3>
+<h3 id="WebRR"><a href="#WebRR" class="headerlink" title="WebRR"></a>WebRR</h3><h4 id="javascript执行单元分区"><a href="#javascript执行单元分区" class="headerlink" title="javascript执行单元分区"></a>javascript执行单元分区</h4><p>在记录环节，WebRR的策略是将JS执行划分为一些列JEU（例如当脚本插入DOM时，触发事件或执行回调）</p>
+<h5 id="script单元"><a href="#script单元" class="headerlink" title="script单元"></a>script单元</h5><p>划分方式：通过Hook方法，添加到Blink中，使用JS-Execution Uni Recorder模块在JEU开始和结束时记录，具体而言，在Blink中，当一个script标签被插入到DOM中时，对应页面的ScriptController被调用，该Controller调用V8来执行相关的脚本。具体来说，ExecuteScriptAndReturnValue将脚本传递给V8进行执行。为了记录脚本执行，在Blink将控制权传递给V8的地方插入了hook。对于每个执行的脚本，WEBRR记录了帧ID、脚本ID、序列号以及脚本源代码的哈希值，不必记录脚本的源代码，因为在脚本的网络请求发起时，Blink-Platform recording shims将会记录它。</p>
+<blockquote>
+<p>Hook</p>
+<p>叫做 <strong>钩子函数</strong>，在系统调用一个函数之前，钩子程序就先捕获该消息，得到控制权，这时钩子程序既可以加工处理（改变）该函数的执行行为，还可以强制结束消息的传递。</p>
+<p>“Blink-Platform recording shims” </p>
+<p>是指在浏览器引擎 Blink 中的一种机制，用于记录页面加载过程中的各种活动，特别是网络请求和脚本执行。这些记录是为了支持开发者工具、性能分析以及类似的目的。</p>
+<p>ExecuteScriptAndReturnValue </p>
+<p>是 Blink 渲染引擎中的一个函数，用于执行 JavaScript 脚本并返回执行结果的值。</p>
+</blockquote>
+<h5 id="回调单元"><a href="#回调单元" class="headerlink" title="回调单元"></a>回调单元</h5><p>注册回调最常用的 Web API 包括 setTimeout 和 setInterval。当调用 setTimeout 和 setInterval 时，Blink 创建一个 DOMTimer 对象。该对象封装了回调，Blink 将在渲染线程上安排执行 DOMTimer::Execute，以在指定的时间后执行回调。为了记录这些回调单元，WebRR在 DOMTimer::Execute 内部添加Hook，记录回调的执行开始和结束时间。<strong>这是为了在后续的重放过程中能够还原回调函数的执行顺序和时序。</strong></p>
+<h5 id="事件单元"><a href="#事件单元" class="headerlink" title="事件单元"></a>事件单元</h5>
                 
               </div>
             
