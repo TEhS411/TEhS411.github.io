@@ -24,8 +24,9 @@
 <meta property="og:description" content="WEBRR: A Forensic System for Replaying and Investigating Web-Based Attacks in The Modern Web知识点基于Chromium的浏览器使用多进程架构。主进程是浏览器进程，类似于操作系统级别的内核。然后，在沙箱化的渲染进程中呈现Web内容，这些进程无法直接访问网络或底层文件系统。本文提出的WebRR是基于Chromi">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2024/02/02/WebRR/image-20240202202110475.png">
+<meta property="og:image" content="http://example.com/2024/02/02/WebRR/image-20240205212153130.png">
 <meta property="article:published_time" content="2024-02-02T06:22:24.000Z">
-<meta property="article:modified_time" content="2024-02-04T13:38:30.276Z">
+<meta property="article:modified_time" content="2024-02-05T13:55:42.161Z">
 <meta property="article:author" content="TEhS">
 <meta property="article:tag" content="ReadPaper">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.8k 字
+          4k 字
         
       </span>
     
@@ -233,7 +234,7 @@
         
         
         
-          32 分钟
+          34 分钟
         
       </span>
     
@@ -360,7 +361,7 @@
 <li><strong>密钥管理：</strong> 加密密钥可以安全地存储在密钥托管中，以确保密钥的安全性，只有在调查需要时才能解密并与分析师共享。</li>
 <li><strong>浏览器安全性：</strong> WEBRR在威胁模型中假设浏览器应用程序在攻击发生时不被破坏，从而可信任记录的日志。即使浏览器被破坏，WEBRR仍然能够记录攻击的所有步骤，直到实际破坏发生。</li>
 </ol>
-<h3 id="WebRR"><a href="#WebRR" class="headerlink" title="WebRR"></a>WebRR</h3><h4 id="javascript执行单元分区"><a href="#javascript执行单元分区" class="headerlink" title="javascript执行单元分区"></a>javascript执行单元分区</h4><p>在记录环节，WebRR的策略是将JS执行划分为一些列JEU（例如当脚本插入DOM时，触发事件或执行回调）</p>
+<h3 id="WebRR"><a href="#WebRR" class="headerlink" title="WebRR"></a>WebRR</h3><h4 id="记录（record）"><a href="#记录（record）" class="headerlink" title="记录（record）"></a>记录（record）</h4><p>在记录环节，WebRR的策略是将JS执行划分为一些列JEU（例如当脚本插入DOM时，触发事件或执行回调）</p>
 <h5 id="script单元"><a href="#script单元" class="headerlink" title="script单元"></a>script单元</h5><p>划分方式：通过Hook方法，添加到Blink中，使用JS-Execution Uni Recorder模块在JEU开始和结束时记录，具体而言，在Blink中，当一个script标签被插入到DOM中时，对应页面的ScriptController被调用，该Controller调用V8来执行相关的脚本。具体来说，ExecuteScriptAndReturnValue将脚本传递给V8进行执行。为了记录脚本执行，在Blink将控制权传递给V8的地方插入了hook。对于每个执行的脚本，WEBRR记录了帧ID、脚本ID、序列号以及脚本源代码的哈希值，不必记录脚本的源代码，因为在脚本的网络请求发起时，Blink-Platform recording shims将会记录它。</p>
 <blockquote>
 <p>Hook</p>
@@ -385,6 +386,8 @@
 <li><strong>逐一执行监听器：</strong> 遍历事件监听器列表，依次执行每个监听器的回调函数</li>
 </ol>
 </blockquote>
+<h4 id="重放（replay）"><a href="#重放（replay）" class="headerlink" title="重放（replay）"></a>重放（replay）</h4><p><img src="/2024/02/02/WebRR/image-20240205212153130.png" srcset="/img/loading.gif" lazyload alt="image-20240205212153130"></p>
+<p>在重放过程中，操作被从队列中取出，并由 Replay Dispatcher 安排在渲染线程上执行。这个过程会一直进行，直到队列为空。首先，在重放开始时，WEBRR 将回放调度程序安排为渲染线程任务队列的一项任务。接下来，渲染线程的调度程序将执行回放调度程序任务。当这发生时，调度程序将从队列中弹出下一个重放操作，处理它，并在渲染线程上执行。操作如何被“处理”取决于从队列中弹出的重放操作的类型。最后，在操作完成后，WEBRR 通过将调度程序任务放回渲染线程的任务队列，重复这个过程，直到重放操作队列为空。</p>
 
                 
               </div>

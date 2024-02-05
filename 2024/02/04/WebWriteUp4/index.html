@@ -30,8 +30,14 @@
 <meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240204214600079.png">
 <meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240204220846562.png">
 <meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240204220949342.png">
+<meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240205203520961.png">
+<meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240205204003253.png">
+<meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240205205537445.png">
+<meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240205205610457.png">
+<meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240205210043709.png">
+<meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240205210252841.png">
 <meta property="article:published_time" content="2024-02-04T13:40:21.000Z">
-<meta property="article:modified_time" content="2024-02-04T14:10:50.435Z">
+<meta property="article:modified_time" content="2024-02-05T13:03:00.297Z">
 <meta property="article:author" content="TEhS">
 <meta property="article:tag" content="CTF">
 <meta name="twitter:card" content="summary_large_image">
@@ -228,7 +234,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          308 字
+          1.1k 字
         
       </span>
     
@@ -239,7 +245,7 @@
         
         
         
-          3 分钟
+          10 分钟
         
       </span>
     
@@ -304,6 +310,43 @@
 <p>得到flag</p>
 <p><strong>方法二</strong></p>
 <p>使用数组进行传参，跳过判断</p>
+<p>payload：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">password</span>=<span class="hljs-number">404</span>a &amp; money[]=<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="EasyMD5"><a href="#EasyMD5" class="headerlink" title="EasyMD5"></a>EasyMD5</h3><p><img src="/2024/02/04/WebWriteUp4/image-20240205203520961.png" srcset="/img/loading.gif" lazyload alt="image-20240205203520961"></p>
+<p>尝试了各种sql注入字符串均没异常</p>
+<p>那么抓包看看：</p>
+<p><img src="/2024/02/04/WebWriteUp4/image-20240205204003253.png" srcset="/img/loading.gif" lazyload alt="image-20240205204003253"></p>
+<p>看到hint： select * from ‘admin’ where password&#x3D;md5($pass,true)</p>
+<p>md5函数用法：</p>
+<figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs vbnet">md5(<span class="hljs-type">string</span>,raw)<br><br><span class="hljs-symbol">string:</span>需要计算的字符串<br><span class="hljs-symbol">raw:</span> <span class="hljs-literal">true</span>: <span class="hljs-number">16</span>字符二进制格式<br>		 <span class="hljs-literal">false</span>: <span class="hljs-number">32</span>字符十六进制格式<br></code></pre></td></tr></table></figure>
+
+<p>所以这里需要进行sql注入的话，需要利用mysql一个特性：</p>
+<blockquote>
+<p>在mysql里面，在用作布尔型判断时，以1开头的字符串会被当做整型数。<br>要注意的是这种情况是必须要有单引号括起来的，比如password&#x3D;‘xxx’ or ‘1xxxxxxxxx’，那么就相当于password&#x3D;‘xxx’ or 1 ，也就相当于password&#x3D;‘xxx’ or true，所以返回值就是true</p>
+</blockquote>
+<p>那么就需要一个字符，在计算完该字符的md5值后，经过hex能转成 ‘xxx’ or ‘xxxx’ 格式，通过后边的字符串由数字开头，就能将原select语句变成永真式</p>
+<p>这里了解到一个常用字符串：ffifdyop</p>
+<p>后端语句就会变成：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">select * <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;admin&#x27;</span> where password=<span class="hljs-string">&#x27;&#x27;</span>o<span class="hljs-string">r&#x27;6xxxxxxx&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>所以这里输入ffifdyop，得到：</p>
+<p><img src="/2024/02/04/WebWriteUp4/image-20240205205537445.png" srcset="/img/loading.gif" lazyload alt="image-20240205205537445"></p>
+<p>看来还要继续注入</p>
+<p>查看源码：</p>
+<p><img src="/2024/02/04/WebWriteUp4/image-20240205205610457.png" srcset="/img/loading.gif" lazyload alt="image-20240205205610457"></p>
+<p>这里应该就是让我们找一对md5碰撞，但可以看到，依旧是弱类型比较，所以其实a，b只要满足其md5值的形式是例如1xxxxx，就行。</p>
+<p>提供一对字符：QNKCDZO和s214587387a，通过get方法传参即可</p>
+<p><img src="/2024/02/04/WebWriteUp4/image-20240205210043709.png" srcset="/img/loading.gif" lazyload alt="image-20240205210043709"></p>
+<p>这回不是弱类型比较了，但可以利用数组绕过，因为：md5(array()) &#x3D; null</p>
+<blockquote>
+<p>补充：</p>
+<p>strcmp(array(), “abc”) &#x3D; null<br>strpos(array(),”abc”) &#x3D; null</p>
+</blockquote>
+<p><img src="/2024/02/04/WebWriteUp4/image-20240205210252841.png" srcset="/img/loading.gif" lazyload alt="image-20240205210252841"></p>
+<p>即可得到flag</p>
 
                 
               </div>
