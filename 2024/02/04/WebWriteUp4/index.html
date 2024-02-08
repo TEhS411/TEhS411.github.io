@@ -36,8 +36,20 @@
 <meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240205205610457.png">
 <meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240205210043709.png">
 <meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240205210252841.png">
+<meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240208204615216.png">
+<meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240208204826660.png">
+<meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240208205237527.png">
+<meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240208205403054.png">
+<meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240208205503847.png">
+<meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240208211735266.png">
+<meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240208211707475.png">
+<meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240208212850364.png">
+<meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240208212917440.png">
+<meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240208213509159.png">
+<meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240208213530444.png">
+<meta property="og:image" content="http://example.com/2024/02/04/WebWriteUp4/image-20240208213639476.png">
 <meta property="article:published_time" content="2024-02-04T13:40:21.000Z">
-<meta property="article:modified_time" content="2024-02-05T13:03:00.297Z">
+<meta property="article:modified_time" content="2024-02-08T13:53:16.906Z">
 <meta property="article:author" content="TEhS">
 <meta property="article:tag" content="CTF">
 <meta name="twitter:card" content="summary_large_image">
@@ -234,7 +246,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.1k 字
+          1.4k 字
         
       </span>
     
@@ -245,7 +257,7 @@
         
         
         
-          10 分钟
+          12 分钟
         
       </span>
     
@@ -347,6 +359,29 @@
 </blockquote>
 <p><img src="/2024/02/04/WebWriteUp4/image-20240205210252841.png" srcset="/img/loading.gif" lazyload alt="image-20240205210252841"></p>
 <p>即可得到flag</p>
+<h3 id="你传你🐎呢"><a href="#你传你🐎呢" class="headerlink" title="你传你🐎呢"></a>你传你🐎呢</h3><p><img src="/2024/02/04/WebWriteUp4/image-20240208204615216.png" srcset="/img/loading.gif" lazyload alt="image-20240208204615216"></p>
+<p>进来是一个充满了抽象元素的界面</p>
+<p>随便上传一个一句话木马webshell.php，得到如下界面</p>
+<p><img src="/2024/02/04/WebWriteUp4/image-20240208204826660.png" srcset="/img/loading.gif" lazyload alt="image-20240208204826660"></p>
+<p>抓包看看，看着界面上已经有的两个图片都是jpg，改变content-type试试</p>
+<p><img src="/2024/02/04/WebWriteUp4/image-20240208205237527.png" srcset="/img/loading.gif" lazyload alt="image-20240208205237527"></p>
+<p>应该对后缀php还有检测，尝试一些方法也无法绕过</p>
+<p><img src="/2024/02/04/WebWriteUp4/image-20240208205403054.png" srcset="/img/loading.gif" lazyload alt="image-20240208205403054"></p>
+<p>使用php.后缀，绕过成功</p>
+<p><img src="/2024/02/04/WebWriteUp4/image-20240208205503847.png" srcset="/img/loading.gif" lazyload alt="image-20240208205503847"></p>
+<p>但用蚁剑连接不上，应该是一句话木马确实上传到了后端，但没被解析，所以在连接的时候显示连接是空，这里再选择用上传.htaccess文件绕过</p>
+<p><img src="/2024/02/04/WebWriteUp4/image-20240208211735266.png" srcset="/img/loading.gif" lazyload alt="image-20240208211735266"></p>
+<p><img src="/2024/02/04/WebWriteUp4/image-20240208211707475.png" srcset="/img/loading.gif" lazyload alt="image-20240208211707475"></p>
+<p>在根目录找到flag</p>
+<h3 id="easy-tornado"><a href="#easy-tornado" class="headerlink" title="easy_tornado"></a>easy_tornado</h3><p><img src="/2024/02/04/WebWriteUp4/image-20240208212850364.png" srcset="/img/loading.gif" lazyload alt="image-20240208212850364"></p>
+<p>flag.txt:</p>
+<p><img src="/2024/02/04/WebWriteUp4/image-20240208212917440.png" srcset="/img/loading.gif" lazyload alt="image-20240208212917440"></p>
+<p>welcome.txt</p>
+<p><img src="/2024/02/04/WebWriteUp4/image-20240208213509159.png" srcset="/img/loading.gif" lazyload alt="image-20240208213509159"></p>
+<p>hints.txt</p>
+<p><img src="/2024/02/04/WebWriteUp4/image-20240208213530444.png" srcset="/img/loading.gif" lazyload alt="image-20240208213530444"></p>
+<p><img src="/2024/02/04/WebWriteUp4/image-20240208213639476.png" srcset="/img/loading.gif" lazyload alt="image-20240208213639476"></p>
+<p>这里可以看到这里是计算了filename的hash值，才能访问</p>
 
                 
               </div>
