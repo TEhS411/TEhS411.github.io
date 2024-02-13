@@ -30,8 +30,17 @@
 <meta property="og:image" content="http://example.com/2024/02/12/WebWriteUp5/image-20240212135428321.png">
 <meta property="og:image" content="http://example.com/2024/02/12/WebWriteUp5/image-20240212135822226.png">
 <meta property="og:image" content="http://example.com/2024/02/12/WebWriteUp5/image-20240212140151781.png">
+<meta property="og:image" content="http://example.com/2024/02/12/WebWriteUp5/image-20240213192437978.png">
+<meta property="og:image" content="http://example.com/2024/02/12/WebWriteUp5/image-20240213193310068.png">
+<meta property="og:image" content="http://example.com/2024/02/12/WebWriteUp5/image-20240213194207026.png">
+<meta property="og:image" content="http://example.com/2024/02/12/WebWriteUp5/image-20240213194340429.png">
+<meta property="og:image" content="http://example.com/2024/02/12/WebWriteUp5/image-20240213194637057.png">
+<meta property="og:image" content="http://example.com/2024/02/12/WebWriteUp5/image-20240213194722710.png">
+<meta property="og:image" content="http://example.com/2024/02/12/WebWriteUp5/image-20240213194940758.png">
+<meta property="og:image" content="http://example.com/2024/02/12/WebWriteUp5/image-20240213195059910.png">
+<meta property="og:image" content="http://example.com/2024/02/12/WebWriteUp5/image-20240213195723114.png">
 <meta property="article:published_time" content="2024-02-12T05:16:22.000Z">
-<meta property="article:modified_time" content="2024-02-12T06:03:12.457Z">
+<meta property="article:modified_time" content="2024-02-13T11:59:01.327Z">
 <meta property="article:author" content="TEhS">
 <meta property="article:tag" content="CTF">
 <meta name="twitter:card" content="summary_large_image">
@@ -228,7 +237,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.5k 字
+          5.8k 字
         
       </span>
     
@@ -239,7 +248,7 @@
         
         
         
-          29 分钟
+          49 分钟
         
       </span>
     
@@ -373,6 +382,47 @@
 <p><img src="/2024/02/12/WebWriteUp5/image-20240212140151781.png" srcset="/img/loading.gif" lazyload alt="image-20240212140151781"></p>
 <p>最后将两段拼起来并去掉重复的部分：</p>
 <p>flag{0738fa38-907b-4661-a4b0-fc6c78dae589}</p>
+<h3 id="MRCTF2020-Ez-bypass"><a href="#MRCTF2020-Ez-bypass" class="headerlink" title="[MRCTF2020]Ez_bypass"></a>[MRCTF2020]Ez_bypass</h3><p><img src="/2024/02/12/WebWriteUp5/image-20240213192437978.png" srcset="/img/loading.gif" lazyload alt="image-20240213192437978"></p>
+<p>一进来是这么一段话</p>
+<p>还原后大概是：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs php">I put something in F12 <span class="hljs-keyword">for</span> you <br><span class="hljs-meta">&lt;?php</span> <br><span class="hljs-keyword">include</span> <span class="hljs-string">&#x27;flag.php&#x27;</span>; <br><span class="hljs-variable">$flag</span>=<span class="hljs-string">&#x27;MRCTF&#123;xxxxxxxxxxxxxxxxxxxxxxxxx&#125;&#x27;</span>; <br><span class="hljs-keyword">if</span>(<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;gg&#x27;</span>])&amp;&amp;<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;id&#x27;</span>])) &#123; <span class="hljs-comment">// 传入两个GET,gg和id</span><br>    <span class="hljs-variable">$id</span>=<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;id&#x27;</span>]; <br>    <span class="hljs-variable">$gg</span>=<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;gg&#x27;</span>]; <br>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">md5</span>(<span class="hljs-variable">$id</span>) === <span class="hljs-title function_ invoke__">md5</span>(<span class="hljs-variable">$gg</span>) &amp;&amp; <span class="hljs-variable">$id</span> !== <span class="hljs-variable">$gg</span>) &#123; <span class="hljs-comment">// 经过md5后两个值,全等，且传入的值不相同</span><br>        <span class="hljs-keyword">echo</span> <span class="hljs-string">&#x27;You got the first step&#x27;</span>; <br>        <span class="hljs-keyword">if</span>(<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;passwd&#x27;</span>])) &#123; 	<span class="hljs-comment">// 传入POST,passwd</span><br>            <span class="hljs-variable">$passwd</span>=<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;passwd&#x27;</span>]; <br>            <span class="hljs-keyword">if</span> (!<span class="hljs-title function_ invoke__">is_numeric</span>(<span class="hljs-variable">$passwd</span>)) &#123; <span class="hljs-comment">// passwd不能为数字</span><br>                <span class="hljs-keyword">if</span>(<span class="hljs-variable">$passwd</span>==<span class="hljs-number">1234567</span>) &#123; <span class="hljs-comment">// passwd必须要和1234567对等</span><br>                    <span class="hljs-keyword">echo</span> <span class="hljs-string">&#x27;Good Job!&#x27;</span>; <br>                    <span class="hljs-title function_ invoke__">highlight_file</span>(<span class="hljs-string">&#x27;flag.php&#x27;</span>); <br>                    <span class="hljs-keyword">die</span>(<span class="hljs-string">&#x27;By Retr_0&#x27;</span>); <br>                &#125; <span class="hljs-keyword">else</span> &#123; <br>                    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;can you think twice??&quot;</span>; <br>                    &#125; <br>            &#125; <span class="hljs-keyword">else</span>&#123; <br>                <span class="hljs-keyword">echo</span> <span class="hljs-string">&#x27;You can not get it !&#x27;</span>; <br>                &#125; <br>        &#125; <span class="hljs-keyword">else</span>&#123; <br>            <span class="hljs-keyword">die</span>(<span class="hljs-string">&#x27;only one way to get the flag&#x27;</span>); <br>            &#125; <br>    &#125; <span class="hljs-keyword">else</span> &#123; <br>        <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;You are not a real hacker!&quot;</span>; <br>        &#125; <br>&#125; <span class="hljs-keyword">else</span>&#123; <br>    <span class="hljs-keyword">die</span>(<span class="hljs-string">&#x27;Please input first&#x27;</span>); <br>    &#125;<br><span class="hljs-meta">?&gt;</span><br>Please input first<br></code></pre></td></tr></table></figure>
+
+
+
+<ol>
+<li><code>include &#39;flag.php&#39;;</code>：引入 <code>flag.php</code> 文件，其中包含了一个变量 <code>$flag</code></li>
+<li><code>if(isset($_GET[&#39;gg&#39;])&amp;&amp;isset($_GET[&#39;id&#39;])) &#123;</code>：检查是否存在名为 <code>gg</code> 和 <code>id</code> 的 GET 参数。</li>
+<li><code>$id=$_GET[&#39;id&#39;]; $gg=$_GET[&#39;gg&#39;];</code>：将 <code>id</code> 和 <code>gg</code> 的 GET 参数的值分别赋给 <code>$id</code> 和 <code>$gg</code> 变量。</li>
+<li><code>if (md5($id) === md5($gg) &amp;&amp; $id !== $gg) &#123;</code>：比较 <code>id</code> 和 <code>gg</code> 经过 MD5 哈希后的值是否相等，且它们本身不相等。这是为了确保输入的两个值不同。</li>
+<li><code>echo &#39;You got the first step&#39;;</code>：如果上述条件成立，输出提示信息。</li>
+<li><code>if(isset($_POST[&#39;passwd&#39;])) &#123;</code>：检查是否存在名为 <code>passwd</code> 的 POST 参数。</li>
+<li><code>$passwd=$_POST[&#39;passwd&#39;];</code>：将 <code>passwd</code> 的 POST 参数的值赋给 <code>$passwd</code> 变量。</li>
+<li><code>if (!is_numeric($passwd)) &#123;</code>：检查 <code>$passwd</code> 是否为数字。</li>
+<li><code>if($passwd==1234567) &#123;</code>：如果 <code>$passwd</code> 的值等于 <code>1234567</code>，输出成功信息，包括 flag 文件的内容，并结束程序。</li>
+<li><code>else &#123; echo &quot;can you think twice??&quot;; &#125;</code>：如果密码不等于 <code>1234567</code>，输出提示信息。</li>
+<li><code>&#125; else&#123; echo &#39;You can not get it !&#39;; &#125;</code>：如果密码是数字，输出提示信息。</li>
+<li><code>&#125; else&#123; die(&#39;only one way to get the flag&#39;); &#125;</code>：如果没有找到 <code>passwd</code> 参数，输出提示信息，然后结束程序。</li>
+<li><code>&#125; else &#123; echo &quot;You are not a real hacker!&quot;; &#125;</code>：如果 <code>id</code> 和 <code>gg</code> 的值不满足条件，输出提示信息。</li>
+<li><code>&#125; else&#123; die(&#39;Please input first&#39;); &#125;</code>：如果没有找到 <code>gg</code> 和 <code>id</code> 参数，输出提示信息，然后结束程序</li>
+</ol>
+<p>这里很显然可以利用之前学到的绕过md5比较的方式绕过id和gg的比较，通过弱类型比较来绕过password的判断</p>
+<p>所以利用Hackbar，得到flag</p>
+<p><img src="/2024/02/12/WebWriteUp5/image-20240213193310068.png" srcset="/img/loading.gif" lazyload alt="image-20240213193310068"></p>
+<h3 id="babyUpload"><a href="#babyUpload" class="headerlink" title="babyUpload"></a>babyUpload</h3><p><img src="/2024/02/12/WebWriteUp5/image-20240213194207026.png" srcset="/img/loading.gif" lazyload alt="image-20240213194207026"></p>
+<p>一个常见的界面，随便上传一个看看，上传了一个webshell.php，得到如下界面：</p>
+<p><img src="/2024/02/12/WebWriteUp5/image-20240213194340429.png" srcset="/img/loading.gif" lazyload alt="image-20240213194340429"></p>
+<p>老规矩，开始抓包</p>
+<p><img src="/2024/02/12/WebWriteUp5/image-20240213194637057.png" srcset="/img/loading.gif" lazyload alt="image-20240213194637057"></p>
+<p>加.绕过，提示类型，修改成jpeg</p>
+<p><img src="/2024/02/12/WebWriteUp5/image-20240213194722710.png" srcset="/img/loading.gif" lazyload alt="image-20240213194722710"></p>
+<p>感觉又要使用.htaccess文件了</p>
+<p><img src="/2024/02/12/WebWriteUp5/image-20240213194940758.png" srcset="/img/loading.gif" lazyload alt="image-20240213194940758"></p>
+<p>修改类型之后成功上传，上传一个webshell.jpg文件，但依然无法通过，看起来是检测了内容</p>
+<p><img src="/2024/02/12/WebWriteUp5/image-20240213195059910.png" srcset="/img/loading.gif" lazyload alt="image-20240213195059910"></p>
+<p>利用script+php绕过试试</p>
+<p><img src="/2024/02/12/WebWriteUp5/image-20240213195723114.png" srcset="/img/loading.gif" lazyload alt="image-20240213195723114"></p>
+<p>成功上传</p>
+<p>用蚁剑连接，根目录下找到flag</p>
 
                 
               </div>
