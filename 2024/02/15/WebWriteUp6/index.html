@@ -39,8 +39,15 @@
 <meta property="og:image" content="http://example.com/2024/02/15/WebWriteUp6/image-20240215213802810.png">
 <meta property="og:image" content="http://example.com/2024/02/15/WebWriteUp6/image-20240215214206502.png">
 <meta property="og:image" content="http://example.com/2024/02/15/WebWriteUp6/image-20240215214426539.png">
+<meta property="og:image" content="http://example.com/2024/02/15/WebWriteUp6/image-20240216204606234.png">
+<meta property="og:image" content="http://example.com/2024/02/15/WebWriteUp6/image-20240216204937344.png">
+<meta property="og:image" content="http://example.com/2024/02/15/WebWriteUp6/image-20240216210713160.png">
+<meta property="og:image" content="http://example.com/2024/02/15/WebWriteUp6/image-20240216211555399.png">
+<meta property="og:image" content="http://example.com/2024/02/15/WebWriteUp6/image-20240216212349425.png">
+<meta property="og:image" content="http://example.com/2024/02/15/WebWriteUp6/image-20240216212533280.png">
+<meta property="og:image" content="http://example.com/2024/02/15/WebWriteUp6/image-20240216212625882.png">
 <meta property="article:published_time" content="2024-02-15T12:45:08.000Z">
-<meta property="article:modified_time" content="2024-02-15T13:46:09.537Z">
+<meta property="article:modified_time" content="2024-02-16T13:26:42.978Z">
 <meta property="article:author" content="TEhS">
 <meta property="article:tag" content="CTF">
 <meta name="twitter:card" content="summary_large_image">
@@ -237,7 +244,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.6k 字
+          2.9k 字
         
       </span>
     
@@ -248,7 +255,7 @@
         
         
         
-          23 分钟
+          24 分钟
         
       </span>
     
@@ -338,6 +345,20 @@
 <p><img src="/2024/02/15/WebWriteUp6/image-20240215214206502.png" srcset="/img/loading.gif" lazyload alt="image-20240215214206502"></p>
 <p><img src="/2024/02/15/WebWriteUp6/image-20240215214426539.png" srcset="/img/loading.gif" lazyload alt="image-20240215214426539"></p>
 <p>打开是一堆乱码，但有一串字符后有&#x3D;&#x3D;，base64解密后得到flag</p>
+<h2 id="BJDCTF2020-The-mystery-of-ip"><a href="#BJDCTF2020-The-mystery-of-ip" class="headerlink" title="[BJDCTF2020]The mystery of ip"></a>[BJDCTF2020]The mystery of ip</h2><p><img src="/2024/02/15/WebWriteUp6/image-20240216204606234.png" srcset="/img/loading.gif" lazyload alt="image-20240216204606234"></p>
+<p>点击flag：发现屏幕会显示出当前机器的ip</p>
+<p>点击hint：hint的源码中存在这样的注释</p>
+<p><img src="/2024/02/15/WebWriteUp6/image-20240216204937344.png" srcset="/img/loading.gif" lazyload alt="image-20240216204937344"></p>
+<p>抓包看看，并没有发现有什么显示了ip的地方</p>
+<p><img src="/2024/02/15/WebWriteUp6/image-20240216210713160.png" srcset="/img/loading.gif" lazyload alt="image-20240216210713160"></p>
+<p>感觉获取的途径可能是从Header中获取的，尝试修改XFF试试（<a target="_blank" rel="noopener" href="https://tehs411.github.io/2024/01/29/WebWriteUp2/#HTTP">XFF相关</a>）</p>
+<p><img src="/2024/02/15/WebWriteUp6/image-20240216211555399.png" srcset="/img/loading.gif" lazyload alt="image-20240216211555399"></p>
+<p>发现可以修改，那么就可能存在XFF注入</p>
+<p><img src="/2024/02/15/WebWriteUp6/image-20240216212349425.png" srcset="/img/loading.gif" lazyload alt="image-20240216212349425"></p>
+<p>看到当前目录存在flag.php，但这个就是我们现在访问的页面，按着之前的题目，通常flag在根目录，尝试目录穿越：(其实这里一层就行了)</p>
+<p><img src="/2024/02/15/WebWriteUp6/image-20240216212533280.png" srcset="/img/loading.gif" lazyload alt="image-20240216212533280"></p>
+<p>获取flag：</p>
+<p><img src="/2024/02/15/WebWriteUp6/image-20240216212625882.png" srcset="/img/loading.gif" lazyload alt="image-20240216212625882"></p>
 
                 
               </div>
