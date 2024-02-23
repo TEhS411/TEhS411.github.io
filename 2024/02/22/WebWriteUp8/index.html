@@ -29,8 +29,16 @@
 <meta property="og:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240222193314861.png">
 <meta property="og:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240222193335081.png">
 <meta property="og:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240222201944624.png">
+<meta property="og:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240223142215534.png">
+<meta property="og:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240223143251197.png">
+<meta property="og:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240223143301506.png">
+<meta property="og:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240223155214230.png">
+<meta property="og:image" content="https://img2020.cnblogs.com/blog/1344396/202009/1344396-20200911174631687-758048107.png">
+<meta property="og:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240223155312248.png">
+<meta property="og:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240223155355940.png">
+<meta property="og:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240223155644972.png">
 <meta property="article:published_time" content="2024-02-22T11:15:56.000Z">
-<meta property="article:modified_time" content="2024-02-22T12:27:54.931Z">
+<meta property="article:modified_time" content="2024-02-23T08:07:22.270Z">
 <meta property="article:author" content="TEhS">
 <meta property="article:tag" content="CTF">
 <meta name="twitter:card" content="summary_large_image">
@@ -227,7 +235,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k 字
+          2.1k 字
         
       </span>
     
@@ -238,7 +246,7 @@
         
         
         
-          14 分钟
+          18 分钟
         
       </span>
     
@@ -321,6 +329,29 @@
 <p>此题中，若要利用hansome，需要传入flag !&#x3D; flag，相当于改变了flag的值，无法利用</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-keyword">foreach</span>(<span class="hljs-variable">$_GET</span> <span class="hljs-keyword">as</span> <span class="hljs-variable">$x</span> =&gt; <span class="hljs-variable">$y</span>)&#123;<br>    <span class="hljs-comment">#git传入flag变量且值不为flag</span><br>    <span class="hljs-keyword">if</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;flag&#x27;</span>] === <span class="hljs-variable">$x</span> &amp;&amp; <span class="hljs-variable">$x</span> !== <span class="hljs-string">&#x27;flag&#x27;</span>)&#123;<br>        <span class="hljs-keyword">exit</span>(<span class="hljs-variable">$handsome</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
+
+
+<h2 id="BJDCTF2020-Cookie-is-so-stable"><a href="#BJDCTF2020-Cookie-is-so-stable" class="headerlink" title="[BJDCTF2020]Cookie is so stable"></a>[BJDCTF2020]Cookie is so stable</h2><p><img src="/2024/02/22/WebWriteUp8/image-20240223142215534.png" srcset="/img/loading.gif" lazyload alt="image-20240223142215534"></p>
+<p>flag界面</p>
+<p><img src="/2024/02/22/WebWriteUp8/image-20240223143251197.png" srcset="/img/loading.gif" lazyload alt="image-20240223143251197"></p>
+<p>hint界面</p>
+<p><img src="/2024/02/22/WebWriteUp8/image-20240223143301506.png" srcset="/img/loading.gif" lazyload alt="image-20240223143301506"></p>
+<p>既然题目提到cookie，那么先用admin登录，在页面刷新抓cookie</p>
+<p><img src="/2024/02/22/WebWriteUp8/image-20240223155214230.png" srcset="/img/loading.gif" lazyload alt="image-20240223155214230"></p>
+<p>既然存在一个POST值，那么尝试sql注入，但发现，输入啥就会回显啥，无法进行注入</p>
+<h4 id="ssti注入（模版注入）"><a href="#ssti注入（模版注入）" class="headerlink" title="ssti注入（模版注入）"></a><strong>ssti注入（模版注入）</strong></h4><p><img src="https://img2020.cnblogs.com/blog/1344396/202009/1344396-20200911174631687-758048107.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>服务端接收攻击者的恶意输入以后，未经任何处理就将其作为 Web 应用模板内容的一部分，模板引擎在进行目标编译渲染的过程中，执行了攻击者插入的可以破坏模板的语句，从而达到攻击者的目的。</p>
+<p>那么先进行注入测试，payload：49</p>
+<p><img src="/2024/02/22/WebWriteUp8/image-20240223155312248.png" srcset="/img/loading.gif" lazyload alt="image-20240223155312248"></p>
+<p>观察返回的内容，</p>
+<p><img src="/2024/02/22/WebWriteUp8/image-20240223155355940.png" srcset="/img/loading.gif" lazyload alt="image-20240223155355940"></p>
+<p>可以确定是服务器端类型</p>
+<p>根据上表，可以看到有smarty，twig</p>
+<p>那么进行尝试就行，网上找twig注入的模版，进行修改：</p>
+<figure class="highlight handlebars"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs handlebars"><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">_self.env.registerUndefinedFilterCallback</span>(<span class="hljs-name">&quot;exec&quot;</span>)&#125;&#125;</span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">_self.env.getFilter</span>(<span class="hljs-name">&quot;cat /flag&quot;</span>)&#125;&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/2024/02/22/WebWriteUp8/image-20240223155644972.png" srcset="/img/loading.gif" lazyload alt="image-20240223155644972"></p>
+<p>得到flag</p>
 
                 
               </div>
