@@ -24,8 +24,11 @@
 <meta property="og:description" content="DynSQL: Stateful Fuzzing for Database Management Systems with Complex and Valid SQL Query GenerationDynSQL：用于复杂且有效的SQL查询生成的数据库管理系统的有状态模糊测试 知识点：DBMS通常在四个阶段处理每个语句：解析、优化、评估和执行。在解析阶段，DBMS首先根据其预定义的语法规则检查语句">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2024/01/30/DynSQL/image-20240131204350172.png">
+<meta property="og:image" content="http://example.com/2024/01/30/DynSQL/image-20240309144351266.png">
+<meta property="og:image" content="http://example.com/2024/01/30/DynSQL/image-20240311141128983.png">
+<meta property="og:image" content="http://example.com/2024/01/30/DynSQL/image-20240311141631981.png">
 <meta property="article:published_time" content="2024-01-30T02:56:43.000Z">
-<meta property="article:modified_time" content="2024-01-31T12:52:37.664Z">
+<meta property="article:modified_time" content="2024-03-11T08:00:31.014Z">
 <meta property="article:author" content="TEhS">
 <meta property="article:tag" content="ReadPaper">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.8k 字
+          3.2k 字
         
       </span>
     
@@ -233,7 +236,7 @@
         
         
         
-          16 分钟
+          28 分钟
         
       </span>
     
@@ -276,9 +279,9 @@
               <div class="markdown-body">
                 
                 <h2 id="DynSQL-Stateful-Fuzzing-for-Database-Management-Systems-with-Complex-and-Valid-SQL-Query-Generation"><a href="#DynSQL-Stateful-Fuzzing-for-Database-Management-Systems-with-Complex-and-Valid-SQL-Query-Generation" class="headerlink" title="DynSQL: Stateful Fuzzing for Database Management Systems with Complex and Valid SQL Query Generation"></a>DynSQL: Stateful Fuzzing for Database Management Systems with Complex and Valid SQL Query Generation</h2><p><strong>DynSQL：用于复杂且有效的SQL查询生成的数据库管理系统的有状态模糊测试</strong></p>
-<h3 id="知识点："><a href="#知识点：" class="headerlink" title="知识点："></a>知识点：</h3><p>DBMS通常在四个阶段处理每个语句：<strong>解析、优化、评估和执行</strong>。在解析阶段，DBMS首先根据其预定义的语法规则检查语句的语法正确性，然后根据当前数据库模式检查语义正确性。如果任何语法或语义检查失败，该语句将被直接丢弃，整个查询处理可能被终止。在后续阶段，DBMS优化语句的低级表达，并生成若干可能的执行计划。然后，DBMS评估每个执行计划的成本，并最终执行最有效的计划。语句执行后，DBMS更新状态，包括数据库模式和执行状态，然后处理查询中的下一个语句。</p>
-<h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><p>应用于DBMS的模糊测试技术，通过生成一系列SQL查询来测试DBMS的安全性一些模糊测试工具利用明确定义的规则随机生成SQL查询，将这些查询提供给目标DBMS，并检查是否触发了缺陷。还有一些方法涉及反馈机制：在每个测试用例执行之后，收集目标DBMS的运行时信息（例如代码覆盖率），并检查是否发生了改变或别的行为（例如覆盖了新的分支）。如果是这样，该测试用例将被存储为以后生成测试用例的种子。</p>
-<h4 id="现状"><a href="#现状" class="headerlink" title="现状"></a><strong>现状</strong></h4><p>现有的数据库管理系统模糊测试工具在生成复杂且有效的查询方面仍然存在限制，难以发现DBMS中的深层次缺陷。</p>
+<h2 id="知识点："><a href="#知识点：" class="headerlink" title="知识点："></a>知识点：</h2><p>DBMS通常在四个阶段处理每个语句：<strong>解析、优化、评估和执行</strong>。在解析阶段，DBMS首先根据其预定义的语法规则检查语句的语法正确性，然后根据当前数据库模式检查语义正确性。如果任何语法或语义检查失败，该语句将被直接丢弃，整个查询处理可能被终止。在后续阶段，DBMS优化语句的低级表达，并生成若干可能的执行计划。然后，DBMS评估每个执行计划的成本，并最终执行最有效的计划。语句执行后，DBMS更新状态，包括数据库模式和执行状态，然后处理查询中的下一个语句。</p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>应用于DBMS的模糊测试技术，通过生成一系列SQL查询来测试DBMS的安全性一些模糊测试工具利用明确定义的规则随机生成SQL查询，将这些查询提供给目标DBMS，并检查是否触发了缺陷。还有一些方法涉及反馈机制：在每个测试用例执行之后，收集目标DBMS的运行时信息（例如代码覆盖率），并检查是否发生了改变或别的行为（例如覆盖了新的分支）。如果是这样，该测试用例将被存储为以后生成测试用例的种子。</p>
+<h3 id="现状"><a href="#现状" class="headerlink" title="现状"></a><strong>现状</strong></h3><p>现有的数据库管理系统模糊测试工具在生成复杂且有效的查询方面仍然存在限制，难以发现DBMS中的深层次缺陷。</p>
 <ul>
 <li>复杂查询：包含多个涉及SQL特性的SQL语句，如多层嵌套子查询</li>
 <li>有效查询：确保语法和语义的正确性</li>
@@ -294,15 +297,47 @@
 <li>子查询subq_1选择了常量值11，并将其重命名为c4。</li>
 <li>交叉连接将这两个子查询的结果组合在一起。</li>
 </ul>
-<p><strong>最终查询：</strong> 执行一个简单的SELECT语句，选择常量值1。这个查询本身没有实际的目的，主要是作为一个最小的测试用例，用于触发服务器漏洞。</p>
+<p>什么是公共表达式</p>
+<p>在单个语句的执行范围内定义的临时结果集</p>
+<p><strong>查询：</strong> 执行一个简单的SELECT语句，选择常量值1。这个查询本身没有实际的目的，主要是作为一个最小的测试用例，用于触发服务器漏洞。</p>
 <p>这是一个恶意查询，可以使MariaDB服务器崩溃并实现拒绝服务攻击，在DynSQL发现之前存在了超过5年，而显然，对于传统的模糊测试器来说，生成这样的查询语句以检测漏洞是非常难的</p>
-<h4 id="本文解决方案"><a href="#本文解决方案" class="headerlink" title="本文解决方案"></a><strong>本文解决方案</strong></h4><p>DBMS逐条处理每个查询语句，并在执行每个语句后更改受操纵数据库的状态。在语句处理的间隔中，DBMS特定的状态信息，包括最新的数据库模式和语句处理状态，是可用的。</p>
+<h3 id="本文解决方案"><a href="#本文解决方案" class="headerlink" title="本文解决方案"></a><strong>本文解决方案</strong></h3><p>DBMS逐条处理每个查询语句，并在执行每个语句后更改受操纵数据库的状态。在语句处理的间隔中，DBMS特定的状态信息，包括最新的数据库模式和语句处理状态，是可用的。</p>
 <p>利用这个信息，本文提出了有状态的DBMS模糊测试框架，通过<strong>执行动态查询交互将查询生成和查询执行合并</strong>，而不是传统的在查询执行之前完成查询生成。这种方法将每个生成的语句提供给目标DBMS，然后在语句执行后动态与DBMS交互，收集最新的状态信息。收集到的状态信息用于指导后续语句的生成。为了提升有效性，收集关于查询执行的信息，并观察生成的查询是否通过目标DBMS的语法和语义检查。如果生成的查询触发了任何语法或语义错误，这些查询被标识为无效并被直接丢弃。这样能保证所有的种子都是有效的。</p>
-<p>读到此处的疑问：</p>
-<ol>
-<li>如何量化DBMS的状态，什么样才是引起了状态变化</li>
-<li>如何根据状态变化自主的去生成一条复杂的查询（如例子所示</li>
+<h2 id="DynSQL"><a href="#DynSQL" class="headerlink" title="DynSQL"></a>DynSQL</h2><p><img src="/2024/01/30/DynSQL/image-20240309144351266.png" srcset="/img/loading.gif" lazyload alt="image-20240309144351266"></p>
+<h3 id="动态查询交互"><a href="#动态查询交互" class="headerlink" title="动态查询交互"></a>动态查询交互</h3><h4 id="调度器（Scheduler）"><a href="#调度器（Scheduler）" class="headerlink" title="调度器（Scheduler）"></a>调度器（Scheduler）</h4><ul>
+<li><strong>Input：</strong> 输入包括文件（<code>file</code>）和数据库管理系统（<code>DBMS</code>）。</li>
+<li><strong>Output：</strong> 输出包括生成的查询语句（<code>query</code>）、目标数据库管理系统的代码覆盖率（<code>cov</code>）和查询处理的状态（<code>status</code>）。</li>
+<li>Algorithm：<ol>
+<li>初始化一些变量，包括文件大小、目标数据库管理系统、读取字节数、查询语句、代码覆盖率。</li>
+<li>进入一个循环，循环将在所有文件字节被读取完毕后结束。</li>
+<li>在每一轮循环中，首先查询目标数据库管理系统以获取最新的数据库模式。</li>
+<li>将查询到的数据库模式、文件和已读取字节数传递给Translator翻译器，获得生成的SQL语句和更新后的已读取字节数。</li>
+<li>将生成的SQL语句添加到查询语句中。</li>
+<li>将生成的SQL语句发送给目标数据库管理系统，并收集执行该语句后的代码覆盖率和执行状态。</li>
+<li>检查执行状态，如果检测到崩溃（<code>CRASH</code>）或其他异常错误，报告并结束循环。</li>
+<li>当循环结束时，返回生成的查询语句、代码覆盖率和最终查询处理状态。</li>
 </ol>
+</li>
+</ul>
+<h4 id="翻译器（Translator）"><a href="#翻译器（Translator）" class="headerlink" title="翻译器（Translator）"></a>翻译器（Translator）</h4><ul>
+<li><strong>Input：</strong> 输入包括数据库模式（<code>schema</code>）、文件（<code>file</code>）和已读取字节数（<code>rb</code>）。</li>
+<li><strong>Output：</strong> 输出包括生成的SQL语句（<code>stmt</code>）和更新后的已读取字节数（<code>rb + tmp_rb</code>）。</li>
+<li>Algorithm：<ol>
+<li>从文件中提取未读取部分，并将其存储在<code>tmp_file</code>中。</li>
+<li>使用内部的SQL语句生成器（<code>StmtGenerator</code>）根据提供的数据库模式和<code>tmp_file</code>生成SQL语句。</li>
+<li>返回生成的SQL语句和已读取字节数的更新值。</li>
+</ol>
+</li>
+</ul>
+<p><img src="/2024/01/30/DynSQL/image-20240311141128983.png" srcset="/img/loading.gif" lazyload alt="image-20240311141128983"></p>
+<p>由于尚未处理任何语句，模式为空。调度器将空模式发送给翻译器。然后，翻译器遍历其AST模型，并根据从文件中读取的值生成一个CREATE TABLE语句。调度器将该语句馈送给DBMS，并收集语句处理的代码覆盖和状态。由于没有崩溃或错误，调度器进入下一轮交互。在第二轮中，调度器再次查询DBMS以获取最新的模式，然后将模式发送给翻译器。由于CREATE TABLE语句已执行，模式包含一个创建的表t1。翻译器首先删除已读取的文件部分，然后使用已处理的文件生成一个新语句，根据更新后的模式。它从文件中读取一些字节并生成一个包含表t1引用的CREATE VIEW语句。生成的语句再次馈送给DBMS，并正常处理，因此调度器进入第三轮。在第三轮中，调度器查询DBMS并获取最新的扩展了一个包含两列c2和c4的视图v1的模式。将此模式发送给翻译器，翻译器相应地生成一个带有CTE的SELECT语句，其中引用了模式中的视图v1。当调度器将生成的语句馈送给DBMS时，触发了一个崩溃，因此调度器终止交互并报告一个包含3个生成语句的触发漏洞的查询的漏洞。</p>
+<p><img src="/2024/01/30/DynSQL/image-20240311141631981.png" srcset="/img/loading.gif" lazyload alt="image-20240311141631981"></p>
+<p>对于每个SQL查询的输入文件，我们的方法检查查询是否在执行过程中增加了代码覆盖率。如果查询导致DBMS在运行时覆盖新分支，我们的模糊测试方法将这些分支合并到全局覆盖中。对于每个增加了覆盖率的SQL查询的输入文件，我们的方法进一步检查查询是否使目标DBMS执行异常。如果DBMS报告任何错误，则将丢弃该输入文件以进行种子变异。通过这种方式，我们的模糊测试方法确保所有已识别的种子在用作动态查询交互的输入文件时都能生成有效的SQL查询。利用这些有效的种子，我们的种子变异在模糊测试期间实现了生成有效查询的高可能性。</p>
+<p>实验结果：<br>对每个DBMS，进行5次模糊测试，使用24小时作为超时标准</p>
+<p>found：发现的错误数量</p>
+<p>confirm：开发人员确认</p>
+<p>fix：开发人员修复</p>
+<p>statement对象：不带参数的sql语句</p>
 
                 
               </div>

