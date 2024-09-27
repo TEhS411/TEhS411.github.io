@@ -1,0 +1,717 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/lhr.png">
+  <link rel="icon" href="/img/lhr.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="TEhS">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Toss a Fault to Your Witcher: Applying Grey-box Coverage-Guided Mutational Fuzzing to Detect SQL and Command Injection Vulnerabilities将灰盒覆盖引导的变异模糊测试应用于检测SQL和命令注入漏洞 作者来自 UCSB SecLab 和 ASU SEFCOM 这两个安全研">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Witcher">
+<meta property="og:url" content="http://example.com/2024/04/13/WebFuzz/index.html">
+<meta property="og:site_name" content="TEhS">
+<meta property="og:description" content="Toss a Fault to Your Witcher: Applying Grey-box Coverage-Guided Mutational Fuzzing to Detect SQL and Command Injection Vulnerabilities将灰盒覆盖引导的变异模糊测试应用于检测SQL和命令注入漏洞 作者来自 UCSB SecLab 和 ASU SEFCOM 这两个安全研">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/04/13/WebFuzz/image-20240414125835089.png">
+<meta property="og:image" content="http://example.com/2024/04/13/WebFuzz/image-20240415094606244.png">
+<meta property="og:image" content="http://example.com/2024/04/13/WebFuzz/image-20240415190234581.png">
+<meta property="og:image" content="http://example.com/2024/04/13/WebFuzz/image-20240415190253173.png">
+<meta property="og:image" content="http://example.com/2024/04/13/WebFuzz/image-20240415133845810.png">
+<meta property="og:image" content="http://example.com/2024/04/13/WebFuzz/image-20240415134006388.png">
+<meta property="og:image" content="http://example.com/2024/04/13/WebFuzz/image-20240415134316237.png">
+<meta property="og:image" content="http://example.com/2024/04/13/WebFuzz/image-20240415134443402.png">
+<meta property="article:published_time" content="2024-04-13T02:32:15.000Z">
+<meta property="article:modified_time" content="2024-04-15T12:35:04.526Z">
+<meta property="article:author" content="TEhS">
+<meta property="article:tag" content="ReadPaper">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2024/04/13/WebFuzz/image-20240414125835089.png">
+  
+  
+  
+  <title>Witcher - TEhS</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>TEhS</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Witcher"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-04-13 10:32" pubdate>
+          2024年4月13日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          61 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Witcher</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="Toss-a-Fault-to-Your-Witcher-Applying-Grey-box-Coverage-Guided-Mutational-Fuzzing-to-Detect-SQL-and-Command-Injection-Vulnerabilities"><a href="#Toss-a-Fault-to-Your-Witcher-Applying-Grey-box-Coverage-Guided-Mutational-Fuzzing-to-Detect-SQL-and-Command-Injection-Vulnerabilities" class="headerlink" title="Toss a Fault to Your Witcher: Applying Grey-box Coverage-Guided Mutational Fuzzing to Detect SQL and Command Injection Vulnerabilities"></a>Toss a Fault to Your Witcher: Applying Grey-box Coverage-Guided Mutational Fuzzing to Detect SQL and Command Injection Vulnerabilities</h2><h3 id="将灰盒覆盖引导的变异模糊测试应用于检测SQL和命令注入漏洞"><a href="#将灰盒覆盖引导的变异模糊测试应用于检测SQL和命令注入漏洞" class="headerlink" title="将灰盒覆盖引导的变异模糊测试应用于检测SQL和命令注入漏洞"></a>将灰盒覆盖引导的变异模糊测试应用于检测SQL和命令注入漏洞</h3><p><img src="/2024/04/13/WebFuzz/image-20240414125835089.png" srcset="/img/loading.gif" lazyload alt="image-20240414125835089"></p>
+<p>作者来自 UCSB SecLab 和 ASU SEFCOM 这两个安全研究大组，目前论文被 IEEE S &amp; P 2023 接收</p>
+<h3 id="现状"><a href="#现状" class="headerlink" title="现状"></a>现状</h3><p>Web应用程序数量的不断增加和支持的框架不断多样化，同时也会带来许多的Web漏洞。这些Web漏洞，如SQL注入，可能对Web应用程序的开发人员、运行Web应用程序的公司以及访问并在网站应用程序上存储数据的最终用户造成灾难性影响。</p>
+<h3 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h3><p>Web应用程序在Web服务器上运行，并通过网络与其客户端进行交互。客户端通过向Web服务器发送HTTP请求来访问Web应用程序，Web服务器解析并将请求路由到Web应用程序。Web应用程序接受输入，执行适当的操作，并对请求做出响应。在这种架构中，Web服务器充当Web应用程序的网关，而Web应用程序可以用任何编程语言编写。</p>
+<p><strong>CGI Requests</strong> </p>
+<p>通用网关接口（CGI）使Web服务器能够通过将HTTP请求转换为CGI请求来调用可执行程序。尽管许多Web应用程序已将CGI替换为FastCGI、Apache模块和NSAPI插件，但CGI应用程序仍广泛用于嵌入式设备，例如路由器和网络摄像头。</p>
+<p><strong>Injection Vulnerabilities</strong> </p>
+<p>注入漏洞是代码和数据混合的一种情况，当Web应用程序将未经过过滤的用户数据发送到外部解析器时，比如将数据发送到Shell来执行命令或发送到数据库来执行SQL查询时，就会出现这种漏洞。根据漏洞的类型和攻击目标的不同，攻击者可能会注入数据库查询、JavaScript代码、本机应用程序代码、操作系统命令等等。</p>
+<p>在SQL注入漏洞中，攻击者发送一个格式正确的payload，其中包含了SQL代码，这个输入会作为SQL查询发送到数据库。当数据库执行查询时，也会执行攻击者注入的SQL代码。同样，在命令注入漏洞中，攻击者创建的payload会导致额外的Shell命令被执行。</p>
+<h3 id="Witcher"><a href="#Witcher" class="headerlink" title="Witcher"></a>Witcher</h3><h4 id="白盒"><a href="#白盒" class="headerlink" title="白盒"></a><strong>白盒</strong></h4><p>白盒静态分析工具依赖于分析Web应用程序的源代码，但源代码并不总是可用。此外，白盒工具通常对特定语言的语义建模，因此将这些工具应用于新的语言或框架较为复杂。</p>
+<h4 id="黑盒"><a href="#黑盒" class="headerlink" title="黑盒"></a><strong>黑盒</strong></h4><p>基于黑盒的漏洞扫描器不需要源代码，这些工具生成合法的 Web 应用程序输入来探索应用程序，然后尝试通过发送设计用于触发漏洞的输入到 Web 应用程序来推断漏洞的存在。但这也会导致测试漏洞的输入受到严格限制，因为它们来源于手动策划的字符串或基于专家启发式的漏洞类型模板。因此，黑盒式扫描器会忽略那些超出预先配置的字符串和模板范围的输入触发的漏洞。</p>
+<p>同时黑盒扫描器只能根据Web应用程序的输出推断漏洞。这样的推断可能会出现误报。例如，考虑一个返回HTTP 500状态码（表示内部服务器错误）的Web应用程序。现有的黑盒扫描器如Burp 使用此类错误代码来判断他们的漏洞诱发输入是否成功触发了漏洞。在寻找SQL注入漏洞的黑盒扫描器的情况下，HTTP 500错误可能表明输入导致了SQL错误。然而，这种错误可能是由其他无关问题引起的，比如实现错误而不是安全漏洞。</p>
+<h4 id="灰盒"><a href="#灰盒" class="headerlink" title="灰盒"></a><strong>灰盒</strong></h4><p>最近的一些研究引入了灰盒模糊测试工具的概念（BackREST，WebFuzz）用于自动测试Web应用程序。这些工具使用覆盖率信息来指导输入的生成。但这些方法只针对单一语言，无法检测SQL或命令注入漏洞，并且不是开源的，而且相对较慢。</p>
+<p>什么是灰盒覆盖引导模糊测试？</p>
+<p>覆盖引导的变异模糊测试使用静态或动态插桩来收集覆盖率信息，该信息用于识别在程序中执行新执行路径的输入（从而打破了纯黑盒方法），模糊测试工具通过输入测试用例并导致目标应用程序进入不同的程序状态来自动测试应用程序。当模糊器启动时，它会接收一组输入种子，并将其放入测试用例队列中。然后，模糊器从队列中派生新的测试用例，并使用各种变异策略对测试用例进行变异。例如，American Fuzzy Lop (AFL) 使用确定性的变异策略，如位翻转、整数算术和字典插入。此外，AFL还使用随机策略，如随机拼接和从用户提供的字典插入数据。在变异输入之后，模糊器将修改后的输入发送给目标应用程序。</p>
+<p>在覆盖引导的模糊测试中，模糊器捕获近似于程序状态的覆盖率数据，以指导测试用例的选择。模糊器捕获的覆盖率数据近似于程序状态，但比执行轨迹要不完整得多。模糊器通过静态或动态插装获取覆盖率数据。对于静态插装，分析人员使用修改过的编译器编译目标应用程序的源代码。对于动态插装，动态插装工具（如Pin）或修改过以提供覆盖率数据的模拟器（如QEMU-user）在执行过程中产生覆盖信息。之所以近似于程序状态，是因为对于模糊器来说，捕获和分析每次执行的完整执行轨迹过于处理密集。</p>
+<p>当测试用例导致程序达到一个新的位置，或者导致应用程序报错，模糊器会标记该测试用例。通常，这意味着应用程序进入了一个易受攻击的状态 （vulnerable program state）。</p>
+<h4 id="本文提的出Witcher"><a href="#本文提的出Witcher" class="headerlink" title="本文提的出Witcher"></a>本文提的出Witcher</h4><p>本文提出了一种名为Witcher的新型Web漏洞发现框架，受到灰盒覆盖引导模糊测试的启发。主要思想是通过使用执行覆盖率信息来高效地引导随机输入的生成，从而探索Web应用程序的输入空间（而不仅仅依赖于硬编码的启发式规则）。</p>
+<h3 id="面临的挑战"><a href="#面临的挑战" class="headerlink" title="面临的挑战"></a>面临的挑战</h3><h4 id="挑战一-如何检测-Web-应用漏洞被触发？"><a href="#挑战一-如何检测-Web-应用漏洞被触发？" class="headerlink" title="挑战一 如何检测 Web 应用漏洞被触发？"></a>挑战一 如何检测 Web 应用漏洞被触发？</h4><p>检测程序中是否存在漏洞实际上就是要判断程序是否处于 vulnerable program state，对传统二进制软件来说，检测到段错误（segmentation fault）就表示触发了漏洞，但 Web 应用程序来说没有直接的触发信号。</p>
+<h4 id="挑战二-如何生成能打通-Web-应用程序的合理输入？"><a href="#挑战二-如何生成能打通-Web-应用程序的合理输入？" class="headerlink" title="挑战二 如何生成能打通 Web 应用程序的合理输入？"></a>挑战二 如何生成能打通 Web 应用程序的合理输入？</h4><p>Web 应用通常只接受 HTTP 和 CGI 请求，而 fuzzer 生成的 seeds 往往不满足相应结构，不能直接用来探索目标程序的输入空间。</p>
+<h4 id="挑战三-如何有效收集覆盖率信息？"><a href="#挑战三-如何有效收集覆盖率信息？" class="headerlink" title="挑战三 如何有效收集覆盖率信息？"></a>挑战三 如何有效收集覆盖率信息？</h4><p>覆盖导向型的 fuzzer 需要插桩目标应用程序来收集覆盖率信息，但对解释性语言编写的 Web 应用程序来说，插桩收集到的往往是解释器本身而非目标 Web 应用程序的覆盖率信息，这种信息大多是噪音，使得 fuzzer 无法有效探索目标程序的输入空间。</p>
+<h4 id="挑战四-如何有效变异测试用例？"><a href="#挑战四-如何有效变异测试用例？" class="headerlink" title="挑战四 如何有效变异测试用例？"></a>挑战四 如何有效变异测试用例？</h4><p>传统 fuzzer 往往把输入当作无结构的比特流来变异，难以利用 Web 应用中的上下文信息（比如网页表单中的变量名）。</p>
+<h3 id="Witcher各组件"><a href="#Witcher各组件" class="headerlink" title="Witcher各组件"></a>Witcher各组件</h3><p><img src="/2024/04/13/WebFuzz/image-20240415094606244.png" srcset="/img/loading.gif" lazyload alt="image-20240415094606244"></p>
+<p>Witcher以AFL作为基础，并通过增加组件的方式来应对上述挑战来将该fuzzer应用于web</p>
+<h4 id="Fault-Escalator"><a href="#Fault-Escalator" class="headerlink" title="Fault Escalator"></a><strong>Fault Escalator</strong></h4><p>在传统的二进制模糊测试中，易受攻击状态是由内存损坏漏洞引起的，而二进制模糊器通过检测段错误信号来检测是否使程序进入易受攻击状态。</p>
+<p>SQL注入或命令注入漏洞导致外部解析器将用户输入的数据解释为代码。结合二进制模糊器的思路，可以将外部解析器引发的语法错误视为内存损坏漏洞引发的分段错误信号的类比。</p>
+<p>如果攻击者控制的输入在外部解析器中引发语法错误，那么攻击者可以更改命令，并且很有可能存在可利用的漏洞。因此，当发生解析错误时，”Fault Escalator”将错误升级为分段错误，通知模糊器当前的测试用例导致了易受攻击的程序状态。例如，想象一个执行<code>mysqli_query(\$con,&quot;SELECT ID from tbl where ID=&quot;. \$_GET[&#39;id&#39;])</code>的PHP应用程序，而模糊器将<code>id=1&#39;</code>设置为一个输入，由于单引号导致了一个格式不正确的SQL语句。当页面执行SQL语句时，SQL解析器会返回一个解析错误，该错误会被”Fault Escalator”拦截并升级为段错误。</p>
+<p>考虑到生成语句的随机性，如果随意的构造一个未经过滤的sql语句或者shell命令，也可能会导致解析错误，并导致误报的产生。但对于一个sql注入漏洞的攻击语句来说，不太可能不导致解析错误。同时，触发将参数限制为仅能为一个字符的Web应用程序的错误可能不代表一个可利用的漏洞，这些错误会被标记，并人工进行确认是否是一个可利用的漏洞。通过以上手段，经实验证实，Witcher未能发现的漏洞与Fault Escalator的误报无关，所以这种故障升级策略是有效的。</p>
+<p><strong>命令注入</strong></p>
+<p>Witcher使用dash的命令解释器进行故障升级。Debian Almquist shell，通常简称为dash，是一个轻量级的Unix shell，通常用作Unix系统中的默认shell。例如，使用exec()、system()或passthru()的PHP脚本，或者使用exec()的Node.js脚本，将其命令发送到&#x2F;bin&#x2F;sh，这意味着dash会解析并运行该命令。Witcher版本的dash（与原始版本相比仅有3行代码差异）将解析错误升级为分段错误。</p>
+<p><strong>SQL注入</strong></p>
+<p>为了捕获语法错误，Witcher使用LD_PRELOAD来hook libc库中的recv()函数，该函数用于与数据库通信。每当来自数据库的任何响应包含SQL语法错误消息时，Witcher会触发分段错误。</p>
+<blockquote>
+<p>LD_PRELOAD是Linux系统的一个环境变量，它可以影响程序的运行时的链接（Runtime linker），它允许你定义在程序运行前优先加载的动态链接库。这个功能主要就是用来有选择性的载入不同动态链接库中的相同函数。</p>
+<p>替换前</p>
+<p><img src="/2024/04/13/WebFuzz/image-20240415190234581.png" srcset="/img/loading.gif" lazyload alt="image-20240415190234581"></p>
+<p>替换后</p>
+<p><img src="/2024/04/13/WebFuzz/image-20240415190253173.png" srcset="/img/loading.gif" lazyload alt="image-20240415190253173"></p>
+</blockquote>
+<p><strong>跨站脚本攻击</strong></p>
+<p>因为浏览器在解析HTML浏览器在解析HTML时非常宽容，因此要在HTML中可靠且快速地检测跨站脚本漏洞可能是困难的。因此，我们选择关注命令注入和SQL注入。此外，SQL和命令注入漏洞代表了一类在之前的工作中基于变异的模糊测试器很难检测到的漏洞。</p>
+<h4 id="Request-Crawler"><a href="#Request-Crawler" class="headerlink" title="Request Crawler"></a><strong>Request Crawler</strong></h4><p>Reqr（Request Crawler）是一个黑盒爬虫，旨在自主识别HTTP请求及其关联的参数。Reqr能够从各种类型的Web应用中提取HTTP请求，包括那些广泛使用客户端JavaScript构建用户界面的应用。它能够识别Web应用中的链接、表单、提交以及请求等各种组件</p>
+<p>Reqr的运作方式类似于黑盒漏洞扫描工具：它接收一个入口URL，可选地提供有效的登录凭证和登录URL。Reqr使用Node.js库Puppeteer（用于控制Chromium的API）来模拟用户操作并捕获请求 。Reqr启动后，如果需要，它可以登录到Web应用并加载入口页面。一旦页面加载完成，Reqr会对呈现的HTML进行静态分析，以识别创建HTTP请求或HTTP参数的HTML元素，接下来，Reqr在模拟用户事件（例如鼠标点击、填写表单字段和滚动页面）的同时监听HTTP请求。Reqr会通过针对每个接受用户事件的HTML元素系统地触发这些事件。此外，Reqr还使用Gremlins测试工具随机触发用户输入事件（例如点击、表单填写、滚动和输入）。</p>
+<p>当Reqr完成时，它会创建一个包含所有请求信息的文件。Witcher使用这些请求信息来创建模糊测试器的种子（初始测试用例）并构建模糊测试器的字典。</p>
+<h4 id="Request-Harnesses"><a href="#Request-Harnesses" class="headerlink" title="Request Harnesses"></a><strong>Request Harnesses</strong></h4><p>Witcher的HTTP harness将模糊测试器生成的输入转换为有效的请求。由于不同的执行模型，Witcher在处理PHP和CGI二进制文件方面与处理Python、Node.js、Java和基于QEMU的二进制文件方面具有不同的harness设计。对于使用PHP和CGI的web应用程序，Witcher将模糊测试器输入的格式转换为CGI请求。对于Python、Node.js、Java和基于QEMU的二进制文件，Witcher将模糊测试器的输入转换为HTTP请求</p>
+<p><strong>CGI Harness.</strong> 对于PHP（通过php-cgi）和CGI二进制文件，使用相同的harness，因为两者都依赖于CGI请求，并且调用的终端在被调用后会一直运行到完成。对于PHP和CGI二进制文件，HTTP harness使用LD_PRELOAD创建一个fork服务器，在处理输入之前，它会在解释器或二进制文件中启动进程。这个harness会从模糊测试器接收每个新的输入，将输入转换为CGI请求，然后将请求传递到新fork的进程中。</p>
+<p><strong>HTTP Request Harness.</strong> Witcher通过使用关联的HTTP请求Harness来对其他解释型语言和基于QEMU的Web应用进行模糊测试，HTTP Request Harness在AFL和Web服务器之间建立了一个桥梁，以利用Web服务器对Web应用程序的接口。HTTP Harness包括其自己的Fork-Server，从而增加了请求提交的吞吐量。该Harness接收来自模糊测试器的输入，将该输入转换为格式良好的HTTP请求，并将HTTP请求发送到Web服务器。</p>
+<p><strong>Translating Fuzzing Input into a Request.</strong> CGI Harness和HTTP Request Harness充当了模糊测试器和Web应用程序之间的翻译器。Witcher自动为模糊测试器创建了遵循以空终止符分隔的格式的种子。这些种子包括用于Cookies、查询参数、POST变量和其他头部值的字段。因此，模糊测试器基于这个格式创建了测试用例，然后Harness将其转换为适当的请求类型。</p>
+<h4 id="Coverage-Accountant"><a href="#Coverage-Accountant" class="headerlink" title="Coverage Accountant"></a><strong>Coverage Accountant</strong></h4><p>覆盖导向型的 fuzzer 需要插桩目标应用程序来收集覆盖率信息，但对解释性语言编写的 Web 应用程序来说，插桩收集到的往往是解释器本身而非目标 Web 应用程序的覆盖率信息，这种信息大多是噪音，使得 fuzzer 无法有效探索目标程序的输入空间。为此设计了 Coverage Accountant 来更精确地收集覆盖信息，不同类型的解释型语言都需要先将源码翻译成字节码，然后再逐条执行字节码指令，Coverage Accountant 就是在解释器执行指令过程中将代码行数、参数等信息传给 Witcher。而对于 CGI 程序来说则只需使用 AFL 的编译插桩或 QEMU 动态插桩。</p>
+<p>（并不是很懂）</p>
+<h4 id="HTTP-specific-Input-Mutations"><a href="#HTTP-specific-Input-Mutations" class="headerlink" title="HTTP-specific Input Mutations"></a><strong>HTTP-specific Input Mutations</strong></h4><p>传统 fuzzer 往往把输入当作无结构的比特流来变异，难以利用 Web 应用中的上下文信息（比如网页表单中的变量名）。因此实现了 HTTP-specific Input Mutations 以在变量的层面上对参数进行变异</p>
+<p><strong>HTTP参数变异器</strong>通过在fuzzer队列中存储的可能使程序进入脆弱状态的测试用例之间交叉传播唯一的参数名称和值。Witcher一次只模糊测试一个URL终端点，不同测试用例的变量之间通常存在相互依赖关系。通过交叉传播参数，fuzzer提供了更有针对性的测试用例，这些测试用例比随机字节变异更有可能触发新的执行路径。例如，如果一个测试用例包含act&#x3D;a，另一个包含ptype&#x3D;dog_red，那么通过组合它们来变异成更有效的攻击代码。</p>
+<p><strong>HTTP字典变异器</strong>减少了将当前输入与字典中的变量配对所需的执行次数。许多终端点具有多个用途，因此，一个终端点可能有多个使用不同HTTP变量的请求。对于某个终端点，Witcher将Reqr发现的所有HTTP变量放入模糊字典中。HTTP字典变异器利用上下文相似的变量，通过将它们与当前请求进行混合来执行此操作。HTTP字典变异器从字典中随机选择一个到十个变量，并将它们添加到当前测试案例中。</p>
+<h3 id><a href="#" class="headerlink" title></a></h3><h3 id="评估"><a href="#评估" class="headerlink" title="评估"></a>评估</h3><h4 id="RQ1-Witcher-使用的增强性技术是否有效？"><a href="#RQ1-Witcher-使用的增强性技术是否有效？" class="headerlink" title="RQ1: Witcher 使用的增强性技术是否有效？"></a>RQ1: Witcher 使用的增强性技术是否有效？</h4><p>设置了四个配置 AFLR, AFLHR, WiCR, WiCHR 代表启用&#x2F;禁用 coverage acccountant 和 HTTP mutator 的四种情况，在 10 个 microtest 测试代码上运行，结果如下表所示，Witcher 的两种增强性技术极大地改进了 fuzz 效果。</p>
+<p><img src="/2024/04/13/WebFuzz/image-20240415133845810.png" srcset="/img/loading.gif" lazyload alt="image-20240415133845810"></p>
+<h4 id="RQ2-Witcher-识别-Web-应用程序中的漏洞效果如何？"><a href="#RQ2-Witcher-识别-Web-应用程序中的漏洞效果如何？" class="headerlink" title="RQ2: Witcher 识别 Web 应用程序中的漏洞效果如何？"></a>RQ2: Witcher 识别 Web 应用程序中的漏洞效果如何？</h4><p>为了测试 Witcher 扫描 Web 应用漏洞的实际表现，使用了不同种类应用组成的数据集，其中有 8 个 PHP 应用，5 个路由器固件和 Java &#x2F; Python &#x2F; Node.js 应用各一个，共有 36 个已知的漏洞，对于每个漏洞都人工验证其是否 exploitable。</p>
+<p>本轮实验的结果如下表所示，可以看出 Witcher 不仅检测到了超过六成的已知漏洞，还能许多发现未知的漏洞。而未检测出的漏洞大多是由于攻击点本身没被 crawler 爬取到，比如有些 URL 需要一系列点击操作才能触达或者根本是界面中不显示的隐藏后门。</p>
+<p><img src="/2024/04/13/WebFuzz/image-20240415134006388.png" srcset="/img/loading.gif" lazyload alt="image-20240415134006388"></p>
+<h4 id="RQ3-Witcher-的代码覆盖率和漏洞扫描效果与黑盒漏洞扫描器和其他工作相比如何？"><a href="#RQ3-Witcher-的代码覆盖率和漏洞扫描效果与黑盒漏洞扫描器和其他工作相比如何？" class="headerlink" title="RQ3:Witcher 的代码覆盖率和漏洞扫描效果与黑盒漏洞扫描器和其他工作相比如何？"></a>RQ3:Witcher 的代码覆盖率和漏洞扫描效果与黑盒漏洞扫描器和其他工作相比如何？</h4><p>Burp 是知名的商业黑盒漏洞扫描器，实验中设置了 Burp (solo) 和 BurpPlus Witcher 两种配置，分别采用内置 crawler 和 Witcher 的 crawler 提供的请求，后者能专注对比 Burp 和 Witcher 在输入生成上的效果，可以看出 Witcher 效果远胜 Burp。唯一的不足是 Witcher 专注于单页请求而不像 Burp 那样可能触发多个页面的状态。</p>
+<p><img src="/2024/04/13/WebFuzz/image-20240415134316237.png" srcset="/img/loading.gif" lazyload alt="image-20240415134316237"></p>
+<p>Black Widow 和 WebFuzz 是2023对 Web 应用进行 fuzz 的工作，但它们主要关注 XSS 漏洞，因此本文只比较了其触发的代码行数，可以看出 Witcher 几乎占据绝对优势。W \B 列显示了 Witcher 发现的唯一行。W ∩B 显示了 Witcher 和其他扫描仪找到的行。B\W 列显示了其他工具找到的唯一行。</p>
+<p><img src="/2024/04/13/WebFuzz/image-20240415134443402.png" srcset="/img/loading.gif" lazyload alt="image-20240415134443402"></p>
+<p>Witcher 的一些不足：首先是目前仅限于发现 SQL 和命令注入漏洞，而且在注入类漏洞中也只限于检测到单次请求的反射型漏洞，对于涉及多次请求的存储型漏洞，则无法精确判断具体是哪次输入触发漏洞。这种每次只 fuzz 一个 URL 的设计也使得它难以完整地感知 Web 应用的状态</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Study/" class="category-chain-item">Study</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ReadPaper/" class="print-no-link">#ReadPaper</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Witcher</div>
+      <div>http://example.com/2024/04/13/WebFuzz/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>TEhS</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年4月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/05/21/OWASPTop10/" title="OWASPTop10">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">OWASPTop10</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/03/04/WebWriteUp9/" title="WebWriteUp9">
+                        <span class="hidden-mobile">WebWriteUp9</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
